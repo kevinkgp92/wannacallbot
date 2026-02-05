@@ -28,6 +28,23 @@ from tkinter import messagebox
 ctk.set_appearance_mode("Dark")
 ctk.set_default_color_theme("blue")
 
+def _boot_log(msg):
+    """Write diagnostic info to a file since terminal might be hidden or buffered."""
+    try:
+        # Use absolute path to ensure it writes next to the EXE/Script
+        if hasattr(sys, '_MEIPASS'):
+            log_dir = os.path.dirname(sys.executable)
+        else:
+            log_dir = os.path.abspath(".")
+        
+        log_path = os.path.join(log_dir, "DEBUG_BOOT.txt")
+        timestamp = time.strftime("%H:%M:%S")
+        with open(log_path, "a", encoding="utf-8") as f:
+            f.write(f"[{timestamp}] {msg}\n")
+    except: pass
+
+_boot_log("--- SESSION START ---")
+
 class TextRedirector(object):
     def __init__(self, widget, tag="stdout"):
         self.widget = widget
@@ -104,12 +121,13 @@ class OsintGUI(ctk.CTk):
         self.initialization_complete = False
         self.logo_image = None
         
-        # 1. SHOW SPLASH SCREEN (Professional Loading)
+        _boot_log("OsintGUI.__init__ called")
         self.show_splash()
         self.version = "2.2.5" 
-        print(f"DEBUG: Iniciando {self.version}...")
+        _boot_log(f"Version: {self.version}")
 
         # Setup Auto-Updater (Silent)
+        _boot_log("Starting AutoUpdater")
         self.updater = AutoUpdater(self.version)
         self.updater.check_updates_silent(callback=self._on_update_found)
 
@@ -156,12 +174,13 @@ class OsintGUI(ctk.CTk):
         else:
             print(f"Warning: Logo not found at {logo_path}")
             
-        print("DEBUG: Construyendo interfaz...")
+        _boot_log("Starting _build_main_ui")
         # --- GUI LAYOUT ---
         try:
             self._build_main_ui()
-            print("DEBUG: Interfaz construida con éxito.")
+            _boot_log("UI build finished successfully")
         except Exception as e:
+            _boot_log(f"FATAL ERROR IN UI BUILD: {e}")
             error_msg = f"ERROR CRITICO DE UI:\n{e}\n\n{traceback.format_exc()}"
             print(error_msg)
             # Force show error in a box since it's an EXE environment
@@ -180,11 +199,14 @@ class OsintGUI(ctk.CTk):
             self.after(1000, lambda: self.updater.prompt_update())
 
     def _build_main_ui(self):
+        _boot_log("Building Sidebar...")
         # --- Sidebar (Midnight Blue) ---
-        self.sidebar_frame = ctk.CTkScrollableFrame(self, width=280, corner_radius=0, fg_color="#0f0f15", label_text="") 
-        self.sidebar_frame.grid(row=0, column=0, sticky="nsew")
-        self.sidebar_frame.grid_columnconfigure(0, weight=1)
-        self.sidebar_frame.grid_rowconfigure(4, weight=1)
+        try:
+            self.sidebar_frame = ctk.CTkScrollableFrame(self, width=280, corner_radius=0, fg_color="#0f0f15", label_text="") 
+            self.sidebar_frame.grid(row=0, column=0, sticky="nsew")
+            self.sidebar_frame.grid_columnconfigure(0, weight=1)
+            self.sidebar_frame.grid_rowconfigure(4, weight=1)
+        except Exception as e: _boot_log(f"Fail Sidebar Frame: {e}")
 
         # --- SECTION: HEADER ---
         self.sidebar_header = ctk.CTkFrame(self.sidebar_frame, fg_color="transparent")
@@ -348,7 +370,10 @@ class OsintGUI(ctk.CTk):
         
         self.service_vars = {}
         self.service_checkboxes = {}
-        self.populate_services()
+        try:
+            _boot_log("Populating services...")
+            self.populate_services()
+        except Exception as e: _boot_log(f"Fail Populate Services: {e}")
 
         # --- SECTION: TELEGRAM ---
         self.tg_label = ctk.CTkLabel(self.sidebar_frame, text="TELEGRAM REMOTE", anchor="w", font=ctk.CTkFont(family="Roboto", size=12, weight="bold"), text_color="gray70")
@@ -372,12 +397,15 @@ class OsintGUI(ctk.CTk):
                                        fg_color="#34495e", hover_color="#2c3e50", font=ctk.CTkFont(size=11, weight="bold"), height=30)
         self.btn_build.pack(fill="x", padx=20, pady=(5, 30))
 
+        _boot_log("Building Main Area...")
         # --- Main Area ---
         # --- Main Area (Deep Space) ---
-        self.main_frame = ctk.CTkFrame(self, corner_radius=0, fg_color="#16161d")
-        self.main_frame.grid(row=0, column=1, sticky="nsew")
-        self.main_frame.grid_columnconfigure(0, weight=1)
-        self.main_frame.grid_rowconfigure(2, weight=1) # Log area expands
+        try:
+            self.main_frame = ctk.CTkFrame(self, corner_radius=0, fg_color="#16161d")
+            self.main_frame.grid(row=0, column=1, sticky="nsew")
+            self.main_frame.grid_columnconfigure(0, weight=1)
+            self.main_frame.grid_rowconfigure(2, weight=1) # Log area expands
+        except Exception as e: _boot_log(f"Fail Main Frame: {e}")
 
         # Input Fields Container (Glass Card Style)
         self.inputs_frame = ctk.CTkFrame(self.main_frame, fg_color="#1f1f2e", corner_radius=20, border_width=1, border_color="#33334d")
@@ -479,6 +507,7 @@ class OsintGUI(ctk.CTk):
         
         self.tg_controller = None
         self.initialization_complete = True # Signal splash we are done building
+        _boot_log("BOOT COMPLETE: GUI is ready.")
         
         # Close Splash and show main window
         self.splash_close_id = self.after(2000, self.hide_splash)
@@ -576,9 +605,14 @@ class OsintGUI(ctk.CTk):
         
         # Ensure main window is visible and forced to redraw
         try:
+            _boot_log("Hiding splash and deiconifying main window")
             self.deiconify()
+            self.lift()
+            self.focus_force()
             self.update() # Force Tkinter to recalculate layout and draw frames
-        except: pass
+            _boot_log(f"Main window state: {self.state()}")
+        except Exception as e:
+            _boot_log(f"Error during deiconify: {e}")
 
     def trigger_build_pro(self):
         """Runs the build_pro.py script in a background thread."""

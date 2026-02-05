@@ -1,5 +1,6 @@
 import os
 import sys
+import time
 import importlib
 import pkgutil
 import inspect
@@ -40,6 +41,7 @@ def discover_services():
             
             full_module_name = f"services.definitions.{module_name}"
             try:
+                # print(f"DEBUG: Scrying {full_module_name}") # Minimal spam
                 # Reload if already loaded to pick up changes
                 if full_module_name in sys.modules:
                     importlib.reload(sys.modules[full_module_name])
@@ -57,7 +59,16 @@ def discover_services():
     except Exception as e:
         print(f"CRITICAL ERROR in discovery: {e}")
     
-    print(f"Services discovered: {len(service_classes)}")
+    # Trace completion
+    try:
+        if hasattr(sys, '_MEIPASS'):
+            log_dir = os.path.dirname(sys.executable)
+        else:
+            log_dir = os.path.abspath(".")
+        log_path = os.path.join(log_dir, "DEBUG_BOOT.txt")
+        with open(log_path, "a", encoding="utf-8") as f:
+            f.write(f"[{time.strftime('%H:%M:%S')}] Services discovered: {len(service_classes)}\n")
+    except: pass
     return service_classes
 
 # Initial discovery
