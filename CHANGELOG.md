@@ -2,29 +2,36 @@
 
 ---
 
-## 🚀 [2.2.6] - 2026-02-05 (ULTRA-GREEN STABILITY)
+## � [2.2.7] - 2026-02-05 (ULTRA-PRO RELEASE)
 
 ### 🇪🇸 ESPAÑOL
-#### REPARACIÓN CRÍTICA
-- **BYPASS DE HIJACKING**: Eliminado el conflicto con el archivo `python.exe` (103MB) antiguo que impedía el arranque.
-- **IDENTIFICACIÓN VISUAL**: Botón de ataque ahora es **VERDE** para confirmar que estás en la versión correcta.
-- **SINCRO TOTAL**: Versiones unificadas en GUI, `version.txt` y este log.
+#### NOVEDADES VISUALES
+- **INTERFAZ DE ACTUALIZACIÓN**: Nueva ventana dedicada con barra de progreso y registro de cambios integrado. ¡Mucho más intuitivo y profesional!
+- **EJECUTABLE INDEPENDIENTE**: Ahora el bot se distribuye como un `.exe` real con todos los recursos (iconos, logos) incluidos.
+- **FLUJO SIN COSTURAS**: Se acabó el usar el `.bat` manualmente. El bot detecta, descarga, aplica y se reinicia solo.
 
 #### MEJORAS TÉCNICAS
-- **ACTUALIZACIÓN INTEGRADA**: Ahora el bot se actualiza solo desde el menú si detecta cambios en GitHub (vía Git).
-- **LIMPIEZA ATÓMICA**: El script `AUTO_FIX_ULTIMATE.bat` ahora limpia residuos de compilación automáticamente.
+- **SINCRO TOTAL v2.2.7**: Versión unificada en todos los archivos del proyecto.
+- **CONSTRUCTOR AUTOMÁTICO**: Añadido `build_exe.py` para generar versiones compiladas en segundos.
 
 ---
 
 ### 🇺🇸 ENGLISH
-#### CRITICAL FIXES
-- **HIJACKING BYPASS**: Removed conflict with legacy 103MB `python.exe` that blocked startup.
-- **VISUAL IDENTIFICATION**: Attack button is now **GREEN** to confirm you are on the correct version.
-- **TOTAL SYNC**: Unified versions across GUI, `version.txt`, and this log.
+#### VISUAL UPDATES
+- **UPDATE INTERFACE**: New dedicated window with progress bar and integrated changelog. Much more intuitive and professional!
+- **STANDALONE EXECUTABLE**: Bot is now distributed as a real `.exe` with all assets (icons, logos) included.
+- **SEAMLESS FLOW**: No more manual `.bat` usage. The bot detects, downloads, applies, and restarts itself.
 
 #### TECHNICAL IMPROVEMENTS
-- **INTEGRATED UPDATER**: Bot can now auto-update via the GUI menu when it detects changes on GitHub.
-- **ATOMIC CLEANUP**: `AUTO_FIX_ULTIMATE.bat` now automatically removes compilation junk.
+- **TOTAL v2.2.7 SYNC**: Unified version across all project files.
+- **AUTOMATIC BUILDER**: Added `build_exe.py` to generate compiled versions in seconds.
+
+---
+
+## 🚀 [2.2.6] - 2026-02-05 (ULTRA-GREEN STABILITY)
+- **BYPASS DE HIJACKING**: Eliminado conflicto con `python.exe` antiguo.
+- **BOTÓN VERDE**: Identificación visual de la versión fuente correcta.
+- **LIMPIEZA ATÓMICA**: Mejoras en la limpieza de archivos temporales.
 
 ---
 
