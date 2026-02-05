@@ -117,6 +117,9 @@ class App(ctk.CTk):
         self.title("WANNA CALL? v2.2.5 (AUTO-UPDATER + TURBO MINING)")
         self.geometry("1100x700")
         
+        # --- GUI LAYOUT ---
+        self.create_widgets()
+        
         # Performance & Stats tracking
         self.total_success = 0
         self.total_error = 0
@@ -163,7 +166,7 @@ class App(ctk.CTk):
             # Must run on main thread
             self.after(1000, lambda: self.updater.prompt_update())
 
-    def show_splash(self):
+    def create_widgets(self):
         # --- Sidebar (Midnight Blue) ---
         self.sidebar_frame = ctk.CTkScrollableFrame(self, width=280, corner_radius=0, fg_color="#0f0f15", label_text="") 
         self.sidebar_frame.grid(row=0, column=0, sticky="nsew")
