@@ -153,15 +153,15 @@ class OsintGUI(ctk.CTk):
         # TEST: Disable splash temporarily to see if main window renders alone
         # self.show_splash() 
         _boot_log("Splash skipped (test mode)")
-        self.version = "2.2.5" 
+        self.version = "2.2.5 [REPAIRED]" 
         _boot_log(f"Version: {self.version}")
 
         # Setup Auto-Updater (Silent)
         _boot_log("Starting AutoUpdater")
-        self.updater = AutoUpdater(self.version)
+        self.updater = AutoUpdater("2.2.5")
         self.updater.check_updates_silent(callback=self._on_update_found)
 
-        self.title("WANNA CALL? v2.2.5 (AUTO-UPDATER + TURBO MINING)")
+        self.title(f"WANNA CALL? {self.version} (STABILITY FIX)")
         self.geometry("1100x700")
         
         # Performance & Stats tracking
