@@ -263,10 +263,12 @@ class BrowserManager:
         options.add_argument("--accept-lang=es-ES,es")
         options.add_argument("--disable-blink-features=AutomationControlled")
         
-        # SLIM MODE Chrome (v2.2.23)
+        # SLIM & COOLING MODE Chrome (v2.2.24)
         options.add_argument("--disable-gpu")
+        options.add_argument("--disable-software-rasterizer")
+        options.add_argument("--disable-dev-shm-usage")
         options.add_argument("--blink-settings=imagesEnabled=false")
-        options.add_argument("--disable-dev-shm-usage") # Prevents crashes in low RAM
+        options.add_argument("--disable-background-networking")
         options.add_argument("--no-sandbox")
         
         

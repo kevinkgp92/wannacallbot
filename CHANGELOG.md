@@ -2,6 +2,20 @@
 
 ---
 
+## 🔥 [2.2.24] - 2026-02-05 (COOLING & PROXY QUALITY)
+
+### 🇪🇸 ESPAÑOL
+- **CPU COOLING**: Reducción drástica del uso de procesador (limitado a 20 hilos). ¡Mantenemos tu PC frío!
+- **GOLDEN PROXY CACHE**: El bot ahora recuerda los mejores proxys de España para inicios instantáneos.
+- **ENERGY SAVER**: Optimizada la carga del navegador para evitar lag en el sistema.
+
+### 🇺🇸 ENGLISH
+- **CPU COOLING**: Drastic reduction in processor usage (limited to 20 threads). Keep your PC cool!
+- **GOLDEN PROXY CACHE**: The bot now remembers the best Spanish proxies for instant startups.
+- **ENERGY SAVER**: Optimized browser loading to avoid system lag.
+
+---
+
 ## 🔥 [2.2.23] - 2026-02-05 (HYPER-EFFICIENCY & SLIM BROWSING)
 
 ### 🇪🇸 ESPAÑOL

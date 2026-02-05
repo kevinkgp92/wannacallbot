@@ -20,8 +20,8 @@ class ProxyScraper:
             "https://www.proxy-list.download/api/v1/get?type=http"
         ]
         self.proxies = []
-        self.geo_cache = {} # IP -> CountryCode
         self.last_scrape_time = 0
+        self.golden_cache_file = "core/golden_proxies.json"
         self._load_cache()
 
     def _load_cache(self):
@@ -41,6 +41,11 @@ class ProxyScraper:
             clean = list(set([p for p in self.proxies if p]))
             with open(CACHE_FILE, "w") as f:
                 json.dump(clean, f)
+            
+            # Save "Golden" (known good ES) proxies separately for faster reuse
+            if hasattr(self, 'golden_proxies') and self.golden_proxies:
+                with open(self.golden_cache_file, "w") as f:
+                    json.dump(list(self.golden_proxies)[:50], f)
         except: pass
 
     def _batch_filter_country(self, proxies, country_code, stop_signal=None):
@@ -110,7 +115,7 @@ class ProxyScraper:
                 except: pass
                 return None
 
-            with concurrent.futures.ThreadPoolExecutor(max_workers=20) as executor:
+            with concurrent.futures.ThreadPoolExecutor(max_workers=5) as executor: # Dropped from 20 to 5 for CPU
                 results = list(executor.map(check_single_candidate, sub_chunk))
                 matches.extend([r for r in results if r])
             
@@ -219,8 +224,8 @@ class ProxyScraper:
                 return []
 
             import concurrent.futures
-            # TURBO MODE: Check 100 sources in parallel for hyper-speed acquisition
-            with concurrent.futures.ThreadPoolExecutor(max_workers=100) as executor:
+            # COOLING MODE: Throttled to 20 workers to avoid 100% CPU spikes
+            with concurrent.futures.ThreadPoolExecutor(max_workers=20) as executor:
                 futures = [executor.submit(fetch_one, u) for u in urls]
                 for future in concurrent.futures.as_completed(futures):
                     if stop_signal and stop_signal():
