@@ -83,14 +83,8 @@ class ProxyScraper:
             "https://www.proxy-list.download/api/v1/get?type=http&country=ES",
             "https://www.proxy-list.download/api/v1/get?type=https&country=ES",
             "https://raw.githubusercontent.com/roosterkid/openproxylist/main/ES_RAW.txt",
-            "https://raw.githubusercontent.com/TheSpeedX/PROXY-List/master/http.txt",
-            "https://raw.githubusercontent.com/monosans/proxy-list/main/proxies/http.txt",
-            "https://raw.githubusercontent.com/Z4nzu/Free-Proxy-List/master/http.txt",
-            "https://raw.githubusercontent.com/RDX-Gamer/proxy-list/main/proxies.txt",
-            "https://raw.githubusercontent.com/jetkai/proxy-list/main/online-proxies/txt/proxies.txt",
-            "https://raw.githubusercontent.com/ErcinDedeoglu/proxies/main/proxies/http.txt",
             "https://www.proxyscan.io/api/proxy?country=es&format=txt",
-            "https://spys.me/proxy.txt"
+            "https://api.proxyscrape.com/v2/?request=displayproxies&protocol=http&timeout=10000&country=es"
         ]
         
         # TIER 2: MASSIVE HAYSTACK (Only used if Tier 1 fails)
@@ -232,7 +226,7 @@ class ProxyScraper:
                     "http://clients3.google.com/generate_204", 
                     proxies={"http": f"http://{proxy}", "https": f"http://{proxy}"}, 
                     headers={"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36"},
-                    timeout=8 
+                    timeout=12 
                 )
                 if r.status_code == 204 or r.status_code == 200:
                     return proxy
