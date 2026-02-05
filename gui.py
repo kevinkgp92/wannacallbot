@@ -159,7 +159,7 @@ class App(ctk.CTk):
             print(f"Warning: Logo not found at {logo_path}")
             
         # --- GUI LAYOUT ---
-        self.create_widgets()
+        self._build_main_ui()
         
     def _on_update_found(self, found, new_version):
         """Callback triggered when an update is found."""
@@ -167,7 +167,7 @@ class App(ctk.CTk):
             # Must run on main thread
             self.after(1000, lambda: self.updater.prompt_update())
 
-    def create_widgets(self):
+    def _build_main_ui(self):
         # --- Sidebar (Midnight Blue) ---
         self.sidebar_frame = ctk.CTkScrollableFrame(self, width=280, corner_radius=0, fg_color="#0f0f15", label_text="") 
         self.sidebar_frame.grid(row=0, column=0, sticky="nsew")
@@ -498,22 +498,17 @@ class App(ctk.CTk):
         try:
             # 1. Lazy Import Updater
             import core.updater
-            self.updater = core.updater.ServiceUpdater()
+            # FIXED: Naming mismatch from old version
+            self.updater = core.updater.AutoUpdater(self.version)
             
-            # 2. Get Version (Quick File Read)
-            local_ver = self.updater.get_local_version()
-            if local_ver:
-                self.version = local_ver
-                # Update title in main thread
-                self.after(0, lambda: self.title(f"Wanna Call? v{self.version} - OSINT & Automation"))
+            # 2. Get Version (Quick Check)
+            # The new AutoUpdater doesn't have local_ver check here, we already have self.version
+            # But we can check for updates silent
+            self.updater.check_updates_silent(callback=self._on_update_found)
             
-            # 3. Start Update Check (Network IO)
-            # Use Queue for thread safety if updater exists
-            self.update_queue = queue.Queue()
-            self.after(500, self._process_update_queue)
-            self.updater.check_for_updates(callback=lambda msg: self.update_queue.put(msg))
+            # self.updater_ready = True # Deprecated attribute
             
-            self.updater_ready = True
+            pass
             
         except Exception as e:
             print(f"⚠️ Nitro Loader Warning: {e}")
