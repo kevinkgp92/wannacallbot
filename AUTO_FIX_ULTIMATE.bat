@@ -1,5 +1,5 @@
 @echo off
-title WANNA CALL - REPARACION TOTAL v2.2.7
+title WANNA CALL - REPARACION TOTAL v2.2.8
 echo ===================================================
 echo    REPARACION TOTAL - ELIMINANDO VERSIONES VIEJAS
 echo ===================================================
@@ -35,7 +35,7 @@ echo [6/7] Verificando version...
 if exist "version.txt" type version.txt
 echo.
 
-echo [7/7] LANZANDO VERSION v2.2.7 - BOTON VERDE
+echo [7/7] LANZANDO VERSION v2.2.8 - BOTON VERDE
 echo.
 :: Usamos 'python' directamente porque 'py -3' no tiene las librerias instaladas
 python -u gui.py

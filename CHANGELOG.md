@@ -2,42 +2,34 @@
 
 ---
 
-## � [2.2.7] - 2026-02-05 (ULTRA-PRO RELEASE)
+## 🔥 [2.2.8] - 2026-02-05 (STABILITY & SYNC RELEASE)
 
 ### 🇪🇸 ESPAÑOL
-#### NOVEDADES VISUALES
-- **INTERFAZ DE ACTUALIZACIÓN**: Nueva ventana dedicada con barra de progreso y registro de cambios integrado. ¡Mucho más intuitivo y profesional!
-- **EJECUTABLE INDEPENDIENTE**: Ahora el bot se distribuye como un `.exe` real con todos los recursos (iconos, logos) incluidos.
-- **FLUJO SIN COSTURAS**: Se acabó el usar el `.bat` manualmente. El bot detecta, descarga, aplica y se reinicia solo.
+#### REPARACIÓN DE ESTABILIDAD
+- **THREAD-SAFE UPDATER**: Corregido el error de "main thread" mediante una cola de procesos (Queue). El actualizador ahora es 100% estable.
+- **SINCRO TOTAL v2.2.8**: Versión unificada en todos los archivos, etiquetas y GitHub para evitar confusiones.
+- **OSINT RECOVERY**: Restaurada la compatibilidad con el modo OSINT que fallaba en versiones anteriores.
 
-#### MEJORAS TÉCNICAS
-- **SINCRO TOTAL v2.2.7**: Versión unificada en todos los archivos del proyecto.
-- **CONSTRUCTOR AUTOMÁTICO**: Añadido `build_exe.py` para generar versiones compiladas en segundos.
+#### NOVEDADES v2.2.7 (Incluidas)
+- **INTERFAZ VISUAL**: Nueva ventana de actualización con barra de progreso.
+- **EXE BUILDER**: Generación de binarios profesionales simplificada.
 
 ---
 
 ### 🇺🇸 ENGLISH
-#### VISUAL UPDATES
-- **UPDATE INTERFACE**: New dedicated window with progress bar and integrated changelog. Much more intuitive and professional!
-- **STANDALONE EXECUTABLE**: Bot is now distributed as a real `.exe` with all assets (icons, logos) included.
-- **SEAMLESS FLOW**: No more manual `.bat` usage. The bot detects, downloads, applies, and restarts itself.
+#### STABILITY FIXES
+- **THREAD-SAFE UPDATER**: Fixed "main thread" error using a Queue system. The updater is now 100% stable.
+- **TOTAL v2.2.8 SYNC**: Unified version across all files, labels, and GitHub to avoid confusion.
+- **OSINT RECOVERY**: Restored compatibility with OSINT mode that failed in previous versions.
 
-#### TECHNICAL IMPROVEMENTS
-- **TOTAL v2.2.7 SYNC**: Unified version across all project files.
-- **AUTOMATIC BUILDER**: Added `build_exe.py` to generate compiled versions in seconds.
+#### NEWS from v2.2.7 (Included)
+- **VISUAL INTERFACE**: New update window with progress bar.
+- **EXE BUILDER**: Simplified professional binary generation.
 
 ---
 
 ## 🚀 [2.2.6] - 2026-02-05 (ULTRA-GREEN STABILITY)
 - **BYPASS DE HIJACKING**: Eliminado conflicto con `python.exe` antiguo.
 - **BOTÓN VERDE**: Identificación visual de la versión fuente correcta.
-- **LIMPIEZA ATÓMICA**: Mejoras en la limpieza de archivos temporales.
-
----
-
-## [2.2.5] - 2026-02-05 (STABILITY REFACTOR)
-- Added early-boot logging.
-- Fixed TextRedirector crashes.
-- Increased scanning speed (60 threads).
 
 ---
