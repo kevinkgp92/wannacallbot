@@ -122,10 +122,11 @@ class ProxyScraper:
             
             return matches
 
-        # TURBO GEO-FILTER: Increased from 40 to 50 workers for v2.2.19
-        with concurrent.futures.ThreadPoolExecutor(max_workers=50) as executor:
+        # TURBO GEO-FILTER: Reduced to 5 workers for v2.2.28 (STABILITY FIRST)
+        with concurrent.futures.ThreadPoolExecutor(max_workers=5) as executor:
             futures = [executor.submit(process_chunk, chunk) for chunk in chunks]
             for future in concurrent.futures.as_completed(futures):
+                time.sleep(0.2) # Give some air to the OS
                 found = future.result()
                 if found: valid_proxies.extend(found)
 
@@ -233,10 +234,11 @@ class ProxyScraper:
                 return []
 
             import concurrent.futures
-            # COOLING MODE: Throttled to 20 workers to avoid 100% CPU spikes
-            with concurrent.futures.ThreadPoolExecutor(max_workers=20) as executor:
+            # COOLING MODE: Throttled to 5 workers for v2.2.28 (Arctic Stability)
+            with concurrent.futures.ThreadPoolExecutor(max_workers=5) as executor:
                 futures = [executor.submit(fetch_one, u) for u in urls]
                 for future in concurrent.futures.as_completed(futures):
+                    time.sleep(0.1) # Yield to system
                     if stop_signal and stop_signal():
                         executor.shutdown(wait=False, cancel_futures=True)
                         return set()

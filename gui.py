@@ -172,7 +172,7 @@ class OsintGUI(ctk.CTk):
         # TEST: Disable splash temporarily to see if main window renders alone
         # self.show_splash() 
         _boot_log("Splash skipped (test mode)")
-        self.version = "2.2.27" 
+        self.version = "2.2.28" 
         _boot_log(f"Version: {self.version}")
 
         # Setup Auto-Updater (Silent)
@@ -891,7 +891,8 @@ class OsintGUI(ctk.CTk):
         finally:
             # Schedule next poll
             if self.running or True: # Keep polling
-                self.after(500, self._process_update_queue)
+                time.sleep(1) # v2.2.28: Yield to system during GUI polling
+                self.after(1000, self._process_update_queue) # Increased from 500 to 1000
 
     def _handle_update_message(self, message):
         """Actual logic to update GUI (formerly _on_update_check_done)."""
