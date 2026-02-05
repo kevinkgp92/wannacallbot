@@ -1,34 +1,47 @@
 @echo off
-title WANNA CALL? - AUTO-REPAIR v2.2.5 [NUCLEAR]
+title WANNA CALL? - REPARACION TOTAL v2.2.5
 echo ===================================================
-echo    WANNA CALL? - REPARACION Y ACTUALIZACION
+echo    REPARACION TOTAL: ELIMINANDO VERSIONES VIEJAS
 echo ===================================================
 echo.
-echo [1/5] Cerrando procesos antiguos...
+echo [1/6] Cerrando procesos bloqueados...
 taskkill /f /im WannaCall* /t 2>nul
 taskkill /f /im PerubianBot* /t 2>nul
 taskkill /f /im python.exe /t 2>nul
 
 echo.
-echo [2/5] Eliminando versiones compiladas antiguas para evitar confusion...
-ren "WannaCall_Update.exe" "OLD_WannaCall.exe.bak" 2>nul
-ren "dist\PerubianBot_Ultimate.exe" "OLD_Perubian.exe.bak" 2>nul
+echo [2/6] Eliminando archivos antiguos y sospechosos...
+:: Borramos el python.exe local que parece estar saboteando el arranque
+del /f /q "python.exe" 2>nul
+del /f /q "WannaCall_Update.exe" 2>nul
+del /f /q "WannaCall_Pro.exe" 2>nul
+if exist dist rmdir /s /q dist 2>nul
+if exist build rmdir /s /q build 2>nul
 
 echo.
-echo [3/5] Forzando descarga de la ULTIMA VERSION (v2.2.5)...
+echo [3/6] Forzando descarga de la ULTIMA version de GitHub...
 git fetch --all
 git reset --hard origin/main
 git pull origin main
 
 echo.
-echo [4/5] Limpiando residuos...
+echo [4/6] Limpiando cache de Python...
 rmdir /s /q __pycache__ 2>nul
 rmdir /s /q core\__pycache__ 2>nul
 rmdir /s /q services\__pycache__ 2>nul
-del /f /q DEBUG_BOOT.txt 2>nul
 
 echo.
-echo [5/5] INICIANDO VERSION REPARADA (v2.2.5)...
+echo [5/6] Verificando version descargada...
+type version.txt
+
 echo.
-python gui.py
+echo [6/6] LANZANDO VERSION REPARADA (v2.2.5)...
+echo Si Python no se encuentra, por favor instala Python 3.12.
+python -u gui.py
+if %errorlevel% neq 0 (
+    echo.
+    echo ❌ ERROR: Parece que 'python' no esta instalado correctamente.
+    echo Intentando con 'py -3'...
+    py -3 gui.py
+)
 pause
