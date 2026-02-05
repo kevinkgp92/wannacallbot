@@ -212,7 +212,14 @@ class BrowserManager:
             import undetected_chromedriver as uc
             opt = uc.ChromeOptions()
             if self.headless: opt.add_argument("--headless")
-            if proxy_str: opt.add_argument(f'--proxy-server={proxy_str}')
+            if proxy_str:
+                proto = "http"
+                actual_proxy = proxy_str
+                if "|" in proxy_str:
+                    proto, actual_proxy = proxy_str.split("|", 1)
+                
+                proxy_url = f"{proto}://{actual_proxy}"
+                opt.add_argument(f'--proxy-server={proxy_url}')
             # OSINT Force Spanish
             opt.add_argument("--lang=es-ES")
             opt.add_argument("--accept-lang=es-ES,es")
@@ -229,7 +236,15 @@ class BrowserManager:
             print("  👻 Modo Fantasma (Headless) activo en Chrome.")
             options.add_argument("--headless")
         
-        if proxy_str: options.add_argument(f'--proxy-server={proxy_str}')
+        if proxy_str:
+            proto = "http"
+            actual_proxy = proxy_str
+            if "|" in proxy_str:
+                proto, actual_proxy = proxy_str.split("|", 1)
+            
+            # Chrome uses schemes like socks5:// or http:// for the proxy server flag
+            proxy_url = f"{proto}://{actual_proxy}"
+            options.add_argument(f'--proxy-server={proxy_url}')
         
         # Simple native stealth & Spanish Locale
         ua = self.user_agent if self.user_agent else "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36"

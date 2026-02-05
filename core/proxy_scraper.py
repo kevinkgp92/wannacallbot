@@ -21,6 +21,7 @@ class ProxyScraper:
         ]
         self.proxies = []
         self.geo_cache = {} # IP -> CountryCode
+        self.last_scrape_time = 0
         self._load_cache()
 
     def _load_cache(self):
@@ -193,15 +194,24 @@ class ProxyScraper:
             return collected
 
         # =========================================================================
-        # PHASE 0: CACHE CHECK (Instant Startup)
+        # PHASE 0: PERSISTENCE & CACHE CHECK (Instant Startup)
         # =========================================================================
+        current_time = time.time()
+        
+        # PERSISTENCE: If we scraped less than 5 minutes ago and we still have proxies, use them.
+        # This prevents infinite loops if a single proxy rotation is requested quickly.
+        if self.proxies and (current_time - self.last_scrape_time) < 300:
+             print(f"🚀 FASE 0: Usando cola persistente ({len(self.proxies)} proxies restantes).")
+             return self.proxies
+
         if self.proxies:
             print(f"🚀 FASE 0: Verificando proxies en caché...")
             cached_live = self._check_proxies_live(self.proxies, stop_signal)
             if cached_live:
                 self.proxies = cached_live
                 print(f"  ✅ FASE 0 ÉXITO: {len(self.proxies)} proxies de caché operativos.")
-                if len(self.proxies) >= 2: # At least 2 for rotation
+                if len(self.proxies) >= 3: # Goal: 3
+                    self.last_scrape_time = current_time
                     return self.proxies
             else:
                 self.proxies = [] # Clear stale cache
@@ -239,12 +249,13 @@ class ProxyScraper:
                     if live_matches:
                         self.proxies.extend(live_matches)
 
-            if len(self.proxies) >= 1:
+            if len(self.proxies) >= 3:
                  print(f"✅ LISTA FINAL: {len(self.proxies)} proxies operativos (FASE 1/1.5).")
+                 self.last_scrape_time = time.time()
                  return self.proxies
             else:
-                 print("⚠️ Fase 1 insuficiente. Activando FASE 2 (Búsqueda Masiva Global)...")
-                 # RELAX TIMEOUTS FOR PHASE 2 (Since we are desperate)
+                 print(f"⚠️ Fase 1 insuficiente ({len(self.proxies)}/3). Activando FASE 2 para completar...")
+                 # DO NOT RETURN, CONTINUE TO PHASE 2 to collect more.
 
         # =========================================================================
         # PHASE 2: TIER 2 (MASSIVE) - The Haynes Stack
@@ -298,6 +309,7 @@ class ProxyScraper:
                 break
 
         print(f"✅ LISTA FINAL: {len(self.proxies)} proxies operativos.")
+        self.last_scrape_time = time.time()
         self._save_cache()
         return self.proxies
 

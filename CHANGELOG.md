@@ -2,6 +2,20 @@
 
 ---
 
+## 🔥 [2.2.16] - 2026-02-05 (INFINITE LOOP FIX & PERSISTENCE)
+
+### 🇪🇸 ESPAÑOL
+- **LOOP BREAKER**: Corregido el bucle infinito de scraping al implementar persistencia en la cola de proxys. No se re-escanea si ya hay candidatos válidos.
+- **AGRESSIVE HARVESTING**: El bot ahora asegura un pool de al menos 3-5 proxys antes de iniciar, combinando fuentes rápidas y minería masiva.
+- **CHROME SOCKS Support**: Ahora el motor de Chrome también soporta proxys SOCKS4/5.
+
+### 🇺🇸 ENGLISH
+- **LOOP BREAKER**: Fixed infinite scraping loop by implementing proxy queue persistence. No re-scans if valid candidates are present.
+- **AGRESSIVE HARVESTING**: Bot now ensures a pool of at least 3-5 proxies before starting, combining fast sources and massive mining.
+- **CHROME SOCKS Support**: Chrome engine now supports SOCKS4/5 proxies.
+
+---
+
 ## 🔥 [2.2.15] - 2026-02-05 (BLACK OPS NETWORK OVERHAUL)
 
 ### 🇪🇸 ESPAÑOL
