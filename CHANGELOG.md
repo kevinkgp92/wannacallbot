@@ -1,15 +1,25 @@
 # CHANGELOG - WANNA CALL? ♈
 
-## [2.2.5] - 2026-02-05 (AUTO-UPDATER + TURBO)
+## [2.2.5] - 2026-02-05 (AUTO-UPDATER + ULTRA-STABILITY)
 ### ESPAÑOL 🇪🇸
-- **AUTO-UPDATER**: ¡Adiós a los .bat! El bot ahora buscará actualizaciones automáticamente al iniciarse. Si hay una nueva versión, te avisará con un popup y te llevará a la descarga.
-- **TURBO MINING (x3 VELOCIDAD)**: Aumentados los hilos de escaneo de 20 a **60**. La "Fase 2" ahora debería volar, escaneando miles de proxies por segundo.
-- **VERSIÓN REMOTA**: Implementado sistema de sincronización con GitHub (`version.txt`).
+- **AUTO-UPDATER**: ¡Adiós a los .bat! El bot ahora buscará actualizaciones automáticamente al iniciarse.
+- **ULTRA-ESTABILIDAD (Hotfix)**:
+    - Corregido error de "Pantalla Blanca" al arrancar.
+    - Solucionada colisión de métodos en la interfaz.
+    - Reparado crash de `TextRedirector` (logs con colores ahora son estables).
+    - Añadida visibilidad forzada (safety deiconify) para evitar que el bot se oculte por error.
+- **TURBO MINING (x3 VELOCIDAD)**: Aumentados los hilos de escaneo de 20 a **60**.
+- **VERSIÓN REMOTA**: Sincronización oficial con GitHub.
 
 ### ENGLISH 🇺🇸
-- **AUTO-UPDATER**: Goodbye .bat! Bot now auto-checks updates on startup. Popups if new version found.
-- **TURBO MINING (x3 SPEED)**: Increased scan threads from 20 to **60**. Phase 2 should now fly.
-- **REMOTE VERSION**: Implemented GitHub sync system.
+- **AUTO-UPDATER**: Goodbye .bat! Bot now auto-checks updates on startup.
+- **ULTRA-STABILITY (Hotfix)**:
+    - Fixed "Blank Window" issue on startup.
+    - Resolved method name collision in UI.
+    - Fixed `TextRedirector` crash (colorized logs are now stable).
+    - Added forced visibility (safety deiconify) to prevent hidden startup bugs.
+- **TURBO MINING (x3 SPEED)**: Increased scan threads to **60**.
+- **REMOTE VERSION**: Official GitHub sync system.
 
 ## [2.2.4] - 2026-02-05 (FAST START)
 ### ESPAÑOL 🇪🇸
