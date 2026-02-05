@@ -2,6 +2,20 @@
 
 ---
 
+## 🔥 [2.2.26] - 2026-02-05 (ECO-RESCUE & MULTITASKING)
+
+### 🇪🇸 ESPAÑOL
+- **MODO ECO (YouTube Friendly)**: El bot ahora corre con prioridad "IDLE". Cederá toda la CPU a Chrome o YouTube si los usas al mismo tiempo. ¡Cero bloqueos!
+- **BUCLES ECOLÓGICOS**: Introducidos descansos obligatorios de 6s entre servicios para enfriar la CPU.
+- **INTELLIGENCE RECOWERY**: Mejorada la detección en motores de búsqueda secundaria.
+
+### 🇺🇸 ENGLISH
+- **ECO MODE (YouTube Friendly)**: The bot now runs with "IDLE" priority. It will give all CPU to Chrome or YouTube if you use them at the same time. Zero freezes!
+- **ECO LOOPS**: Mandatory 6s breaks between services to cool the CPU.
+- **INTELLIGENCE RECOVERY**: Improved detection in secondary search engines.
+
+---
+
 ## 🔥 [2.2.25] - 2026-02-05 (SAUL'S PREMIUM - CRITICAL BUGFIX)
 
 ### 🇪🇸 ESPAÑOL

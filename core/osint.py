@@ -1386,7 +1386,8 @@ class OSINTManager:
                                 try: browser.find_element(By.XPATH, p['btn_xpath']).click()
                                 except: pass
                             
-                            time.sleep(4)
+                                    
+                            time.sleep(6) # Eco-Sleep v2.2.26 (Increase survival + Cooling)
                             
                             page_lower = browser.page_source.lower()
                             if "success_selector" in p:
@@ -1438,8 +1439,10 @@ class OSINTManager:
         # 14. PeepLookup (Direct Personal Name)
         try:
             print(f"[OSINT] Consultando PeepLookup...")
+            from core.utils import set_low_priority
+            set_low_priority() # Ensure we are cool
             _safe_get(f"https://peeplookup.com/reverse-phone-lookup?phone={clean_phone}")
-            time.sleep(4)
+            time.sleep(6) # Increased for v2.2.26
             try:
                 # Name is usually in a h2 or specific class
                 result = browser.find_element(By.CSS_SELECTOR, ".result-name, h2")

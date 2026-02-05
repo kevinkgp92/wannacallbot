@@ -52,3 +52,15 @@ del "%~f0"
     except Exception as e:
         print(f"ERROR: Failed to trigger update: {e}")
         return False
+
+def set_low_priority():
+    """Sets the current process priority to IDLE (minimum) to prevent system lag."""
+    if os.name == 'nt':
+        try:
+            import win32api, win32process, win32con
+            pid = win32api.GetCurrentProcessId()
+            handle = win32api.OpenProcess(win32con.PROCESS_ALL_ACCESS, True, pid)
+            win32process.SetPriorityClass(handle, win32process.IDLE_PRIORITY_CLASS)
+            print("🧊 ECO-MODE: Prioridad de proceso establecida en IDLE (Mínima).")
+        except Exception as e:
+            print(f"⚠️ No se pudo establecer la prioridad baja: {e}")
