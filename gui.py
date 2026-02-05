@@ -102,6 +102,7 @@ class App(ctk.CTk):
         self.updater_ready = False
         self.updater = None
         self.initialization_complete = False
+        self.logo_image = None
         
         # 1. SHOW SPLASH SCREEN (Professional Loading)
         self.show_splash()
@@ -116,9 +117,6 @@ class App(ctk.CTk):
 
         self.title("WANNA CALL? v2.2.5 (AUTO-UPDATER + TURBO MINING)")
         self.geometry("1100x700")
-        
-        # --- GUI LAYOUT ---
-        self.create_widgets()
         
         # Performance & Stats tracking
         self.total_success = 0
@@ -159,6 +157,9 @@ class App(ctk.CTk):
                                            size=(180, 180))
         else:
             print(f"Warning: Logo not found at {logo_path}")
+            
+        # --- GUI LAYOUT ---
+        self.create_widgets()
         
     def _on_update_found(self, found, new_version):
         """Callback triggered when an update is found."""
