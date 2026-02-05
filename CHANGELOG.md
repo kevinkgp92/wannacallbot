@@ -2,6 +2,24 @@
 
 ---
 
+## 🔥 [2.2.10] - 2026-02-05 (PROXY ENGINE UPGRADE)
+
+### 🇪🇸 ESPAÑOL
+#### MEJORAS EN EL MOTOR DE PROXYS
+- **CACHÉ PERSISTENTE**: Implementado `core/proxies_cache.json` para recordar proxys funcionales entre sesiones.
+- **SOPORTE SOCKS EXTREME**: Añadido soporte nativo para proxys SOCKS4 y SOCKS5, optimizando la tasa de éxito en España.
+- **ALIVE CHECK 2.0**: Nueva lógica de verificación multi-objetivo (Google + Cloudflare) para máxima fiabilidad.
+- **AUTO-BLACKLIST**: El sistema ahora elimina dinámicamente los proxys caídos de la caché.
+
+### 🇺🇸 ENGLISH
+#### PROXY ENGINE UPGRADE
+- **PERSISTENT CACHE**: Implemented `core/proxies_cache.json` to remember working proxies across sessions.
+- **EXTREME SOCKS SUPPORT**: Added native support for SOCKS4 and SOCKS5 proxies, optimizing success rate in Spain.
+- **ALIVE CHECK 2.0**: New multi-target verification logic (Google + Cloudflare) for maximum reliability.
+- **AUTO-BLACKLIST**: The system now dynamically removes dead proxies from the cache.
+
+---
+
 ## 🔥 [2.2.9] - 2026-02-05 (CRITICAL PROXY FIX)
 
 ### 🇪🇸 ESPAÑOL

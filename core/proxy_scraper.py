@@ -4,6 +4,9 @@ import random
 import time
 import json
 import concurrent.futures
+import os
+
+CACHE_FILE = "core/proxies_cache.json"
 
 class ProxyScraper:
     def __init__(self):
@@ -17,6 +20,26 @@ class ProxyScraper:
             "https://www.proxy-list.download/api/v1/get?type=http"
         ]
         self.proxies = []
+        self._load_cache()
+
+    def _load_cache(self):
+        """Loads verified proxies from local cache."""
+        if os.path.exists(CACHE_FILE):
+            try:
+                with open(CACHE_FILE, "r") as f:
+                    self.proxies = json.load(f)
+                if self.proxies:
+                    print(f"  📦 Caché cargada: {len(self.proxies)} proxies guardados.")
+            except: self.proxies = []
+
+    def _save_cache(self):
+        """Saves current verified proxies to local cache."""
+        try:
+            # Keep only unique and non-empty
+            clean = list(set([p for p in self.proxies if p]))
+            with open(CACHE_FILE, "w") as f:
+                json.dump(clean, f)
+        except: pass
 
     def _batch_filter_country(self, proxies, country_code, stop_signal=None):
         """Filters a chunk of proxies by country using ip-api batch."""
@@ -77,9 +100,9 @@ class ProxyScraper:
         
         # TIER 1: HIGH QUALITY / TARGETED (We want to check these FIRST)
         es_sources = [
-            "https://api.proxyscrape.com/v2/?request=displayproxies&protocol=http&timeout=10000&country=es&ssl=all&anonymity=all",
-            "https://api.proxyscrape.com/v2/?request=displayproxies&protocol=socks4&timeout=10000&country=es&ssl=all&anonymity=all",
-            "https://api.proxyscrape.com/v2/?request=displayproxies&protocol=socks5&timeout=10000&country=es&ssl=all&anonymity=all",
+            "https://api.proxyscrape.com/v4/free-proxy-list/get?request=displayproxies&protocol=http&country=es",
+            "https://api.proxyscrape.com/v4/free-proxy-list/get?request=displayproxies&protocol=socks4&country=es",
+            "https://api.proxyscrape.com/v4/free-proxy-list/get?request=displayproxies&protocol=socks5&country=es",
             "https://www.proxy-list.download/api/v1/get?type=http&country=ES",
             "https://www.proxy-list.download/api/v1/get?type=https&country=ES",
             "https://raw.githubusercontent.com/roosterkid/openproxylist/main/ES_RAW.txt",
@@ -129,7 +152,21 @@ class ProxyScraper:
                     if found: collected.update(found)
             return collected
 
-        self.proxies = [] # Reset
+        # =========================================================================
+        # PHASE 0: CACHE CHECK (Instant Startup)
+        # =========================================================================
+        if self.proxies:
+            print(f"🚀 FASE 0: Verificando proxies en caché...")
+            cached_live = self._check_proxies_live(self.proxies, stop_signal)
+            if cached_live:
+                self.proxies = cached_live
+                print(f"  ✅ FASE 0 ÉXITO: {len(self.proxies)} proxies de caché operativos.")
+                if len(self.proxies) >= 2: # At least 2 for rotation
+                    return self.proxies
+            else:
+                self.proxies = [] # Clear stale cache
+        
+        self.proxies = [] # Reset for fresh scrape
 
         # =========================================================================
         # PHASE 1: TIER 1 (TARGETED) - Fast & High Quality
@@ -210,6 +247,7 @@ class ProxyScraper:
                 break
 
         print(f"✅ LISTA FINAL: {len(self.proxies)} proxies operativos.")
+        self._save_cache()
         return self.proxies
 
     def _check_proxies_live(self, proxies, stop_signal=None):
@@ -218,23 +256,23 @@ class ProxyScraper:
         alive = []
         
         def is_alive(proxy):
-            if stop_signal and stop_signal(): return False
+            if stop_signal and stop_signal(): return None
             try:
-                # Fast check using Google Gen_204
-                # v2.2.5 DEBUG: Print errors
-                r = requests.get(
-                    "http://clients3.google.com/generate_204", 
-                    proxies={"http": f"http://{proxy}", "https": f"http://{proxy}"}, 
-                    headers={"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36"},
-                    timeout=12 
-                )
-                if r.status_code == 204 or r.status_code == 200:
+                # Optimized for speed and reliability
+                headers = {"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36"}
+                proxy_dict = {"http": f"http://{proxy}", "https": f"http://{proxy}"}
+                
+                # Check 1: Google Gen_204 (Fastest)
+                r = requests.get("http://clients3.google.com/generate_204", 
+                                 proxies=proxy_dict, headers=headers, timeout=10)
+                if r.status_code == 204:
                     return proxy
-                # else:
-                #     print(f"X {proxy}: Status {r.status_code}")
-            except Exception as e: 
-                # print(f"X {proxy}: {e}") # Uncomment for extreme debug
-                pass
+                
+                # Check 2: Fallback Cloudflare (Reliable)
+                r = requests.get("https://1.1.1.1", proxies=proxy_dict, headers=headers, timeout=8)
+                if r.status_code == 200:
+                    return proxy
+            except: pass
             return None
 
         import concurrent.futures
@@ -255,6 +293,7 @@ class ProxyScraper:
         if proxy in self.proxies:
             print(f"  🚫 Blacklisting Proxy: {proxy}")
             self.proxies.remove(proxy)
+            self._save_cache() # Persist the removal
 
     def get_random_proxy(self):
         if not self.proxies:
