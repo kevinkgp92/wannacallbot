@@ -153,15 +153,15 @@ class OsintGUI(ctk.CTk):
         # TEST: Disable splash temporarily to see if main window renders alone
         # self.show_splash() 
         _boot_log("Splash skipped (test mode)")
-        self.version = "2.2.5 [REPAIRED]" 
+        self.version = "2.2.6 [ULTRA-GREEN]" 
         _boot_log(f"Version: {self.version}")
 
         # Setup Auto-Updater (Silent)
         _boot_log("Starting AutoUpdater")
-        self.updater = AutoUpdater("2.2.5")
+        self.updater = AutoUpdater("2.2.6")
         self.updater.check_updates_silent(callback=self._on_update_found)
 
-        self.title(f"WANNA CALL? {self.version} (STABILITY FIX)")
+        self.title(f"!!! ESTA ES LA VERSION 2.2.6 (BOTON VERDE) !!!")
         self.geometry("1100x700")
         
         # Performance & Stats tracking
@@ -472,10 +472,10 @@ class OsintGUI(ctk.CTk):
         self.action_frame = ctk.CTkFrame(self.main_frame, fg_color="transparent")
         self.action_frame.grid(row=1, column=0, padx=30, pady=(0, 20), sticky="ew")
         
-        self.btn_start = ctk.CTkButton(self.action_frame, text="INICIAR ATAQUE", command=self.start_process, 
-                                       fg_color="#ff0055", hover_color="#d90048", height=60, corner_radius=15,
+        self.btn_start = ctk.CTkButton(self.action_frame, text="!!! INICIAR v2.2.6 !!!", command=self.start_process, 
+                                       fg_color="#2ecc71", hover_color="#27ae60", height=60, corner_radius=15,
                                        font=ctk.CTkFont(family="Roboto", size=20, weight="bold"),
-                                       border_width=2, border_color="#ff0055")
+                                       border_width=2, border_color="#2ecc71")
         self.btn_start.pack(side="left", fill="x", expand=True, padx=(0, 15))
         
         self.btn_stop = ctk.CTkButton(self.action_frame, text="DETENER", command=self.stop_process, 
