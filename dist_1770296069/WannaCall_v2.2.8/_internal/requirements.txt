@@ -1,0 +1,13 @@
+customtkinter
+pyinstaller
+pillow
+packaging
+pywin32
+selenium
+webdriver-manager
+colorama
+requests
+phonenumbers
+beautifulsoup4
+selenium-stealth
+undetected-chromedriver

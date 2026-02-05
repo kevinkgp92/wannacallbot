@@ -1,19 +1,44 @@
 import os
 import subprocess
 import shutil
+import time
 import sys
+
+def kill_process_by_name(name):
+    try:
+        if sys.platform == "win32":
+            subprocess.run(["taskkill", "/F", "/IM", name, "/T"], capture_output=True)
+    except:
+        pass
+
+def clean_folder(folder):
+    if not os.path.exists(folder):
+        return folder
+    print(f"   - Intentando limpiar {folder}...")
+    try:
+        shutil.rmtree(folder)
+        print(f"   ✅ {folder} eliminado.")
+        return folder
+    except Exception:
+        print(f"   [!] {folder} esta bloqueado. Usando carpeta alternativa...")
+        new_folder = f"{folder}_{int(time.time())}"
+        return new_folder
 
 def build():
     print("===================================================")
     print("    WANNA CALL? - EXE BUILDER (PyInstaller)")
     print("===================================================")
-    print("\n[1/3] Limpiando carpetas de construcción...")
     
-    if os.path.exists("dist"): shutil.rmtree("dist")
-    if os.path.exists("build"): shutil.rmtree("build")
+    print("\n[0/3] Matando procesos activos...")
+    kill_process_by_name("WannaCall*")
+    kill_process_by_name("python.exe")
+    kill_process_by_name("py.exe")
+    
+    print("\n[1/3] Preparando carpetas...")
+    dist_folder = clean_folder("dist")
+    build_folder = clean_folder("build")
 
     # Define files to include
-    # Format: "source;destination" (Windows)
     to_include = [
         "carnerosbot_logo.png;.",
         "logo_v3.png;.",
@@ -26,20 +51,23 @@ def build():
 
     add_data_flags = []
     for item in to_include:
-        if os.path.exists(item.split(';')[0]):
+        src = item.split(';')[0]
+        if os.path.exists(src):
             add_data_flags.extend(["--add-data", item])
 
     icon_file = "logo_v3.ico" if os.path.exists("logo_v3.ico") else "icon.ico"
 
-    print("\n[2/3] Iniciando PyInstaller (Esto puede tardar unos minutos)...")
+    print("\n[2/3] Iniciando PyInstaller (Esto puede tardar)...")
     
     cmd = [
-        "pyinstaller",
+        sys.executable, "-m", "PyInstaller",
         "--noconfirm",
-        "--onedir", # Using onedir for faster startup, onefile is slow for large apps
+        "--onedir",
         "--windowed",
         "--icon", icon_file,
-        "--name", "WannaCall_v2.2.7",
+        "--name", f"WannaCall_v2.2.8",
+        "--distpath", dist_folder,
+        "--workpath", build_folder,
         "--clean"
     ]
     
@@ -47,13 +75,26 @@ def build():
     cmd.append("gui.py")
 
     try:
-        subprocess.run(cmd, check=True)
-        print("\n[3/3] ¡CONSTRUCCIÓN COMPLETADA!")
-        print(f"\n✅ Tu ejecutable está listo en: {os.path.abspath('dist/WannaCall_v2.2.7/WannaCall_v2.2.7.exe')}")
-        print("\nNOTA: Se ha creado en modo 'Carpeta' para que abra AL INSTANTE.")
-        print("Si quieres pasarlo a alguien, comprime la carpeta 'WannaCall_v2.2.7' en un .zip")
+        print(f"Comando: {' '.join(cmd)}")
+        result = subprocess.run(cmd, capture_output=True, text=True, encoding='utf-8', errors='replace')
+        
+        if result.returncode == 0:
+            print("\n[3/3] EXITO: CONSTRUCCION COMPLETADA")
+            exe_path = os.path.abspath(os.path.join(dist_folder, "WannaCall_v2.2.8", "WannaCall_v2.2.8.exe"))
+            print(f"\nUbicacion: {exe_path}")
+            
+            # Copy to root
+            try:
+                shutil.copy2(exe_path, os.path.join(os.getcwd(), "WannaCall_v2.2.8.exe"))
+                print(f"✅ Copiado a la raiz: {os.path.join(os.getcwd(), 'WannaCall_v2.2.8.exe')}")
+            except Exception as e:
+                print(f"⚠️ No se pudo copiar a la raiz: {e}")
+                
+        else:
+            print(f"\nERROR: PyInstaller fallo con codigo {result.returncode}")
+            print(result.stderr[-500:])
     except Exception as e:
-        print(f"\n❌ ERROR DURANTE LA CONSTRUCCIÓN: {e}")
+        print(f"\nERROR DURANTE LA CONSTRUCCION: {e}")
 
 if __name__ == "__main__":
     build()

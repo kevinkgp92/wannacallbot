@@ -1,0 +1,151 @@
+[13:02:14] --- COLD START ---
+[13:02:15] Base path resolved
+[13:02:15] Importing customtkinter...
+[13:05:35] --- COLD START ---
+[13:05:35] Running from SOURCE CODE (.py)
+[13:05:35] Base path resolved
+[13:05:35] Importing customtkinter...
+[13:08:39] --- COLD START ---
+[13:08:39] Running from SOURCE CODE (.py)
+[13:08:39] Base path resolved
+[13:08:39] Importing customtkinter...
+[13:10:32] --- COLD START ---
+[13:10:32] Running from SOURCE CODE (.py)
+[13:10:32] Base path resolved
+[13:10:32] Importing customtkinter...
+[13:15:12] --- COLD START ---
+[13:19:41] --- COLD START ---
+[13:19:41] Running from SOURCE CODE (.py)
+[13:19:41] Base path resolved
+[13:19:41] Importing customtkinter...
+[13:23:47] --- COLD START ---
+[13:27:42] --- COLD START ---
+[13:27:42] Running from SOURCE CODE (.py)
+[13:27:42] Base path resolved
+[13:27:42] Importing customtkinter...
+[13:27:43] customtkinter imported
+[13:27:43] Importing standard libs...
+[13:27:43] Standard libs imported
+[13:27:43] Importing core modules...
+[13:27:43] AutoUpdater imported
+[13:27:43] proxy_scraper imported
+[13:27:43] core.utils imported
+[13:27:43] Configuring CTK...
+[13:27:43] CTK configured
+[13:27:43] OsintGUI.__init__ start
+[13:27:43] Splash skipped (test mode)
+[13:27:43] Version: 2.2.6
+[13:27:43] Starting AutoUpdater
+[13:27:43] Starting _build_main_ui
+[13:27:43] Building Sidebar...
+[13:27:44] Populating services...
+[13:27:46] Fail Populate Services: cannot import name 'ServiceUpdater' from 'core.updater' (C:\Users\kevin\Downloads\perubianbot\core\updater.py)
+[13:27:46] Building Main Area...
+[13:27:46] BOOT COMPLETE: GUI is ready.
+[13:27:46] UI build finished successfully
+[13:27:48] Hiding splash and deiconifying main window
+[13:27:48] Main window state: normal
+[13:30:51] --- COLD START ---
+[13:30:51] Running from SOURCE CODE (.py)
+[13:30:51] Base path resolved
+[13:30:51] Importing customtkinter...
+[13:30:51] customtkinter imported
+[13:30:51] Importing standard libs...
+[13:30:51] Standard libs imported
+[13:30:51] Importing core modules...
+[13:30:53] AutoUpdater imported
+[13:30:53] proxy_scraper imported
+[13:30:53] core.utils imported
+[13:30:53] Configuring CTK...
+[13:30:53] CTK configured
+[13:30:53] OsintGUI.__init__ start
+[13:30:53] Splash skipped (test mode)
+[13:30:53] Version: 2.2.6
+[13:30:53] Starting AutoUpdater
+[13:30:53] Starting _build_main_ui
+[13:30:53] Building Sidebar...
+[13:30:54] Populating services...
+[13:31:00] Fail Populate Services: cannot import name 'ServiceUpdater' from 'core.updater' (C:\Users\kevin\Downloads\perubianbot\core\updater.py)
+[13:31:00] Building Main Area...
+[13:31:00] BOOT COMPLETE: GUI is ready.
+[13:31:00] UI build finished successfully
+[13:31:02] Hiding splash and deiconifying main window
+[13:31:02] Main window state: normal
+[13:45:28] --- COLD START ---
+[13:45:28] Running from SOURCE CODE (.py)
+[13:45:28] Base path resolved
+[13:45:28] Importing customtkinter...
+[13:45:28] customtkinter imported
+[13:45:28] Importing standard libs...
+[13:45:28] Standard libs imported
+[13:45:28] Importing core modules...
+[13:45:28] AutoUpdater imported
+[13:45:28] proxy_scraper imported
+[13:45:28] core.utils imported
+[13:45:28] Configuring CTK...
+[13:45:28] CTK configured
+[13:45:28] OsintGUI.__init__ start
+[13:45:28] Splash skipped (test mode)
+[13:45:28] Version: 2.2.7
+[13:45:28] Starting AutoUpdater
+[13:45:28] Starting _build_main_ui
+[13:45:28] Building Sidebar...
+[13:45:30] Populating services...
+[13:45:31] Services discovered: 83
+[13:45:31] Building Main Area...
+[13:45:32] BOOT COMPLETE: GUI is ready.
+[13:45:32] UI build finished successfully
+[13:45:34] Hiding splash and deiconifying main window
+[13:45:34] Main window state: normal
+[13:47:39] --- COLD START ---
+[13:47:40] Running from SOURCE CODE (.py)
+[13:47:40] Base path resolved
+[13:47:40] Importing customtkinter...
+[13:47:40] customtkinter imported
+[13:47:40] Importing standard libs...
+[13:47:40] Standard libs imported
+[13:47:40] Importing core modules...
+[13:47:40] AutoUpdater imported
+[13:47:40] proxy_scraper imported
+[13:47:40] core.utils imported
+[13:47:40] Configuring CTK...
+[13:47:40] CTK configured
+[13:47:40] OsintGUI.__init__ start
+[13:47:40] Splash skipped (test mode)
+[13:47:40] Version: 2.2.7
+[13:47:40] Starting AutoUpdater
+[13:47:40] Starting _build_main_ui
+[13:47:40] Building Sidebar...
+[13:47:41] Populating services...
+[13:47:43] Services discovered: 83
+[13:47:43] Building Main Area...
+[13:47:45] BOOT COMPLETE: GUI is ready.
+[13:47:45] UI build finished successfully
+[13:47:47] Hiding splash and deiconifying main window
+[13:47:47] Main window state: normal
+[13:50:11] --- COLD START ---
+[13:50:11] Running from SOURCE CODE (.py)
+[13:50:11] Base path resolved
+[13:50:11] Importing customtkinter...
+[13:50:12] customtkinter imported
+[13:50:12] Importing standard libs...
+[13:50:12] Standard libs imported
+[13:50:12] Importing core modules...
+[13:50:12] AutoUpdater imported
+[13:50:12] proxy_scraper imported
+[13:50:12] core.utils imported
+[13:50:12] Configuring CTK...
+[13:50:12] CTK configured
+[13:50:12] OsintGUI.__init__ start
+[13:50:12] Splash skipped (test mode)
+[13:50:12] Version: 2.2.8
+[13:50:12] Starting AutoUpdater
+[13:50:12] Starting _build_main_ui
+[13:50:12] Building Sidebar...
+[13:50:13] Populating services...
+[13:50:14] Services discovered: 83
+[13:50:16] Building Main Area...
+[13:50:17] BOOT COMPLETE: GUI is ready.
+[13:50:17] UI build finished successfully
+[13:50:19] Hiding splash and deiconifying main window
+[13:50:19] Main window state: normal
