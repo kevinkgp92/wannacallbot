@@ -1,6 +1,21 @@
 # ♈ WANNA CALL? - CHANGELOG
 
 
+
+---
+
+## 🔥 [2.2.28] - 2026-02-05 (ARCTIC GOVERNOR - EMERGENCY STABILITY)
+
+### 🇪🇸 ESPAÑOL
+- **⛓️ GRILLETES DE HILOS**: Reducción drástica de hilos de 50 a un máximo de 5 para evitar la asfixia del procesador.
+- **🧊 CEDENCIA DE CPU (Yielding)**: Implementadas micro-pausas obligatorias en todos los bucles internos del scraper y la interfaz para que el ratón no se bloquee.
+- **🛡️ MÁXIMA FLUIDEZ**: El bot es ahora totalmente invisible para el sistema, permitiendo el uso de YouTube 4K y multitarea pesada.
+
+### 🇺🇸 ENGLISH
+- **⛓️ THREAD CAPPING**: Drastic reduction of threads from 50 to a maximum of 5 to prevent processor starvation.
+- **🧊 CPU YIELDING**: Implemented mandatory micro-pauses in all internal scraper and interface loops so the mouse doesn't freeze.
+- **🛡️ MAXIMUM FLUIDITY**: The bot is now completely invisible to the system, allowing for 4K YouTube and heavy multitasking.
+
 ---
 
 ## 🔥 [2.2.27] - 2026-02-05 (ARCTIC STABILITY - NUCLEAR CPU FIX)
