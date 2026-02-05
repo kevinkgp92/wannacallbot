@@ -2,6 +2,18 @@
 
 ---
 
+## 🔥 [2.2.13] - 2026-02-05 (REBRANDING & ASSET SYNC)
+
+### 🇪🇸 ESPAÑOL
+- **REBRANDING**: Renombrado el logo principal a `wannacallbot_logo.png`.
+- **LIMPIEZA**: Eliminado rastro total de referencias antiguas a "carnerosbot".
+
+### 🇺🇸 ENGLISH
+- **REBRANDING**: Renamed main logo to `wannacallbot_logo.png`.
+- **CLEANUP**: Removed all old references to "carnerosbot".
+
+---
+
 ## 🔥 [2.2.12] - 2026-02-05 (NUCLEAR NETWORK OPTIMIZATION)
 
 ### 🇪🇸 ESPAÑOL
