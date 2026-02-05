@@ -2,6 +2,20 @@
 
 ---
 
+## 🔥 [2.2.22] - 2026-02-05 (SPANISH ARMADA 5.0 - REAL ES GUARD)
+
+### 🇪🇸 ESPAÑOL
+- **ARMADA ESPAÑOLA 5.0**: Inyectadas 22+ fuentes de proxys exclusivas de España. ¡Más cantidad y mejor calidad!
+- **FILTRADO RESILIENTE**: Mejorado el sistema de verificación geográfica con triple fallback. No más falsos negativos.
+- **PUREZA 100%**: Optimizado el scraper para ignorar proxys saturados y centrarse en IPs residenciales/móviles frescas.
+
+### 🇺🇸 ENGLISH
+- **SPANISH ARMADA 5.0**: Injected 22+ exclusive Spanish proxy sources. More quantity, better quality!
+- **RESILIENT FILTERING**: Improved the Geo-verification system with triple fallback. No more false negatives.
+- **100% PURITY**: Optimized the scraper to ignore saturated proxies and focus on fresh residential/mobile IPs.
+
+---
+
 ## 🔥 [2.2.21] - 2026-02-05 (SAUL'S MEMORY & STABILITY)
 
 ### 🇪🇸 ESPAÑOL

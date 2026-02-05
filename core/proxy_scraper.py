@@ -85,17 +85,28 @@ class ProxyScraper:
                     time.sleep(1)
             except: pass
 
-            # STRATEGY B: Individual Fallback (Limited to small batches to avoid huge delays)
-            # Use ipapi.co as secondary batch-like fallback
-            for p in chunk[:15]: # Only check first 15 of a failed batch to maintain speed
+            # STRATEGY B: Resilient Fallback (v2.2.22)
+            # 1. Try ipapi.co (Batch-like fallback)
+            for p in chunk[:20]: # Expanded to 20 for v2.2.22
                 if stop_signal and stop_signal(): break
                 ip = p.split(':')[0]
+                if ip in self.geo_cache:
+                    if self.geo_cache[ip] == country_code: matches.append(p)
+                    continue
+
                 try:
-                    r = requests.get(f"https://ipapi.co/{ip}/country/", timeout=3)
+                    r = requests.get(f"https://ipapi.co/{ip}/country/", timeout=4)
                     if r.status_code == 200:
                         cc = r.text.strip().upper()
                         self.geo_cache[ip] = cc
                         if cc == country_code: matches.append(p)
+                    elif r.status_code == 429:
+                        # Try ip-api fallback individual
+                        r2 = requests.get(f"http://ip-api.com/json/{ip}?fields=countryCode", timeout=3)
+                        if r2.status_code == 200:
+                            cc = r2.json().get("countryCode", "XX")
+                            self.geo_cache[ip] = cc
+                            if cc == country_code: matches.append(p)
                 except: continue
             return matches
 
@@ -147,7 +158,7 @@ class ProxyScraper:
 
         # --- SOURCES DEFINITION ---
         
-        # TIER 1: THE SPANISH GUARD (v2.2.20) - Ultra-Strict Targeted
+        # TIER 1: THE SPANISH ARMADA 5.0 (v2.2.22) - Elite Targeted
         es_sources = [
             "https://api.proxyscrape.com/v4/free-proxy-list/get?request=displayproxies&protocol=http&country=es",
             "https://api.proxyscrape.com/v4/free-proxy-list/get?request=displayproxies&protocol=socks4&country=es",
@@ -163,7 +174,14 @@ class ProxyScraper:
             "https://raw.githubusercontent.com/officialputuid/free-proxy-list/master/proxies/es.txt",
             "https://raw.githubusercontent.com/roosterkid/openproxylist/main/ES_RAW.txt",
             "https://www.proxyscan.io/api/proxy?country=es&format=txt",
-            "https://proxyspace.pro/spain.txt"
+            "https://proxyspace.pro/spain.txt",
+            "https://raw.githubusercontent.com/Anonymouse-prox/free-proxy-list/master/proxies/es.txt",
+            "https://raw.githubusercontent.com/Zaeem20/free-proxy-list/master/proxies/es.txt",
+            "https://raw.githubusercontent.com/ObcbS/free-proxy-list/master/proxies/es.txt",
+            "https://raw.githubusercontent.com/hookzof/socks5_list/master/proxy.txt", # High speed
+            "https://github.com/ErcinDedeoglu/proxies/raw/main/proxies/http.txt", # Spanish heavy
+            "https://raw.githubusercontent.com/monosans/proxy-list/main/proxies/http.txt", # Filtered
+            "https://api.openproxylist.xyz/http.txt"
         ]
         
         # TIER 2: MASSIVE HAYSTACK (Polluted lists move here)
