@@ -1,40 +1,48 @@
-# ⚖️ WANNA CALL? - OSINT Framework & Educational Tool
+# ⚖️ WANNA CALL? - OSINT Framework & Security Research Tool
 
-![v2.2.9](https://img.shields.io/badge/version-2.2.9--SAUL--EDITION-green?style=for-the-badge)
+![Version](https://img.shields.io/badge/version-2.2.9--SAUL--EDITION-green?style=for-the-badge)
 ![Python](https://img.shields.io/badge/Python-3.11+-blue?style=for-the-badge&logo=python)
 ![License](https://img.shields.io/badge/License-MIT-gold?style=for-the-badge)
 
-**WANNA CALL?** is a high-performance OSINT (Open Source Intelligence) framework developed for educational purposes and security research. It demonstrates advanced automation techniques, asynchronous proxy handling, and human-like web interaction.
+**WANNA CALL?** es un framework avanzado de **OSINT** (Inteligencia de Fuentes Abiertas) diseñado para investigadores de seguridad, analistas de red y fines académicos. Esta herramienta demuestra el potencial de la automatización moderna y la interacción web sigilosa para la recopilación de datos públicos de manera eficiente.
 
 ---
 
-## 🇪🇸 ESPAÑOL: DESCARGO DE RESPONSABILIDAD LEGAL
-Este software está diseñado **únicamente con fines educativos y de investigación de seguridad**. El desarrollador no se hace responsable del uso indebido de esta herramienta.
+## 🇪🇸 ESPAÑOL: AVISO LEGAL Y CONDICIONES DE USO
 
-1. **Uso Ético**: No utilice esta herramienta para acosar, dañar o realizar actividades ilegales.
-2. **Privacidad**: El usuario es el único responsable de cumplir con las leyes de protección de datos locales (GDPR, LOPD, etc.).
-3. **Sin Garantías**: El software se proporciona "tal cual", sin garantías de ningún tipo.
+### ⚠️ DESCARGO DE RESPONSABILIDAD
+Este software se proporciona exclusivamente con **FINES EDUCATIVOS Y DE INVESTIGACIÓN**. El desarrollador no asume ninguna responsabilidad por el uso inadecuado, ilegal o no ético de esta herramienta por parte de terceros.
 
----
-
-## 🇺🇸 ENGLISH: LEGAL DISCLAIMER
-This software is designed **for educational and security research purposes only**. The developer is not responsible for any misuse of this tool.
-
-1. **Ethical Use**: Do not use this tool to harass, harm, or engage in illegal activities.
-2. **Privacy**: The user is solely responsible for complying with local data protection laws (GDPR, CCPA, etc.).
-3. **No Warranties**: The software is provided "as is", without any warranties of any kind.
+1. **Uso Ético**: No utilice este software para actividades que infrinjan la ley, acosen a personas o dañen sistemas.
+2. **Cumplimiento Normativo**: Es responsabilidad exclusiva del usuario final cumplir con las leyes de protección de datos locales (como el **RGPD** en la UE o la **LOPD** en España).
+3. **Sin Garantías**: El software se entrega "tal cual", sin garantías de funcionamiento, precisión de datos o disponibilidad.
+4. **Respeto a la Privacidad**: El usuario debe abstenerse de utilizar los datos recopilados para fines comerciales no autorizados o actividades malintencionadas.
 
 ---
 
-## 🔥 Características Principales / Core Features
-- **🚀 Advanced OSINT Search**: Multi-engine number lookup and information retrieval.
-- **🌐 Smart Proxy Scraper**: Real-time Spanish/Global proxy hunter with "Alive Check" logic.
-- **🛡️ Human-Like Automation**: Sophisticated Stealth mode to bypass bot detection.
-- **📦 Portable Release**: Standalone executable with zero external dependencies.
-- **🔄 Auto-Update**: Integrated version manifest system linked to GitHub.
+## 🇺🇸 ENGLISH: LEGAL DISCLAIMER AND TERMS OF USE
 
-## 🛠️ Instalación / Installation
-Si eres desarrollador y quieres ejecutarlo desde el código fuente:
+### ⚠️ DISCLAIMER
+This software is provided strictly for **EDUCATIONAL AND RESEARCH PURPOSES ONLY**. The developer assumes no responsibility for any improper, illegal, or unethical use of this tool by third parties.
+
+1. **Ethical Use**: Do not use this software for activities that violate the law, harass individuals, or damage systems.
+2. **Regulatory Compliance**: It is the sole responsibility of the end-user to comply with local data protection laws (such as **GDPR** in the EU or **CCPA** in the US).
+3. **No Warranties**: The software is provided "as is," without any warranties regarding performance, data accuracy, or availability.
+4. **Privacy Respect**: Users must refrain from using collected data for unauthorized commercial purposes or malicious activities.
+
+---
+
+## 🔥 Características / Key Features
+- **🚀 Advanced OSINT Lookup**: Búsqueda masiva en múltiples motores y bases de datos públicas.
+- **🌐 Smart Proxy Scraper**: Sistema inteligente de recolección de proxys (Prioridad España) con verificación en tiempo real.
+- **🛡️ Stealth Automation**: Interacción web que simula el comportamiento humano para evitar detecciones.
+- **📦 Portable Release**: Ejecutable independiente (One-File) listo para Windows.
+- **🔄 Visual Updater**: Sistema de actualización visual sincronizado directamente con este repositorio.
+
+---
+
+## 🛠️ Instalación para Desarrolladores / Dev Installation
+Si deseas auditar el código o contribuir al desarrollo:
 
 ```bash
 git clone https://github.com/kevinkgp92/wannacallbot.git
@@ -43,11 +51,8 @@ pip install -r requirements.txt
 python main.py
 ```
 
-## 📦 Uso Directo (Ejecutable)
-Descarga el archivo `WannaCall_v2.2.9_PORTABLE.exe` desde la raíz para iniciar el bot instantáneamente en Windows.
-
-## 🤝 Contribuir
-Las contribuciones son bienvenidas para mejorar los motores de búsqueda y la estabilidad del sistema. Por favor, abre un "Issue" o envía un "Pull Request".
+## 📦 Uso para Usuarios Finales / Final Users
+Descarga el archivo **`WannaCall_v2.2.9_PORTABLE.exe`** desde la raíz de este repositorio para ejecutar el framework de manera instantánea.
 
 ---
-*Desarrollado con fines académicos. v2.2.9 SAUL EDITION.*
+*Desarrollado bajo licencia MIT para fines académicos. v2.2.9 [SAUL EDITION].*
