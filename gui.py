@@ -5,12 +5,27 @@ import time
 def _boot_log(msg):
     """Extreme primitive logging at the top to catch import hangs."""
     try:
-        log_path = "DEBUG_BOOT.txt"
+        # Get the real directory of the script or EXE
+        if hasattr(sys, '_MEIPASS'):
+            log_dir = sys._MEIPASS
+        else:
+            log_dir = os.path.dirname(os.path.abspath(__file__))
+            
+        log_path = os.path.join(log_dir, "DEBUG_BOOT.txt")
         with open(log_path, "a", encoding="utf-8") as f:
             f.write(f"[{time.strftime('%H:%M:%S')}] {msg}\n")
     except: pass
 
 _boot_log("--- COLD START ---")
+
+# EMERGENCY ALERT TO PROVE EXECUTION
+try:
+    from tkinter import messagebox, Tk
+    root = Tk()
+    root.withdraw()
+    # messagebox.showinfo("DEBUG", "El script ha comenzado a ejecutarse.")
+    root.destroy()
+except: pass
 
 # Handle PyInstaller and compiled environments path resolution
 try:
