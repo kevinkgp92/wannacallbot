@@ -17,10 +17,7 @@ import time
 from PIL import Image
 
 from core.updater import AutoUpdater
-
-# Project modules (will be imported lazily)
-# import core.updater  <-- LAZY LOADED
-# from core.proxy_scraper import scrape_proxies <-- LAZY LOADED
+from core.proxy_scraper import scrape_proxies
 
 import re
 import json
@@ -35,14 +32,19 @@ class TextRedirector(object):
     def __init__(self, widget, tag="stdout"):
         self.widget = widget
         self.tag = tag
+        
+        # CTkTextbox encapsulates a standard Tkinter Text widget in _textbox
+        # We need to configure tags on the internal widget
+        target = getattr(self.widget, "_textbox", self.widget)
+        
         # Tags configuration for colors
-        self.widget.tag_config("SUCCESS", foreground="#2ecc71") # Green
-        self.widget.tag_config("ERROR", foreground="#e74c3c")   # Red
-        self.widget.tag_config("WARN", foreground="#f1c40f")    # Yellow
-        self.widget.tag_config("INFO", foreground="#3498db")    # Blue
-        self.widget.tag_config("SYSTEM", foreground="#9b59b6")  # Purple
-        self.widget.tag_config("OSINT", foreground="#1abc9c")   # Turquoise
-        self.widget.tag_config("GOD", foreground="#ff4500")     # Orange-Red
+        target.tag_config("SUCCESS", foreground="#2ecc71") # Green
+        target.tag_config("ERROR", foreground="#e74c3c")   # Red
+        target.tag_config("WARN", foreground="#f1c40f")    # Yellow
+        target.tag_config("INFO", foreground="#3498db")    # Blue
+        target.tag_config("SYSTEM", foreground="#9b59b6")  # Purple
+        target.tag_config("OSINT", foreground="#1abc9c")   # Turquoise
+        target.tag_config("GOD", foreground="#ff4500")     # Orange-Red
 
     def write(self, str_out):
         if not str_out: return
@@ -160,10 +162,15 @@ class OsintGUI(ctk.CTk):
             self._build_main_ui()
             print("DEBUG: Interfaz construida con éxito.")
         except Exception as e:
-            print(f"DEBUG ERROR: Error fatal en _build_main_ui: {e}")
-            import traceback
-            traceback.print_exc()
+            error_msg = f"ERROR CRITICO DE UI:\n{e}\n\n{traceback.format_exc()}"
+            print(error_msg)
+            # Force show error in a box since it's an EXE environment
+            try:
+                messagebox.showerror("Fallo de Inicialización", error_msg)
+            except: pass
+        
         # Safety: Ensure window is visible even if splash hangs
+        self.deiconify() # Force immediate deiconify for debugging
         self.after(5000, self.deiconify)
         
     def _on_update_found(self, found, new_version):
@@ -470,9 +477,8 @@ class OsintGUI(ctk.CTk):
         sys.stdout = TextRedirector(self.log_box, "stdout")
         sys.stderr = TextRedirector(self.log_box, "stderr")
         
-        self.running = False
-        self.worker_thread = None
         self.tg_controller = None
+        self.initialization_complete = True # Signal splash we are done building
         
         # Close Splash and show main window
         self.splash_close_id = self.after(2000, self.hide_splash)
@@ -568,9 +574,10 @@ class OsintGUI(ctk.CTk):
                 self.splash.destroy()
         except: pass
         
-        # Ensure main window is visible
+        # Ensure main window is visible and forced to redraw
         try:
-            self.deiconify() 
+            self.deiconify()
+            self.update() # Force Tkinter to recalculate layout and draw frames
         except: pass
 
     def trigger_build_pro(self):
