@@ -2,6 +2,22 @@
 
 ---
 
+## 🔥 [2.2.18] - 2026-02-05 (DEEP HUNTER & SPANISH ARMADA)
+
+### 🇪🇸 ESPAÑOL
+- **THE SPANISH ARMADA**: Añadidas +15 fuentes de alta fidelidad exclusivas para España.
+- **DEEP HTML SCRAPING**: El bot ahora raspa tablas complejas de sitios como ProxyDB y ProxyServers para encontrar IPs ocultas.
+- **TURBO GEO-FILTER (40 HILOS)**: Cuadriplicada la velocidad de cribado del haystack global para encontrar IPs españolas en segundos.
+- **SEARCH DEPTH**: Mayor profundidad de búsqueda automática en caso de escasez de candidatos rápidos.
+
+### 🇺🇸 ENGLISH
+- **THE SPANISH ARMADA**: Added +15 new high-fidelity sources exclusive for Spain.
+- **DEEP HTML SCRAPING**: Bot now scrapes complex tables from ProxyDB and ProxyServers to find hidden IPs.
+- **TURBO GEO-FILTER (40 THREADS)**: Quadrupled global haystack filtering speed to find ES IPs in seconds.
+- **SEARCH DEPTH**: Automatically increased search depth when quick candidates are scarce.
+
+---
+
 ## 🔥 [2.2.17] - 2026-02-05 (HYPER-SPEED STARTUP & TRUST TIER)
 
 ### 🇪🇸 ESPAÑOL

@@ -99,7 +99,8 @@ class ProxyScraper:
                 except: continue
             return matches
 
-        with concurrent.futures.ThreadPoolExecutor(max_workers=10) as executor:
+        # TURBO GEO-FILTER: Increased from 10 to 40 workers for v2.2.18
+        with concurrent.futures.ThreadPoolExecutor(max_workers=40) as executor:
             futures = [executor.submit(process_chunk, chunk) for chunk in chunks]
             for future in concurrent.futures.as_completed(futures):
                 found = future.result()
@@ -112,7 +113,10 @@ class ProxyScraper:
         found = set()
         targets = [
             ("https://www.proxynova.com/proxy-server-list/country-es/", r'document\.write\(\'(\d+\.\d+\.\d+\.\d+)\'\);'),
-            ("https://proxy-list.org/spanish/index.php", r'\d+\.\d+\.\d+\.\d+:\d+')
+            ("https://proxy-list.org/spanish/index.php", r'\d+\.\d+\.\d+\.\d+:\d+'),
+            ("https://proxydb.net/?country=ES", r'\d+\.\d+\.\d+\.\d+:\d+'),
+            ("https://www.proxyserverlist24.top/search/label/Spain", r'\d+\.\d+\.\d+\.\d+:\d+'),
+            ("https://free-proxy-list.net/spanish-proxy.html", r'\d+\.\d+\.\d+\.\d+:\d+')
         ]
         
         for url, pattern in targets:
@@ -143,7 +147,7 @@ class ProxyScraper:
 
         # --- SOURCES DEFINITION ---
         
-        # TIER 1: HIGH INTENSITY / ONLY ES (API Filtered) - TRUSTED
+        # TIER 1: THE SPANISH ARMADA (v2.2.18) - 100% Targeted
         es_sources = [
             "https://api.proxyscrape.com/v4/free-proxy-list/get?request=displayproxies&protocol=http&country=es",
             "https://api.proxyscrape.com/v4/free-proxy-list/get?request=displayproxies&protocol=socks4&country=es",
@@ -152,12 +156,18 @@ class ProxyScraper:
             "https://www.proxy-list.download/api/v1/get?type=https&country=ES",
             "https://www.proxy-list.download/api/v1/get?type=socks4&country=ES",
             "https://www.proxy-list.download/api/v1/get?type=socks5&country=ES",
+            "https://raw.githubusercontent.com/vakhov/free-proxy-list/master/proxies/es.txt",
+            "https://raw.githubusercontent.com/rdavydov/proxy-list/main/proxies/es.txt",
+            "https://raw.githubusercontent.com/Zaeem20/free-proxy-list/master/proxies/es.txt",
+            "https://raw.githubusercontent.com/officialputuid/free-proxy-list/master/proxies/es.txt",
+            "https://raw.githubusercontent.com/ObcbS/free-proxy-list/master/proxies/es.txt",
+            "https://raw.githubusercontent.com/Anonymouse-prox/free-proxy-list/master/proxies/es.txt",
             "https://raw.githubusercontent.com/roosterkid/openproxylist/main/ES_RAW.txt",
             "https://www.proxyscan.io/api/proxy?country=es&format=txt",
             "https://api.proxyscrape.com/v2/?request=displayproxies&protocol=http&timeout=10000&country=es",
             "https://proxyspace.pro/spain.txt",
-            "https://raw.githubusercontent.com/TheSpeedX/SOCKS-List/master/http.txt", # Check later if ES is inside
-            "https://raw.githubusercontent.com/monosans/proxy-list/main/proxies_anonymous/http.txt" 
+            "https://proxyservers.pro/proxy/spain", # Scraper will handle this
+            "https://free-proxy-list.net/spanish-proxy.html" # Scraper will handle this
         ]
         
         # TIER 2: MASSIVE HAYSTACK (Polluted lists move here)
