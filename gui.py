@@ -16,6 +16,8 @@ import queue
 import time
 from PIL import Image
 
+from core.updater import AutoUpdater
+
 # Project modules (will be imported lazily)
 # import core.updater  <-- LAZY LOADED
 # from core.proxy_scraper import scrape_proxies <-- LAZY LOADED
@@ -154,7 +156,14 @@ class App(ctk.CTk):
                                            size=(180, 180))
         else:
             print(f"Warning: Logo not found at {logo_path}")
+        
+    def _on_update_found(self, found, new_version):
+        """Callback triggered when an update is found."""
+        if found:
+            # Must run on main thread
+            self.after(1000, lambda: self.updater.prompt_update())
 
+    def show_splash(self):
         # --- Sidebar (Midnight Blue) ---
         self.sidebar_frame = ctk.CTkScrollableFrame(self, width=280, corner_radius=0, fg_color="#0f0f15", label_text="") 
         self.sidebar_frame.grid(row=0, column=0, sticky="nsew")
