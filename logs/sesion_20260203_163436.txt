@@ -1,0 +1,23 @@
+
+  ____                                  ____        _   
+ / ___|__ _ _ __ _ __   ___ _ __ ___  | __ )  ___ | |_ 
+| |   / _` | '__| '_ \ / _ \ '__/ _ \ |  _ \ / _ \| __|
+| |__| (_| | |  | | | |  __/ | | (_) || |_) | (_) | |_ 
+ \____\__,_|_|  |_| |_|\___|_|  \___/ |____/ \___/ \__|
+                                           v1.0.0 - ULTIMATE
+
+🛡️ NÚCLEO PREPARADO (Versión 1.0.0)
+🎯 SISTEMA DE OBJETIVOS: ACTIVO
+--------------------------------------------------
+📡 ℹ️ Buscador offline. Usando v1.0.0 local.
+✅ Objetivo 601000271 guardado en favoritos.
+📂 Datos cargados para: 601000271
+--- Iniciando modo: Automático (Secuencial) ---
+
+🚀 Procesando objetivo 1/1: 601000271
+Attempting to launch Firefox...
+🌐 Buscando proxy automático...
+ℹ️ Escaneando nuevas proxies públicas...
+✅ Se han encontrado 2843 proxies.
+CRITICAL ERROR: type object 'ServiceType' has no attribute 'AD'
+

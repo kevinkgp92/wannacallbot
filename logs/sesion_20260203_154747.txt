@@ -1,0 +1,47 @@
+
+  ____                                  ____        _   
+ / ___|__ _ _ __ _ __   ___ _ __ ___  | __ )  ___ | |_ 
+| |   / _` | '__| '_ \ / _ \ '__/ _ \ |  _ \ / _ \| __|
+| |__| (_| | |  | | | |  __/ | | (_) || |_) | (_) | |_ 
+ \____\__,_|_|  |_| |_|\___|_|  \___/ |____/ \___/ \__|
+                                           v1.0.0 - ARIES
+
+🛡️ NÚCLEO PREPARADO (Versión 1.0.0)
+🎯 SISTEMA DE OBJETIVOS: ACTIVO
+--------------------------------------------------
+📡 ℹ️ Buscador offline. Usando v1.0.0 local.
+--- Iniciando modo: Buscador OSINT ---
+
+🚀 Procesando objetivo 1/1: 601000271
+Attempting to launch Undetected Chrome (Ultra Stealth Mode)...
+⚠️ Undetected Chrome falló (Message: session not created: cannot connect to chrome at 127.0.0.1:61734
+from session not created: This version of ChromeDriver only supports Chrome version 145
+Current browser version is 144.0.7559.110; For documentation on this error, please visit: https://www.selenium.dev/documentation/webdriver/troubleshooting/errors#sessionnotcreatedexception
+Stacktrace:
+Symbols not available. Dumping unresolved backtrace:
+	0x114d223
+	0x114d264
+	0xf61dc0
+	0xf9d462
+	0xf9c49c
+	0xf92555
+	0xf92376
+	0xfdaaef
+	0xfda307
+	0xfce816
+	0xfa0049
+	0xfa0e04
+	0x13bdc84
+	0x13b8f05
+	0x13d6d80
+	0x1165e18
+	0x116d85d
+	0x1155cc8
+	0x1155e92
+	0x113f7ba
+	0x752b5d49
+	0x771ed83b
+	0x771ed7c1
+). Usando Chrome estándar con sigilo...
+CRITICAL ERROR: 'ServiceUpdater' object has no attribute 'update_services'
+
