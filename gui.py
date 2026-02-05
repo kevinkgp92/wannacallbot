@@ -25,9 +25,7 @@ from core.updater import AutoUpdater
 import re
 import json
 import core.utils
-import queue 
-from tkinter import messagebox
-import queue 
+import queue
 from tkinter import messagebox
 
 ctk.set_appearance_mode("Dark")
@@ -94,7 +92,7 @@ class TextRedirector(object):
     def flush(self):
         pass
 
-class App(ctk.CTk):
+class OsintGUI(ctk.CTk):
     def __init__(self):
         super().__init__()
         
@@ -107,11 +105,9 @@ class App(ctk.CTk):
         # 1. SHOW SPLASH SCREEN (Professional Loading)
         self.show_splash()
         self.version = "2.2.5" 
-        
-        # Launch background loader
-        threading.Thread(target=self._background_loader, daemon=True).start()
-        
-        # Launch Auto-Updater (Silent)
+        print(f"DEBUG: Iniciando {self.version}...")
+
+        # Setup Auto-Updater (Silent)
         self.updater = AutoUpdater(self.version)
         self.updater.check_updates_silent(callback=self._on_update_found)
 
@@ -158,8 +154,17 @@ class App(ctk.CTk):
         else:
             print(f"Warning: Logo not found at {logo_path}")
             
+        print("DEBUG: Construyendo interfaz...")
         # --- GUI LAYOUT ---
-        self._build_main_ui()
+        try:
+            self._build_main_ui()
+            print("DEBUG: Interfaz construida con éxito.")
+        except Exception as e:
+            print(f"DEBUG ERROR: Error fatal en _build_main_ui: {e}")
+            import traceback
+            traceback.print_exc()
+        # Safety: Ensure window is visible even if splash hangs
+        self.after(5000, self.deiconify)
         
     def _on_update_found(self, found, new_version):
         """Callback triggered when an update is found."""
@@ -494,27 +499,8 @@ class App(ctk.CTk):
             sys.exit(0)
 
     def _background_loader(self):
-        """PROJECT NITRO: Loads heavy modules in background while splash is shown."""
-        try:
-            # 1. Lazy Import Updater
-            import core.updater
-            # FIXED: Naming mismatch from old version
-            self.updater = core.updater.AutoUpdater(self.version)
-            
-            # 2. Get Version (Quick Check)
-            # The new AutoUpdater doesn't have local_ver check here, we already have self.version
-            # But we can check for updates silent
-            self.updater.check_updates_silent(callback=self._on_update_found)
-            
-            # self.updater_ready = True # Deprecated attribute
-            
-            pass
-            
-        except Exception as e:
-            print(f"⚠️ Nitro Loader Warning: {e}")
-        
-        finally:
-            self.initialization_complete = True
+        """No longer used for core loading, kept for compatibility."""
+        self.initialization_complete = True
 
     def show_splash(self):
         """Creates a professional splash screen while loading."""
@@ -1399,7 +1385,7 @@ class App(ctk.CTk):
 
 if __name__ == "__main__":
     try:
-        app = App()
+        app = OsintGUI()
         app.mainloop()
     except Exception as e:
         # Emergency error logging
