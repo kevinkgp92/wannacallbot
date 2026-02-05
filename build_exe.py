@@ -62,8 +62,8 @@ def build():
     
     if result.returncode == 0:
         print("\n[3/3] EXITO: CONSTRUCCION COMPLETADA")
-        exe_path = os.path.join(dist_path, f"WannaCall_v2.2.28.exe")
-        final_name = "WannaCall_v2.2.28_PORTABLE.exe"
+        exe_path = os.path.join(dist_path, f"WannaCall_v2.2.29.exe")
+        final_name = "WannaCall_v2.2.29_PORTABLE.exe"
         if os.path.exists(exe_path):
             # Atomic swap
             if os.path.exists(final_name): os.remove(final_name)

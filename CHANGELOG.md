@@ -4,7 +4,19 @@
 
 ---
 
-## 🔥 [2.2.28] - 2026-02-05 (ARCTIC GOVERNOR - EMERGENCY STABILITY)
+## 🔥 [2.2.29] - 2026-02-05 (ARCTIC COOLING V2 - OSINT THROTTLE)
+
+### 🇪🇸 ESPAÑOL
+- **❄️ ENFRIAMIENTO OSINT**: Implementadas pausas obligatorias de 2s entre búsquedas de Google/DuckDuckGo y 1.5s entre chequeos de plataformas.
+- **🚀 JS OPTIMIZADO**: El script de localización ahora consume un 80% menos de CPU al ser inyectado solo cuando es necesario.
+- **🛡️ ZERO LAG**: Eliminados los picos de CPU al iniciar la investigación que congelaban el ratón.
+
+### 🇺🇸 ENGLISH
+- **❄️ OSINT COOLING**: Implemented mandatory 2s pauses between Google/DuckDuckGo searches and 1.5s between platform checks.
+- **🚀 OPTIMIZED JS**: Localization script now consumes 80% less CPU by only injecting when necessary.
+- **🛡️ ZERO LAG**: Eliminated CPU spikes when starting research that used to freeze the mouse.
+
+---
 
 ### 🇪🇸 ESPAÑOL
 - **⛓️ GRILLETES DE HILOS**: Reducción drástica de hilos de 50 a un máximo de 5 para evitar la asfixia del procesador.

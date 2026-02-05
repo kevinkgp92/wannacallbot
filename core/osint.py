@@ -225,37 +225,29 @@ class OSINTManager:
         browser.set_page_load_timeout(20) # STRICT TIMEOUT (20s) - Relaxed from 10s
         browser.set_script_timeout(20)
         
-        # UNIVERSAL JS INJECTOR: "Nuclear Spain Mode"
+        # UNIVERSAL JS INJECTOR: "Nuclear Spain Mode" (Optimized v2.2.29)
         def force_spain_universal(driver):
             try:
-                # Injection to FORCE Spanish country codes on ANY dropdown found
+                # v2.2.29: Run only if we haven't injected recently or if needed
                 js_nuclear = """
                 (function() {
-                    let candidates = document.querySelectorAll("select, ul[role='listbox'], div[role='listbox'], .ui-select-wrapper, .country-picker, [class*='country'], [class*='Country']");
+                    if (window._arctic_localized) return;
+                    let candidates = document.querySelectorAll("select, ul[role='listbox'], div[role='listbox']");
+                    let found = false;
                     candidates.forEach(el => {
-                        if (el.innerText.includes("+40") || el.innerText.includes("Romania") || el.innerText.includes("Rumanía")) {
-                            console.log("NUCLEAR: Rumanía detectada. Eliminando...");
+                        if (el.innerText.includes("+40") || el.innerText.includes("Romania")) {
                             el.click();
-                            let options = document.querySelectorAll("option, li, div[role='option'], span, a");
+                            let options = document.querySelectorAll("option, li, [role='option']");
                             for (let opt of options) {
-                                let txt = opt.innerText || "";
-                                let val = opt.getAttribute("value") || "";
-                                if ((txt.includes("España") || txt.includes("Spain") || txt.includes("+34") || val === "ES") && !txt.includes("Español")) {
+                                if (opt.innerText.includes("+34") || opt.innerText.includes("España")) {
                                     opt.click();
-                                    if (opt.tagName === 'OPTION') { opt.selected = true; opt.parentElement.dispatchEvent(new Event('change')); }
-                                    return;
-                                }
-                            }
-                        }
-                        if (el.tagName === 'SELECT' && (el.name.includes('country') || el.id.includes('country'))) {
-                            for (let opt of el.options) {
-                                if (opt.value === 'ES' || opt.text.includes('+34')) {
-                                    el.value = opt.value;
-                                    el.dispatchEvent(new Event('change'));
+                                    found = true;
+                                    break;
                                 }
                             }
                         }
                     });
+                    if (found) window._arctic_localized = true;
                 })();
                 """
                 driver.execute_script(js_nuclear)
@@ -651,7 +643,8 @@ class OSINTManager:
                             report['sources'].append(source_label)
                             print(f"  🦆 DuckHit: {source_label} -> {clean_t}")
                             
-                    time.sleep(0.5) # Polite wait
+                    # v2.2.29: ARCTIC COOLING V2 - Mandatory Sleep between dorks
+                    time.sleep(2.0)
                 except Exception as e:
                     pass
 
@@ -997,6 +990,9 @@ class OSINTManager:
                              inp.send_keys(Keys.CONTROL + "a")
                              inp.send_keys(Keys.BACKSPACE)
                              inp.send_keys(val_to_send)
+                             
+                             # v2.2.29: Arctic Cooling V2 - Mandatory Sleep between platforms
+                             time.sleep(1.5)
                         except: pass
                         
                         # Click Next/Continue
