@@ -2,6 +2,22 @@
 
 ---
 
+## 🔥 [2.2.19] - 2026-02-05 (ULTIMATE RESILIENCE & TRIPLE-CHECK)
+
+### 🇪🇸 ESPAÑOL
+- **VERIFICACIÓN TRIPLE**: Las IPs ahora se comprueban contra Google, Icanhazip y Bing. Si pasan 2 de 3, son válidas. ¡Rescatamos proxys que antes daban falso error!
+- **MODO DESESPERACIÓN**: Si tras 60 segundos no hay 3 proxys pero hay al menos 1 bueno, el bot te permite arrancar. ¡Tiempo es dinero!
+- **FUENTES 2026**: Integradas listas ultra-frescas de GitHub (mmpx12, proxifly).
+- **TURBO GEO-FILTER (50 HILOS)**: Velocidad de cribado elevada al máximo exponente.
+
+### 🇺🇸 ENGLISH
+- **TRIPLE-CHECK VERIFICATION**: IPs are now verified against Google, Icanhazip, and Bing. If 2/3 pass, the proxy is validated. No more false negatives!
+- **DESPERATION MODE**: If after 60s only 1 high-quality proxy is found, the bot allows early exit to start operations.
+- **2026 SOURCES**: Integrated ultra-fresh GitHub lists (mmpx12, proxifly).
+- **TURBO GEO-FILTER (50 THREADS)**: Maximum global filtering speed achieved.
+
+---
+
 ## 🔥 [2.2.18] - 2026-02-05 (DEEP HUNTER & SPANISH ARMADA)
 
 ### 🇪🇸 ESPAÑOL

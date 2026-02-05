@@ -99,8 +99,8 @@ class ProxyScraper:
                 except: continue
             return matches
 
-        # TURBO GEO-FILTER: Increased from 10 to 40 workers for v2.2.18
-        with concurrent.futures.ThreadPoolExecutor(max_workers=40) as executor:
+        # TURBO GEO-FILTER: Increased from 40 to 50 workers for v2.2.19
+        with concurrent.futures.ThreadPoolExecutor(max_workers=50) as executor:
             futures = [executor.submit(process_chunk, chunk) for chunk in chunks]
             for future in concurrent.futures.as_completed(futures):
                 found = future.result()
@@ -147,7 +147,7 @@ class ProxyScraper:
 
         # --- SOURCES DEFINITION ---
         
-        # TIER 1: THE SPANISH ARMADA (v2.2.18) - 100% Targeted
+        # TIER 1: THE SPANISH ARMADA (v2.2.19) - 100% Targeted & Fresh
         es_sources = [
             "https://api.proxyscrape.com/v4/free-proxy-list/get?request=displayproxies&protocol=http&country=es",
             "https://api.proxyscrape.com/v4/free-proxy-list/get?request=displayproxies&protocol=socks4&country=es",
@@ -156,18 +156,18 @@ class ProxyScraper:
             "https://www.proxy-list.download/api/v1/get?type=https&country=ES",
             "https://www.proxy-list.download/api/v1/get?type=socks4&country=ES",
             "https://www.proxy-list.download/api/v1/get?type=socks5&country=ES",
+            "https://raw.githubusercontent.com/mmpx12/proxy-list/master/proxies/es.txt",
+            "https://raw.githubusercontent.com/proxifly/free-proxy-list/main/proxies/countries/es.txt",
+            "https://raw.githubusercontent.com/monosans/proxy-list/main/proxies/http.txt", # We'll filter this
             "https://raw.githubusercontent.com/vakhov/free-proxy-list/master/proxies/es.txt",
             "https://raw.githubusercontent.com/rdavydov/proxy-list/main/proxies/es.txt",
-            "https://raw.githubusercontent.com/Zaeem20/free-proxy-list/master/proxies/es.txt",
             "https://raw.githubusercontent.com/officialputuid/free-proxy-list/master/proxies/es.txt",
-            "https://raw.githubusercontent.com/ObcbS/free-proxy-list/master/proxies/es.txt",
-            "https://raw.githubusercontent.com/Anonymouse-prox/free-proxy-list/master/proxies/es.txt",
             "https://raw.githubusercontent.com/roosterkid/openproxylist/main/ES_RAW.txt",
             "https://www.proxyscan.io/api/proxy?country=es&format=txt",
-            "https://api.proxyscrape.com/v2/?request=displayproxies&protocol=http&timeout=10000&country=es",
             "https://proxyspace.pro/spain.txt",
-            "https://proxyservers.pro/proxy/spain", # Scraper will handle this
-            "https://free-proxy-list.net/spanish-proxy.html" # Scraper will handle this
+            "https://proxydb.net/?country=ES",
+            "https://proxyservers.pro/proxy/spain",
+            "https://free-proxy-list.net/spanish-proxy.html"
         ]
         
         # TIER 2: MASSIVE HAYSTACK (Polluted lists move here)
@@ -292,15 +292,23 @@ class ProxyScraper:
              return self.proxies
 
         # HUNTING LOOP for ES in Tier 2
-        BATCH_SIZE = 3000
-        GOAL = 3       # v2.2.4: Lowered goal to 3 to prevent "half hour" waits
-        MAX_SCAN = 80000 
+        BATCH_SIZE = 1500 # Smaller batches for more frequent updates
+        GOAL = 3
+        MAX_SCAN = 60000 
+        START_TIME = time.time()
         
         scanned = 0
         print(f"  🦅 Iniciando Caza de Proxies (Meta: {GOAL} Vivos | Límite: {MAX_SCAN})...")
         
         for i in range(0, len(tier2_candidates), BATCH_SIZE):
             if stop_signal and stop_signal(): break
+            
+            # DESPERATION MODE (v2.2.19): If we have at least 1 and 60s passed, GO.
+            elapsed = time.time() - START_TIME
+            if elapsed > 60 and len(self.proxies) >= 1:
+                print(f"  ⚠️ MODO DESESPERACIÓN: {int(elapsed)}s transcurridos. Arrancando con {len(self.proxies)} proxies.")
+                break
+
             if scanned >= MAX_SCAN: 
                 print("  ⚠️ Límite de escaneo alcanzado.")
                 break
@@ -337,22 +345,41 @@ class ProxyScraper:
         def is_alive(proxy):
             if stop_signal and stop_signal(): return None
             
-            # Use raw IP:PORT for Geo check if needed (but here we receive already filtered ES)
-            # Try protocols: HTTP -> SOCKS5 -> SOCKS4
-            protocols = ["http", "socks5", "socks4"]
+            # Triple-Check Logic (v2.2.19)
+            # A proxy is alive if it passes at least 2 checks
+            checks_passed = 0
+            proto = "http"
+            actual_proxy = proxy
+            if "|" in proxy:
+                proto, actual_proxy = proxy.split("|", 1)
+            
+            proxy_dict = {proto: f"{proto}://{actual_proxy}"}
             headers = {"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36"}
             
-            for proto in protocols:
+            # Check 1: Google (The OSINT standard)
+            try:
+                r = requests.get("https://clients3.google.com/generate_204", 
+                                 proxies=proxy_dict, timeout=12, headers=headers)
+                if r.status_code == 204: checks_passed += 1
+            except: pass
+
+            # Check 2: Icanhazip (Reliable IP reflector)
+            try:
+                r = requests.get("https://ipv4.icanhazip.com", 
+                                 proxies=proxy_dict, timeout=10, headers=headers)
+                if r.status_code == 200 and len(r.text.strip()) <= 15: checks_passed += 1
+            except: pass
+
+            # Check 3: Bing (Backup search engine)
+            if checks_passed < 2:
                 try:
-                    p_uri = f"{proto}://{proxy}"
-                    proxy_dict = {"http": p_uri, "https": p_uri}
-                    
-                    # Check against Google for OSINT viability
-                    r = requests.get("http://clients3.google.com/generate_204", 
-                                     proxies=proxy_dict, headers=headers, timeout=25)
-                    if r.status_code == 204:
-                        return f"{proto}|{proxy}"
-                except: continue
+                    r = requests.get("https://www.bing.com", 
+                                     proxies=proxy_dict, timeout=10, headers=headers)
+                    if r.status_code == 200: checks_passed += 1
+                except: pass
+
+            if checks_passed >= 2:
+                return proxy
             return None
 
         import concurrent.futures
