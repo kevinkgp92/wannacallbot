@@ -62,10 +62,10 @@ def build():
     cmd = [
         sys.executable, "-m", "PyInstaller",
         "--noconfirm",
-        "--onedir",
+        "--onefile",
         "--windowed",
         "--icon", icon_file,
-        "--name", f"WannaCall_v2.2.8",
+        "--name", f"WannaCall_v2.2.9",
         "--distpath", dist_folder,
         "--workpath", build_folder,
         "--clean"
@@ -80,13 +80,14 @@ def build():
         
         if result.returncode == 0:
             print("\n[3/3] EXITO: CONSTRUCCION COMPLETADA")
-            exe_path = os.path.abspath(os.path.join(dist_folder, "WannaCall_v2.2.8", "WannaCall_v2.2.8.exe"))
+            # In --onefile mode, the EXE is directly in the dist folder
+            exe_path = os.path.abspath(os.path.join(dist_folder, "WannaCall_v2.2.9.exe"))
             print(f"\nUbicacion: {exe_path}")
             
             # Copy to root
             try:
-                shutil.copy2(exe_path, os.path.join(os.getcwd(), "WannaCall_v2.2.8.exe"))
-                print(f"✅ Copiado a la raiz: {os.path.join(os.getcwd(), 'WannaCall_v2.2.8.exe')}")
+                shutil.copy2(exe_path, os.path.join(os.getcwd(), "WannaCall_v2.2.9_PORTABLE.exe"))
+                print(f"✅ Copiado a la raiz: {os.path.join(os.getcwd(), 'WannaCall_v2.2.9_PORTABLE.exe')}")
             except Exception as e:
                 print(f"⚠️ No se pudo copiar a la raiz: {e}")
                 

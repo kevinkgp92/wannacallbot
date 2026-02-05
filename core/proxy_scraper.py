@@ -123,16 +123,16 @@ class ProxyScraper:
                 except: pass
                 return []
 
-        import concurrent.futures
-        # TURBO MODE: Check 60 sources in parallel
-        with concurrent.futures.ThreadPoolExecutor(max_workers=60) as executor:
-            futures = [executor.submit(fetch_one, u) for u in urls]
-            for future in concurrent.futures.as_completed(futures):
-                if stop_signal and stop_signal():
-                    executor.shutdown(wait=False, cancel_futures=True)
-                    return set()
-                found = future.result()
-                if found: collected.update(found)
+            import concurrent.futures
+            # TURBO MODE: Check 60 sources in parallel
+            with concurrent.futures.ThreadPoolExecutor(max_workers=60) as executor:
+                futures = [executor.submit(fetch_one, u) for u in urls]
+                for future in concurrent.futures.as_completed(futures):
+                    if stop_signal and stop_signal():
+                        executor.shutdown(wait=False, cancel_futures=True)
+                        return set()
+                    found = future.result()
+                    if found: collected.update(found)
             return collected
 
         self.proxies = [] # Reset
