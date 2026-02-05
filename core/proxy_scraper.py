@@ -102,6 +102,33 @@ class ProxyScraper:
 
         return valid_proxies
 
+    def _scrape_html_tables(self, stop_signal=None):
+        """Scrapes Spanish proxies from HTML tables on specialized sites."""
+        found = set()
+        targets = [
+            ("https://www.proxynova.com/proxy-server-list/country-es/", r'document\.write\(\'(\d+\.\d+\.\d+\.\d+)\'\);'),
+            ("https://proxy-list.org/spanish/index.php", r'\d+\.\d+\.\d+\.\d+:\d+')
+        ]
+        
+        for url, pattern in targets:
+            if stop_signal and stop_signal(): break
+            try:
+                print(f"  🕸️ Deep Scraping: {url}...")
+                r = requests.get(url, timeout=12, headers={"User-Agent": "Mozilla/5.0"})
+                if r.status_code == 200:
+                    # ProxyNova uses JS obfuscation for the IP
+                    if "proxynova" in url:
+                        ips = re.findall(pattern, r.text)
+                        # Ports are in a separate span usually, or hardcoded
+                        for ip in ips:
+                            found.add(f"{ip}:80") # ProxyNova default common
+                            found.add(f"{ip}:8080")
+                    else:
+                        matches = re.findall(pattern, r.text)
+                        found.update(matches)
+            except: pass
+        return list(found)
+
     def scrape(self, country=None, allow_fallback=False, stop_signal=None):
         """Mass Scrapes and HUNTS for valid proxies using a TIERED approach."""
         target_country = country if country else "Global"
@@ -211,11 +238,22 @@ class ProxyScraper:
             # EARLY EXIT if we found enough
             # v2.2.4: If we have even ONE good targeted proxy, we START.
             # No need to wait for massive mining.
+            # EMERGENCY: Check HTML Tables if Tier 1 lists are dry
+            if not self.proxies:
+                print("  🛰️ Fase 1.5: Deep Scrape de Tablas HTML...")
+                html_candidates = self._scrape_html_tables(stop_signal)
+                if html_candidates:
+                    geo_matches = self._batch_filter_country(html_candidates, "ES", stop_signal)
+                    live_matches = self._check_proxies_live(geo_matches, stop_signal)
+                    if live_matches:
+                        self.proxies.extend(live_matches)
+
             if len(self.proxies) >= 1:
-                 print(f"✅ LISTA FINAL: {len(self.proxies)} proxies operativos (FASE 1).")
+                 print(f"✅ LISTA FINAL: {len(self.proxies)} proxies operativos (FASE 1/1.5).")
                  return self.proxies
             else:
                  print("⚠️ Fase 1 insuficiente. Activando FASE 2 (Búsqueda Masiva Global)...")
+                 # RELAX TIMEOUTS FOR PHASE 2 (Since we are desperate)
 
         # =========================================================================
         # PHASE 2: TIER 2 (MASSIVE) - The Haynes Stack
@@ -280,18 +318,19 @@ class ProxyScraper:
         def is_alive(proxy):
             if stop_signal and stop_signal(): return None
             try:
-                # optimized for residential ES latency
+                # optimized for residential ES latency (Spain mobile/home nets are slow but better for OSINT)
                 headers = {"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36"}
                 proxy_dict = {"http": f"http://{proxy}", "https": f"http://{proxy}"}
                 
                 # Check 1: Google Gen_204 (The real standard for OSINT)
+                # INCREASED TIMEOUT: 25s for slow residential networks
                 r = requests.get("http://clients3.google.com/generate_204", 
-                                 proxies=proxy_dict, headers=headers, timeout=15)
+                                 proxies=proxy_dict, headers=headers, timeout=25)
                 if r.status_code == 204:
                     return proxy
                 
                 # Check 2: Cloudflare (High quality fallback)
-                r = requests.get("https://cloudflare.com/cdn-cgi/trace", proxies=proxy_dict, headers=headers, timeout=12)
+                r = requests.get("https://cloudflare.com/cdn-cgi/trace", proxies=proxy_dict, headers=headers, timeout=20)
                 if r.status_code == 200:
                     return proxy
             except: pass

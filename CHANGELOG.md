@@ -2,6 +2,20 @@
 
 ---
 
+## 🔥 [2.2.14] - 2026-02-05 (EXTREME PROXY RECOVERY)
+
+### 🇪🇸 ESPAÑOL
+- **DEEP SCRAPING**: Implementado motor de parsing HTML para extraer proxys españoles de `ProxyNova` y `ProxyList.org` directamente.
+- **RESILIENCIA ++**: Aumentado el timeout de verificación a **25 segundos** para capturar redes residenciales y móviles lentas pero funcionales.
+- **GEO-FALLBACK**: Añadida `ipapi.co` como tercera vía de verificación de geolocalización.
+
+### 🇺🇸 ENGLISH
+- **DEEP SCRAPING**: Implemented HTML parsing engine to extract Spanish proxies from `ProxyNova` and `ProxyList.org` directly.
+- **RESILIENCE ++**: Increased verification timeout to **25 seconds** to capture slow but functional residential/mobile networks.
+- **GEO-FALLBACK**: Added `ipapi.co` as a third geolocation verification fallback.
+
+---
+
 ## 🔥 [2.2.13] - 2026-02-05 (REBRANDING & ASSET SYNC)
 
 ### 🇪🇸 ESPAÑOL

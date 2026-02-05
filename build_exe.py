@@ -4,7 +4,7 @@ import time
 import shutil
 
 def build():
-    version = "2.2.13"
+    version = "2.2.14"
     print("===================================================")
     print(f"    WANNA CALL? - EXE BUILDER (v{version})")
     print("===================================================")
@@ -28,7 +28,7 @@ def build():
         "--onefile",
         "--windowed",
         "--icon", "logo_v3.ico",
-        "--name", f"WannaCall_v2.2.13",
+        "--name", f"WannaCall_v2.2.14",
         "--distpath", dist_path,
         "--workpath", build_path,
         "--clean",
@@ -47,8 +47,8 @@ def build():
     
     if result.returncode == 0:
         print("\n[3/3] EXITO: CONSTRUCCION COMPLETADA")
-        exe_path = os.path.join(dist_path, f"WannaCall_v2.2.13.exe")
-        final_name = "WannaCall_v2.2.13_PORTABLE.exe"
+        exe_path = os.path.join(dist_path, f"WannaCall_v2.2.14.exe")
+        final_name = "WannaCall_v2.2.14_PORTABLE.exe"
         if os.path.exists(exe_path):
             shutil.copy(exe_path, final_name)
             print(f"\nUbicacion: {os.path.abspath(exe_path)}")
