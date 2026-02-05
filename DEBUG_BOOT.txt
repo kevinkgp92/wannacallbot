@@ -150,3 +150,4 @@
 [13:50:19] Hiding splash and deiconifying main window
 [13:50:19] Main window state: normal
 [14:01:37] Services discovered: 83
+[14:07:06] Services discovered: 83
