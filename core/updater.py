@@ -125,3 +125,20 @@ class AutoUpdater:
             if self._update_window:
                 self._update_window.destroy()
             messagebox.showerror("Error de Actualización", msg + "\n\nPor favor, usa AUTO_FIX_ULTIMATE.bat")
+class ServiceUpdater:
+    """Compatibility stub for service definition updates."""
+    def __init__(self):
+        self.local_version = "2.2.7"
+
+    def check_for_updates(self):
+        # For now, we integrate service updates into main AutoUpdater
+        # This is a stub to prevent crashes in ServiceManager
+        print("SISTEMA: Sincronización de servicios lista.")
+        return False
+
+    def get_local_version(self):
+        return self.local_version
+
+    def update_services(self):
+        # Logic moved to main updater if needed
+        pass

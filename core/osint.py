@@ -1800,7 +1800,7 @@ class OSINTManager:
         try:
             from core.updater import ServiceUpdater
             v = ServiceUpdater().get_local_version()
-        except: v = "1.0.0"
+        except: v = "2.2.7"
         
         sep = "═" * 65
         thin_sep = "─" * 65
