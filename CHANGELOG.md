@@ -1,6 +1,21 @@
 # ♈ WANNA CALL? - CHANGELOG
 
+
 ---
+
+## 🔥 [2.2.27] - 2026-02-05 (ARCTIC STABILITY - NUCLEAR CPU FIX)
+
+### 🇪🇸 ESPAÑOL
+- **☢️ EXTERMINIO DE BLOQUEOS CPU**: Corregido el bucle infinito en el bypass de captcha que consumía el 100% de la CPU. Ahora el bot es ultra-ligero.
+- **🛡️ ESCUDO ÁRTICO**: El buscador de proxys ahora trunca archivos gigantes para evitar sobrecarga de RAM y bloqueos de regex.
+- **💀 LIMPIEZA TOTAL**: Limpieza automática de procesos zombis de Chrome/Firefox al arrancar.
+- **🧠 RESULTADOS RECUPERADOS**: Restaurada la lógica de extracción de inteligencia que fallaba en versiones previas.
+
+### 🇺🇸 ENGLISH
+- **☢️ CPU LOCK TERMINATION**: Fixed infinite loop in captcha bypass that consumed 100% CPU. The bot is now ultra-light.
+- **🛡️ ARCTIC SHIELD**: Proxy scraper now truncates giant files to avoid RAM overhead and regex locks.
+- **💀 TOTAL CLEANUP**: Automatic cleanup of zombie Chrome/Firefox processes on startup.
+- **🧠 RESULTS RECOVERED**: Restored intelligence extraction logic that failed in previous versions.
 
 ## 🔥 [2.2.26] - 2026-02-05 (ECO-RESCUE & MULTITASKING)
 
