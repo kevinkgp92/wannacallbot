@@ -279,6 +279,7 @@ class ProxyScraper:
         
         def is_alive(proxy):
             if stop_signal and stop_signal(): return None
+            try:
                 # optimized for residential ES latency
                 headers = {"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36"}
                 proxy_dict = {"http": f"http://{proxy}", "https": f"http://{proxy}"}
