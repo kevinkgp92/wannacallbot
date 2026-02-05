@@ -172,7 +172,7 @@ class OsintGUI(ctk.CTk):
         # TEST: Disable splash temporarily to see if main window renders alone
         # self.show_splash() 
         _boot_log("Splash skipped (test mode)")
-        self.version = "2.2.19" 
+        self.version = "2.2.21" 
         _boot_log(f"Version: {self.version}")
 
         # Setup Auto-Updater (Silent)
@@ -895,9 +895,20 @@ class OsintGUI(ctk.CTk):
 
     def _handle_update_message(self, message):
         """Actual logic to update GUI (formerly _on_update_check_done)."""
-        if message == "RESTART_REQUIRED":
+        # Fix for v2.2.21: Handle both strings and tuples from update_queue
+        msg_type = ""
+        msg_content = ""
+        
+        if isinstance(message, tuple):
+            msg_type = message[0]
+            msg_content = message[1]
+        else:
+            msg_type = message
+            msg_content = message
+
+        if msg_type == "RESTART_REQUIRED":
             pass
-        elif message.startswith("PROGRESS:"):
+        elif isinstance(msg_type, str) and msg_type.startswith("PROGRESS:"):
             # Update splash screen if active
             try:
                 percent_str = message.split(":")[1]
@@ -1114,10 +1125,18 @@ class OsintGUI(ctk.CTk):
         }
 
     def get_favorites_path(self):
+        # Persistence Fix (v2.2.21): 
+        # Always store targets.json next to the executable/script, NOT in Temp
         try:
-            base_path = sys._MEIPASS
-        except Exception:
+            if hasattr(sys, 'frozen'):
+                # Running as PyInstaller EXE
+                base_path = os.path.dirname(sys.executable)
+            else:
+                # Running as script
+                base_path = os.path.dirname(os.path.abspath(__file__))
+        except:
             base_path = os.path.abspath(".")
+            
         return os.path.join(base_path, "targets.json")
 
     def refresh_favorites_menu(self):

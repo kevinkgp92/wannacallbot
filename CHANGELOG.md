@@ -2,6 +2,20 @@
 
 ---
 
+## 🔥 [2.2.21] - 2026-02-05 (SAUL'S MEMORY & STABILITY)
+
+### 🇪🇸 ESPAÑOL
+- **FIX GUI CRASH**: Corregido un error crítico que cerraba el programa al buscar actualizaciones (AttributeError).
+- **MEMORIA INFINITA**: Tus favoritos (números, nombres, etc.) ahora se guardan en `targets.json` junto al bot. ¡Tus contactos sobreviven a las actualizaciones!
+- **LIMPIEZA NUCLEAR 2.0**: El constructor ahora es más agresivo eliminando archivos `.spec` y basura residual.
+
+### 🇺🇸 ENGLISH
+- **FIX GUI CRASH**: Resolved a critical error that crashed the app during update checks (AttributeError).
+- **INFINITE MEMORY**: Your favorites (numbers, names, etc.) are now saved in `targets.json` next to the bot. They persist across updates!
+- **NUCLEAR CLEANUP 2.0**: The builder is now more aggressive in deleting `.spec` files and residual junk.
+
+---
+
 ## 🔥 [2.2.20] - 2026-02-05 (ULTRA-STRICT GUARD & NUCLEAR CLEANUP)
 
 ### 🇪🇸 ESPAÑOL

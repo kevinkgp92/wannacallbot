@@ -128,7 +128,7 @@ class AutoUpdater:
 class ServiceUpdater:
     """Compatibility stub for service definition updates."""
     def __init__(self):
-        self.local_version = "2.2.19"
+        self.local_version = "2.2.21"
 
     def check_for_updates(self):
         # For now, we integrate service updates into main AutoUpdater
