@@ -264,7 +264,7 @@ class BrowserManager:
         self._force_spain_context(driver)
         return driver
 
-    def rotate_proxy(self):
+    def rotate(self):
         """Forces a proxy rotation by clearing the current driver and requesting a new proxy."""
         print("🔄 SISTEMA: Rotando proxy por bloqueo/bajo rendimiento...")
         if self.driver:
