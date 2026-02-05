@@ -23,7 +23,7 @@ git reset --hard origin/main
 git pull origin main
 
 echo [4/7] Instalando librerias necesarias...
-pip install -r requirements.txt --quiet
+python -m pip install -r requirements.txt --user --quiet
 echo.
 
 echo [5/7] Limpiando cache...

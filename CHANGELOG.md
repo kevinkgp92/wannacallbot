@@ -1,5 +1,18 @@
 # CHANGELOG - WANNA CALL? ♈
 
+## [2.2.6] - 2026-02-05 (ULTRA-GREEN STABILITY)
+### ESPAÑOL 🇪🇸
+- **IDENTIFICACIÓN VISUAL**: Botón de "INICIAR" ahora es **VERDE** para confirmar que el código fuente se está ejecutando correctamente.
+- **ELIMINACIÓN DE FANTASMAS**: Sistema de detección de versiones antiguas compiladas. Si el bot se ejecuta desde un .exe antiguo, avisará.
+- **REPARACIÓN AUTOMÁTICA**: El archivo `AUTO_FIX_ULTIMATE.bat` ahora repara el entorno de Python, instala librerías y elimina archivos basura de 103MB.
+- **SYNC TOTAL**: Versión sincronizada entre código, `version.txt` y changelog.
+
+### ENGLISH 🇺🇸
+- **VISUAL IDENTIFICATION**: "START" button is now **GREEN** to confirm source code is running correctly.
+- **GHOST CLEANUP**: Detection system for old compiled versions. It will warn if running from legacy .exe.
+- **AUTO-REPAIR**: `AUTO_FIX_ULTIMATE.bat` now repairs Python environment, installs libraries, and deletes 103MB junk files.
+- **TOTAL SYNC**: Version synced across code, `version.txt`, and changelog.
+
 ## [2.2.5] - 2026-02-05 (AUTO-UPDATER + ULTRA-STABILITY)
 ### ESPAÑOL 🇪🇸
 - **AUTO-UPDATER**: ¡Adiós a los .bat! El bot ahora buscará actualizaciones automáticamente al iniciarse.
