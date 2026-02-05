@@ -5,7 +5,7 @@ import shutil
 import glob
 
 def build():
-    version = "2.2.28"
+    version = "2.2.29"
     print("===================================================")
     print(f"    WANNA CALL? - EXE BUILDER (v{version})")
     print("===================================================")
@@ -43,7 +43,7 @@ def build():
         "--onefile",
         "--windowed",
         "--icon", "logo_v3.ico",
-        "--name", f"WannaCall_v2.2.28",
+        "--name", f"WannaCall_v2.2.29",
         "--distpath", dist_path,
         "--workpath", build_path,
         "--clean",
