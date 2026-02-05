@@ -100,14 +100,18 @@ class ProxyScraper:
         
         # TIER 1: HIGH QUALITY / TARGETED (We want to check these FIRST)
         es_sources = [
-            "https://api.proxyscrape.com/v4/free-proxy-list/get?request=displayproxies&protocol=http&country=es",
-            "https://api.proxyscrape.com/v4/free-proxy-list/get?request=displayproxies&protocol=socks4&country=es",
-            "https://api.proxyscrape.com/v4/free-proxy-list/get?request=displayproxies&protocol=socks5&country=es",
+            "https://api.proxyscrape.com/v4/free-proxy-list/get?request=displayproxies&protocol=http&country=es&ssl=all&anonymity=all",
+            "https://api.proxyscrape.com/v4/free-proxy-list/get?request=displayproxies&protocol=socks4&country=es&ssl=all&anonymity=all",
+            "https://api.proxyscrape.com/v4/free-proxy-list/get?request=displayproxies&protocol=socks5&country=es&ssl=all&anonymity=all",
             "https://www.proxy-list.download/api/v1/get?type=http&country=ES",
             "https://www.proxy-list.download/api/v1/get?type=https&country=ES",
+            "https://www.proxy-list.download/api/v1/get?type=socks4&country=ES",
+            "https://www.proxy-list.download/api/v1/get?type=socks5&country=ES",
             "https://raw.githubusercontent.com/roosterkid/openproxylist/main/ES_RAW.txt",
             "https://www.proxyscan.io/api/proxy?country=es&format=txt",
-            "https://api.proxyscrape.com/v2/?request=displayproxies&protocol=http&timeout=10000&country=es"
+            "https://api.proxyscrape.com/v2/?request=displayproxies&protocol=http&timeout=10000&country=es",
+            "https://raw.githubusercontent.com/jetkai/proxy-list/main/online-proxies/txt/proxies-all.txt",
+            "https://spys.me/proxy.txt"
         ]
         
         # TIER 2: MASSIVE HAYSTACK (Only used if Tier 1 fails)

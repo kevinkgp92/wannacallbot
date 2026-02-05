@@ -2,6 +2,24 @@
 
 ---
 
+## 🔥 [2.2.11] - 2026-02-05 (NUCLEAR CLEANUP & UI REFINEMENT)
+
+### 🇪🇸 ESPAÑOL
+#### REFINAMIENTO Y LIMPIEZA
+- **NUCLEAR CLEANUP**: Eliminados más de 12 archivos obsoletos, logs y restos de versiones antiguas para un repositorio "Grial" impecable.
+- **RESTABLECIMIENTO GUI**: Revertido el título de la ventana y el texto de los botones a su base profesional estable.
+- **MOTORES PROXY ES++**: Añadidas 12+ fuentes adicionales de proxys españoles de alta intensidad para maximizar el éxito en OSINT.
+- **FIX: ALIVE CHECK**: Optimizada la lógica de verificación para detectar proxys españoles reales con mayor precisión.
+
+### 🇺🇸 ENGLISH
+#### REFINEMENT & CLEANUP
+- **NUCLEAR CLEANUP**: Removed over 12 obsolete files, logs, and leftovers from old versions for a pristine "Grial" repository.
+- **GUI RESTORATION**: Reverted window titles and button text back to their stable professional baseline.
+- **ES++ PROXY ENGINES**: Added 12+ additional high-intensity Spanish proxy sources to maximize OSINT success.
+- **FIX: ALIVE CHECK**: Optimized verification logic to detect real Spanish proxies with higher precision.
+
+---
+
 ## 🔥 [2.2.10] - 2026-02-05 (PROXY ENGINE UPGRADE)
 
 ### 🇪🇸 ESPAÑOL

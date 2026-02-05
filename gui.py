@@ -172,7 +172,7 @@ class OsintGUI(ctk.CTk):
         # TEST: Disable splash temporarily to see if main window renders alone
         # self.show_splash() 
         _boot_log("Splash skipped (test mode)")
-        self.version = "2.2.10" 
+        self.version = "2.2.11" 
         _boot_log(f"Version: {self.version}")
 
         # Setup Auto-Updater (Silent)
@@ -181,7 +181,7 @@ class OsintGUI(ctk.CTk):
         self.updater.check_updates_silent(callback=self._on_update_found)
         self.after(2000, self._process_update_queue)
 
-        self.title(f"WANNA CALL? v{self.version} [REPARADO - BOTON VERDE]")
+        self.title(f"WANNA CALL? v{self.version} [SAUL EDITION]")
         self.geometry("1100x700")
         
         # Performance & Stats tracking
@@ -507,7 +507,7 @@ class OsintGUI(ctk.CTk):
         self.action_frame = ctk.CTkFrame(self.main_frame, fg_color="transparent")
         self.action_frame.grid(row=1, column=0, padx=30, pady=(0, 20), sticky="ew")
         
-        self.btn_start = ctk.CTkButton(self.action_frame, text="!!! INICIAR v2.2.6 !!!", command=self.start_process, 
+        self.btn_start = ctk.CTkButton(self.action_frame, text=f"!!! INICIAR v{self.version} !!!", command=self.start_process, 
                                        fg_color="#2ecc71", hover_color="#27ae60", height=60, corner_radius=15,
                                        font=ctk.CTkFont(family="Roboto", size=20, weight="bold"),
                                        border_width=2, border_color="#2ecc71")
