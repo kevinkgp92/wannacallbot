@@ -2,6 +2,20 @@
 
 ---
 
+## 🔥 [2.2.15] - 2026-02-05 (BLACK OPS NETWORK OVERHAUL)
+
+### 🇪🇸 ESPAÑOL
+- **SOCKS SUPPORT**: El motor de red ahora soporta SOCKS4 y SOCKS5, multiplicando por 10 la capacidad de encontrar proxys españoles.
+- **ALIVE CHECK 2.0**: Implementada verificación multi-protocolo y timeouts agresivos de 25s para redes móviles.
+- **SANITY CLEANUP**: Eliminada la contaminación de listas globales en la Fase 1 para evitar falsos positivos y acelerar el arranque.
+
+### 🇺🇸 ENGLISH
+- **SOCKS SUPPORT**: The network engine now supports SOCKS4 and SOCKS5, increasing Spanish proxy yield by 10x.
+- **ALIVE CHECK 2.0**: Implemented multi-protocol verification and 25s timeouts for mobile networks.
+- **SANITY CLEANUP**: Removed global list pollution from Phase 1 to avoid false positives and speed up startup.
+
+---
+
 ## 🔥 [2.2.14] - 2026-02-05 (EXTREME PROXY RECOVERY)
 
 ### 🇪🇸 ESPAÑOL

@@ -138,41 +138,32 @@ class ProxyScraper:
 
         # --- SOURCES DEFINITION ---
         
-        # TIER 1: HIGH INTENSITY / TARGETED ES
+        # TIER 1: HIGH INTENSITY / ONLY ES (API Filtered)
         es_sources = [
-            "https://api.proxyscrape.com/v4/free-proxy-list/get?request=displayproxies&protocol=http&country=es&ssl=all&anonymity=all",
-            "https://api.proxyscrape.com/v4/free-proxy-list/get?request=displayproxies&protocol=socks4&country=es&ssl=all&anonymity=all",
-            "https://api.proxyscrape.com/v4/free-proxy-list/get?request=displayproxies&protocol=socks5&country=es&ssl=all&anonymity=all",
+            "https://api.proxyscrape.com/v4/free-proxy-list/get?request=displayproxies&protocol=http&country=es",
+            "https://api.proxyscrape.com/v4/free-proxy-list/get?request=displayproxies&protocol=socks4&country=es",
+            "https://api.proxyscrape.com/v4/free-proxy-list/get?request=displayproxies&protocol=socks5&country=es",
             "https://www.proxy-list.download/api/v1/get?type=http&country=ES",
             "https://www.proxy-list.download/api/v1/get?type=https&country=ES",
             "https://www.proxy-list.download/api/v1/get?type=socks4&country=ES",
             "https://www.proxy-list.download/api/v1/get?type=socks5&country=ES",
             "https://raw.githubusercontent.com/roosterkid/openproxylist/main/ES_RAW.txt",
             "https://www.proxyscan.io/api/proxy?country=es&format=txt",
-            "https://api.proxyscrape.com/v2/?request=displayproxies&protocol=http&timeout=10000&country=es",
+            "https://api.proxyscrape.com/v2/?request=displayproxies&protocol=http&timeout=10000&country=es"
+        ]
+        
+        # TIER 2: MASSIVE HAYSTACK (Polluted lists move here)
+        global_sources = [
             "https://raw.githubusercontent.com/jetkai/proxy-list/main/online-proxies/txt/proxies-all.txt",
             "https://spys.me/proxy.txt",
             "https://raw.githubusercontent.com/TheSpeedX/PROXY-List/master/http.txt",
             "https://raw.githubusercontent.com/TheSpeedX/PROXY-List/master/socks4.txt",
             "https://raw.githubusercontent.com/TheSpeedX/PROXY-List/master/socks5.txt",
             "https://raw.githubusercontent.com/ErcinDedeoglu/proxies/main/proxies/http.txt",
-            "https://raw.githubusercontent.com/ErcinDedeoglu/proxies/main/proxies/socks5.txt"
-        ]
-        
-        # TIER 2: MASSIVE HAYSTACK (Only used if Tier 1 fails)
-        global_sources = [
-            # HTTP Only (Protocol Fix)
-            "https://raw.githubusercontent.com/TheSpeedX/SOCKS-List/master/http.txt",
+            "https://raw.githubusercontent.com/ErcinDedeoglu/proxies/main/proxies/socks5.txt",
             "https://raw.githubusercontent.com/monosans/proxy-list/main/proxies/http.txt",
             "https://raw.githubusercontent.com/prxchk/proxy-list/main/http.txt",
-            "https://raw.githubusercontent.com/zloi-user/hideip.me/main/http.txt",
-            "https://raw.githubusercontent.com/rdavydov/proxy-list/main/proxies/http.txt",
-            "https://raw.githubusercontent.com/SevenWorksDev/proxy-list/main/proxies/http.txt",
-            "https://api.proxyscrape.com/v2/?request=displayproxies&protocol=http&timeout=10000&country=all&ssl=all&anonymity=all",
-            "https://raw.githubusercontent.com/proxifly/free-proxy-list/main/proxies/all/data.txt",
-            "https://raw.githubusercontent.com/sunny9577/proxy-scraper/master/proxies.txt",
-            "https://raw.githubusercontent.com/MuRongPIG/Proxy-Master/main/http.txt",
-            "https://raw.githubusercontent.com/officialputuid/KangProxy/KangProxy/http/http.txt"
+            "https://api.proxyscrape.com/v2/?request=displayproxies&protocol=http&timeout=10000&country=all&ssl=all&anonymity=all"
         ]
 
         # Helper to fetch a list of URLs
@@ -317,23 +308,23 @@ class ProxyScraper:
         
         def is_alive(proxy):
             if stop_signal and stop_signal(): return None
-            try:
-                # optimized for residential ES latency (Spain mobile/home nets are slow but better for OSINT)
-                headers = {"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36"}
-                proxy_dict = {"http": f"http://{proxy}", "https": f"http://{proxy}"}
-                
-                # Check 1: Google Gen_204 (The real standard for OSINT)
-                # INCREASED TIMEOUT: 25s for slow residential networks
-                r = requests.get("http://clients3.google.com/generate_204", 
-                                 proxies=proxy_dict, headers=headers, timeout=25)
-                if r.status_code == 204:
-                    return proxy
-                
-                # Check 2: Cloudflare (High quality fallback)
-                r = requests.get("https://cloudflare.com/cdn-cgi/trace", proxies=proxy_dict, headers=headers, timeout=20)
-                if r.status_code == 200:
-                    return proxy
-            except: pass
+            
+            # Use raw IP:PORT for Geo check if needed (but here we receive already filtered ES)
+            # Try protocols: HTTP -> SOCKS5 -> SOCKS4
+            protocols = ["http", "socks5", "socks4"]
+            headers = {"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36"}
+            
+            for proto in protocols:
+                try:
+                    p_uri = f"{proto}://{proxy}"
+                    proxy_dict = {"http": p_uri, "https": p_uri}
+                    
+                    # Check against Google for OSINT viability
+                    r = requests.get("http://clients3.google.com/generate_204", 
+                                     proxies=proxy_dict, headers=headers, timeout=25)
+                    if r.status_code == 204:
+                        return f"{proto}|{proxy}"
+                except: continue
             return None
 
         import concurrent.futures

@@ -86,16 +86,29 @@ class BrowserManager:
         if self.headless:
             options.add_argument("--headless")
         
-        # Proxy
+        # Proxy (Supports HTTP, SOCKS4, SOCKS5)
         proxy_str = self._get_proxy()
         if proxy_str:
-            host, port = proxy_str.split(':')
+            proto = "http"
+            actual_proxy = proxy_str
+            if "|" in proxy_str:
+                proto, actual_proxy = proxy_str.split("|", 1)
+            
+            host, port = actual_proxy.split(':')
             options.set_preference("network.proxy.type", 1)
-            options.set_preference("network.proxy.http", host)
-            options.set_preference("network.proxy.http_port", int(port))
-            options.set_preference("network.proxy.ssl", host)
-            options.set_preference("network.proxy.ssl_port", int(port))
-            print(f"  🔗 Usando Proxy: {proxy_str}")
+            
+            if proto.startswith("socks"):
+                options.set_preference("network.proxy.socks", host)
+                options.set_preference("network.proxy.socks_port", int(port))
+                options.set_preference("network.proxy.socks_version", 5 if proto == "socks5" else 4)
+                options.set_preference("network.proxy.socks_remote_dns", True)
+            else:
+                options.set_preference("network.proxy.http", host)
+                options.set_preference("network.proxy.http_port", int(port))
+                options.set_preference("network.proxy.ssl", host)
+                options.set_preference("network.proxy.ssl_port", int(port))
+            
+            print(f"  🔗 Usando Proxy ({proto.upper()}): {actual_proxy}")
 
         # SSL / Security Bypass (Nuclear Mode)
         options.accept_insecure_certs = True
