@@ -7,18 +7,21 @@ import logging
 import sys
 import os
 import subprocess
+import re
 
 # CONFIG
 REPO_USER = "kevinkgp92"
 REPO_NAME = "wannacallbot"
 VERSION_URL = f"https://raw.githubusercontent.com/{REPO_USER}/{REPO_NAME}/main/version.txt"
-RELEASE_URL = f"https://github.com/{REPO_USER}/{REPO_NAME}/releases/latest"
+CHANGELOG_URL = f"https://raw.githubusercontent.com/{REPO_USER}/{REPO_NAME}/main/CHANGELOG.md"
 
 class AutoUpdater:
     def __init__(self, current_version):
         self.current_version = current_version
         self.latest_version = None
         self.update_available = False
+        self.changelog_data = "No se pudo cargar el registro de cambios."
+        self._update_window = None
 
     def check_updates_silent(self, callback=None):
         """Checks for updates in a background thread."""
@@ -30,10 +33,13 @@ class AutoUpdater:
             r = requests.get(VERSION_URL, timeout=5)
             if r.status_code == 200:
                 remote_ver = r.text.strip()
-                # Check if versions are different
                 if remote_ver != self.current_version:
                     self.latest_version = remote_ver
                     self.update_available = True
+                    
+                    # Also fetch changelog
+                    self._fetch_changelog()
+                    
                     print(f"🔔 Actualización encontrada: {remote_ver} (Actual: {self.current_version})")
                     if callback:
                         callback(True, remote_ver)
@@ -44,18 +50,68 @@ class AutoUpdater:
             print(f"⚠️ Error buscando actualizaciones: {e}")
             if callback: callback(False, None)
 
+    def _fetch_changelog(self):
+        """Fetches the latest part of the changelog from GitHub."""
+        try:
+            r = requests.get(CHANGELOG_URL, timeout=5)
+            if r.status_code == 200:
+                full_text = r.text
+                # Extract first section (latest version)
+                # Matches from first '##' to second '##'
+                sections = re.split(r'##\s+\[', full_text)
+                if len(sections) > 1:
+                    # sections[0] is usually the header, [1] is the latest
+                    self.changelog_data = f"## [{sections[1]}"
+                    # Clean up horizontal rules or end markers if any
+                    self.changelog_data = self.changelog_data.split("---")[0].strip()
+        except:
+            pass
+
+    def prompt_update(self, master):
+        """Shows the premium visual update window."""
+        try:
+            from core.update_gui import UpdateWindow
+            self._update_window = UpdateWindow(
+                master, 
+                self.current_version, 
+                self.latest_version, 
+                self.changelog_data,
+                self.apply_update_git
+            )
+        except Exception as e:
+            print(f"Error opening update window: {e}")
+            # Fallback to simple prompt
+            msg = f"¡Nueva versión disponible (v{self.latest_version})!\n\n¿Quieres actualizar ahora?"
+            if messagebox.askyesno("Actualización", msg):
+                self.apply_update_git()
+
     def apply_update_git(self):
         """Perform a git pull and restart the application."""
+        # Use a thread to not freeze the GUI during git operations
+        threading.Thread(target=self._do_git_update, daemon=True).start()
+
+    def _do_git_update(self):
         try:
-            print("🚀 Iniciando actualización automática via Git...")
-            # 1. Force update
-            subprocess.run(["git", "fetch", "--all"], check=True, capture_output=True)
-            subprocess.run(["git", "reset", "--hard", "origin/main"], check=True, capture_output=True)
-            subprocess.run(["git", "pull", "origin", "main"], check=True, capture_output=True)
+            if self._update_window:
+                self._update_window.set_status("Conectando con GitHub...")
             
-            print("✅ Código actualizado. Reiniciando...")
+            # 1. Force update
+            def run(cmd):
+                return subprocess.run(cmd, check=True, capture_output=True, text=True)
+
+            if self._update_window: self._update_window.set_status("Descargando nuevos archivos...")
+            run(["git", "fetch", "--all"])
+            
+            if self._update_window: self._update_window.set_status("Sincronizando código...")
+            run(["git", "reset", "--hard", "origin/main"])
+            run(["git", "pull", "origin", "main"])
+            
+            if self._update_window: self._update_window.set_status("✅ ¡Listo! Reiniciando...")
             
             # 2. Restart
+            import time
+            time.sleep(1) # Visual feedback
+            
             if getattr(sys, 'frozen', False):
                 subprocess.Popen([sys.executable])
             else:
@@ -64,11 +120,8 @@ class AutoUpdater:
             os._exit(0)
             
         except Exception as e:
-            messagebox.showerror("Error de Actualización", f"No se pudo completar la actualización automática:\n{e}\n\nPor favor, usa el archivo AUTO_FIX_ULTIMATE.bat")
-
-    def prompt_update(self):
-        """Shows a GUI prompt to the user."""
-        msg = f"¡Nueva versión disponible (v{self.latest_version})!\n\n¿Quieres actualizar ahora?\n(El bot se reiniciará automáticamente)"
-        response = messagebox.askyesno("Actualización Detectada 🚀", msg)
-        if response:
-            self.apply_update_git()
+            msg = f"No se pudo completar la actualización automática:\n{e}"
+            print(msg)
+            if self._update_window:
+                self._update_window.destroy()
+            messagebox.showerror("Error de Actualización", msg + "\n\nPor favor, usa AUTO_FIX_ULTIMATE.bat")

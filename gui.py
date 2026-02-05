@@ -168,7 +168,7 @@ class OsintGUI(ctk.CTk):
         # TEST: Disable splash temporarily to see if main window renders alone
         # self.show_splash() 
         _boot_log("Splash skipped (test mode)")
-        self.version = "2.2.6" 
+        self.version = "2.2.7" 
         _boot_log(f"Version: {self.version}")
 
         # Setup Auto-Updater (Silent)
@@ -241,7 +241,7 @@ class OsintGUI(ctk.CTk):
         """Callback triggered when an update is found."""
         if found:
             # Must run on main thread
-            self.after(1000, lambda: self.updater.prompt_update())
+            self.after(1000, lambda: self.updater.prompt_update(self))
 
     def _build_main_ui(self):
         _boot_log("Building Sidebar...")
