@@ -27,6 +27,21 @@ try:
     root.destroy()
 except: pass
 
+# DETECCION DE "FANTASMA" (MEI / COMPILED)
+if hasattr(sys, '_MEIPASS'):
+    _boot_log("WARNING: Running from MEIPASS (COMPILED EXE)")
+    try:
+        from tkinter import messagebox, Tk
+        root = Tk()
+        root.withdraw()
+        # Only alert if it's the old version (if we can detect it) or just alert anyway
+        # Since this is v2.2.6, if it's compiled, user might have just compiled it.
+        # But if they are seeing v2.0.103, they are definitely not running THIS file.
+        root.destroy()
+    except: pass
+else:
+    _boot_log("Running from SOURCE CODE (.py)")
+
 # Handle PyInstaller and compiled environments path resolution
 try:
     if hasattr(sys, '_MEIPASS'):
