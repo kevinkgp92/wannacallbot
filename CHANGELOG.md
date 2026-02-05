@@ -2,6 +2,24 @@
 
 ---
 
+## 🔥 [2.2.12] - 2026-02-05 (NUCLEAR NETWORK OPTIMIZATION)
+
+### 🇪🇸 ESPAÑOL
+#### OPTIMIZACIÓN DE RED Y PROXYS
+- **ES SOURCES ++**: Inyectadas 15+ nuevas fuentes diarias de España para eliminar la dependencia de búsquedas globales lentas.
+- **GEO-CACHE INTELIGENTE**: Implementada caché local de geolocalización para evitar bloqueos por exceso de peticiones (Rate Limit) y acelerar la verificación.
+- **ALIVE CHECK 2.0**: Optimizado para la latencia de servicios residenciales españoles, asegurando conexiones estables en OSINT.
+- **ESCUDO DE ROTACIÓN**: Añadido límite de 5 rotaciones por sesión para prevenir bucles infinitos en el motor de búsqueda.
+
+### 🇺🇸 ENGLISH
+#### NETWORK & PROXY OPTIMIZATION
+- **ES SOURCES ++**: Injected 15+ new daily Spanish sources to eliminate dependency on slow global searches.
+- **SMART GEO-CACHE**: Implemented local geolocation cache to prevent Rate Limit blocks and accelerate verification.
+- **ALIVE CHECK 2.0**: Optimized for high-latency Spanish residential services, ensuring stable OSINT connections.
+- **ROTATION GUARD**: Added a limit of 5 rotations per session to prevent infinite loops in the search engine.
+
+---
+
 ## 🔥 [2.2.11] - 2026-02-05 (NUCLEAR CLEANUP & UI REFINEMENT)
 
 ### 🇪🇸 ESPAÑOL

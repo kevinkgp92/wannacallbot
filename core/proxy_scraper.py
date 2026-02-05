@@ -20,6 +20,7 @@ class ProxyScraper:
             "https://www.proxy-list.download/api/v1/get?type=http"
         ]
         self.proxies = []
+        self.geo_cache = {} # IP -> CountryCode
         self._load_cache()
 
     def _load_cache(self):
@@ -42,48 +43,60 @@ class ProxyScraper:
         except: pass
 
     def _batch_filter_country(self, proxies, country_code, stop_signal=None):
-        """Filters a chunk of proxies by country using ip-api batch."""
+        """Filters a chunk of proxies by country using multiple Geo-IP APIs with caching."""
         valid_proxies = []
+        clean_proxies = [p for p in proxies if ":" in p]
         
-        # Chunk into 100 (API limit)
-        chunks = [proxies[i:i + 100] for i in range(0, len(proxies), 100)]
+        # 1. Check Cache first
+        uncached = []
+        for p in clean_proxies:
+            ip = p.split(':')[0]
+            if ip in self.geo_cache:
+                if self.geo_cache[ip] == country_code:
+                    valid_proxies.append(p)
+            else:
+                uncached.append(p)
         
-        import concurrent.futures
+        if not uncached: return valid_proxies
+
+        # 2. Process uncached in chunks (Batch API)
+        chunks = [uncached[i:i + 100] for i in range(0, len(uncached), 100)]
         
         def process_chunk(chunk):
             if stop_signal and stop_signal(): return []
             matches = []
+            ips = [p.split(':')[0] for p in chunk]
+            
+            # STRATEGY A: ip-api.com (Batch)
             try:
-                # Prepare IPs
-                ips = []
-                clean_chunk = []
-                for p in chunk:
-                     if ":" in p:
-                         ip = p.split(':')[0]
-                         ips.append(ip)
-                         clean_chunk.append(p)
-
-                if not max(ips, default=0): return [] # Safety check
-
-                # API expects: [{"query": "ip"}, ...]
                 data = [{"query": ip, "fields": "countryCode"} for ip in ips]
-                
-                # High timeout for API stability
-                r = requests.post("http://ip-api.com/batch", json=data, timeout=10)
-                results = r.json()
-                
-                for idx, res in enumerate(results):
-                    if res.get('countryCode') == country_code:
-                        matches.append(clean_chunk[idx])
+                r = requests.post("http://ip-api.com/batch", json=data, timeout=8)
+                if r.status_code == 200:
+                    results = r.json()
+                    for idx, res in enumerate(results):
+                        cc = res.get('countryCode', 'XX')
+                        self.geo_cache[ips[idx]] = cc
+                        if cc == country_code:
+                            matches.append(chunk[idx])
+                    return matches
             except: pass
+
+            # STRATEGY B: ipwhois.app (Individual Fallback - slower but helps when rate limited)
+            # Only if chunk is small or we are desperate
+            if len(chunk) <= 10:
+                for p in chunk:
+                    ip = p.split(':')[0]
+                    try:
+                        r = requests.get(f"https://ipwhois.app/json/{ip}", timeout=5)
+                        cc = r.json().get('country_code', 'XX')
+                        self.geo_cache[ip] = cc
+                        if cc == country_code: matches.append(p)
+                    except: pass
             return matches
 
-        with concurrent.futures.ThreadPoolExecutor(max_workers=20) as executor:
+        with concurrent.futures.ThreadPoolExecutor(max_workers=10) as executor:
             futures = [executor.submit(process_chunk, chunk) for chunk in chunks]
             for future in concurrent.futures.as_completed(futures):
-                if stop_signal and stop_signal(): 
-                    executor.shutdown(wait=False, cancel_futures=True)
-                    return []
                 found = future.result()
                 if found: valid_proxies.extend(found)
 
@@ -98,7 +111,7 @@ class ProxyScraper:
 
         # --- SOURCES DEFINITION ---
         
-        # TIER 1: HIGH QUALITY / TARGETED (We want to check these FIRST)
+        # TIER 1: HIGH INTENSITY / TARGETED ES
         es_sources = [
             "https://api.proxyscrape.com/v4/free-proxy-list/get?request=displayproxies&protocol=http&country=es&ssl=all&anonymity=all",
             "https://api.proxyscrape.com/v4/free-proxy-list/get?request=displayproxies&protocol=socks4&country=es&ssl=all&anonymity=all",
@@ -111,7 +124,12 @@ class ProxyScraper:
             "https://www.proxyscan.io/api/proxy?country=es&format=txt",
             "https://api.proxyscrape.com/v2/?request=displayproxies&protocol=http&timeout=10000&country=es",
             "https://raw.githubusercontent.com/jetkai/proxy-list/main/online-proxies/txt/proxies-all.txt",
-            "https://spys.me/proxy.txt"
+            "https://spys.me/proxy.txt",
+            "https://raw.githubusercontent.com/TheSpeedX/PROXY-List/master/http.txt",
+            "https://raw.githubusercontent.com/TheSpeedX/PROXY-List/master/socks4.txt",
+            "https://raw.githubusercontent.com/TheSpeedX/PROXY-List/master/socks5.txt",
+            "https://raw.githubusercontent.com/ErcinDedeoglu/proxies/main/proxies/http.txt",
+            "https://raw.githubusercontent.com/ErcinDedeoglu/proxies/main/proxies/socks5.txt"
         ]
         
         # TIER 2: MASSIVE HAYSTACK (Only used if Tier 1 fails)
@@ -261,19 +279,18 @@ class ProxyScraper:
         
         def is_alive(proxy):
             if stop_signal and stop_signal(): return None
-            try:
-                # Optimized for speed and reliability
+                # optimized for residential ES latency
                 headers = {"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36"}
                 proxy_dict = {"http": f"http://{proxy}", "https": f"http://{proxy}"}
                 
-                # Check 1: Google Gen_204 (Fastest)
+                # Check 1: Google Gen_204 (The real standard for OSINT)
                 r = requests.get("http://clients3.google.com/generate_204", 
-                                 proxies=proxy_dict, headers=headers, timeout=10)
+                                 proxies=proxy_dict, headers=headers, timeout=15)
                 if r.status_code == 204:
                     return proxy
                 
-                # Check 2: Fallback Cloudflare (Reliable)
-                r = requests.get("https://1.1.1.1", proxies=proxy_dict, headers=headers, timeout=8)
+                # Check 2: Cloudflare (High quality fallback)
+                r = requests.get("https://cloudflare.com/cdn-cgi/trace", proxies=proxy_dict, headers=headers, timeout=12)
                 if r.status_code == 200:
                     return proxy
             except: pass

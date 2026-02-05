@@ -166,6 +166,8 @@ class OSINTManager:
         return None
 
     def lookup(self, browser_manager, phone_str, name_hint=None, progress_callback=None, stop_check=None):
+        rotation_count = 0
+        max_rotations = 5
         browser = browser_manager.get_driver()
         
         # Helper for progress reporting
@@ -208,6 +210,10 @@ class OSINTManager:
             print(f"    ⚠️ Proxy invalido o no es español ({e}). Rotando...")
             browser_manager.mark_current_proxy_bad()
             browser_manager.close() # CORRECT TEARDOWN
+            rotation_count += 1
+            if rotation_count > max_rotations:
+                print("🚫 LÍMITE DE ROTACIÓN ALCANZADO: El sistema no encuentra proxys ES estables. Abortando búsqueda.")
+                return None
             return self.lookup(browser_manager, phone_str, name_hint, progress_callback, stop_check)
 
         # GLOBAL TIMEOUT & CIRCUIT BREAKER
@@ -304,6 +310,10 @@ class OSINTManager:
                     browser_manager.mark_current_proxy_bad() # Burn bad proxy
                     
                     print("🔄 SISTEMA: Rotando proxy por bloqueo/bajo rendimiento...")
+                    rotation_count += 1
+                    if rotation_count > max_rotations:
+                        print("🚫 LÍMITE DE ROTACIÓN ALCANZADO: Demasiados bloqueos. Saltando fuente.")
+                        return False
                     browser = browser_manager.get_driver()
                     browser.set_page_load_timeout(20) # Re-apply 20s
             
