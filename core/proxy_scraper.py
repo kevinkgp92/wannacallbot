@@ -85,29 +85,35 @@ class ProxyScraper:
                     time.sleep(1)
             except: pass
 
-            # STRATEGY B: Resilient Fallback (v2.2.22)
-            # 1. Try ipapi.co (Batch-like fallback)
-            for p in chunk[:20]: # Expanded to 20 for v2.2.22
-                if stop_signal and stop_signal(): break
+            # STRATEGY B: Turbo Resilient Fallback (v2.2.23 - Parallelized)
+            # Parallelize individual checks to avoid linear delays
+            sub_chunk = chunk[:30] # Check up to 30 candidates per batch failure
+            
+            def check_single_candidate(p):
+                if stop_signal and stop_signal(): return None
                 ip = p.split(':')[0]
                 if ip in self.geo_cache:
-                    if self.geo_cache[ip] == country_code: matches.append(p)
-                    continue
+                    return p if self.geo_cache[ip] == country_code else None
 
                 try:
-                    r = requests.get(f"https://ipapi.co/{ip}/country/", timeout=4)
+                    # Use a short timeout for turbo mode
+                    r = requests.get(f"https://ipapi.co/{ip}/country/", timeout=3)
                     if r.status_code == 200:
                         cc = r.text.strip().upper()
                         self.geo_cache[ip] = cc
-                        if cc == country_code: matches.append(p)
+                        return p if cc == country_code else None
                     elif r.status_code == 429:
-                        # Try ip-api fallback individual
-                        r2 = requests.get(f"http://ip-api.com/json/{ip}?fields=countryCode", timeout=3)
-                        if r2.status_code == 200:
-                            cc = r2.json().get("countryCode", "XX")
-                            self.geo_cache[ip] = cc
-                            if cc == country_code: matches.append(p)
-                except: continue
+                        r2 = requests.get(f"http://ip-api.com/json/{ip}?fields=countryCode", timeout=2)
+                        cc = r2.json().get("countryCode", "XX")
+                        self.geo_cache[ip] = cc
+                        return p if cc == country_code else None
+                except: pass
+                return None
+
+            with concurrent.futures.ThreadPoolExecutor(max_workers=20) as executor:
+                results = list(executor.map(check_single_candidate, sub_chunk))
+                matches.extend([r for r in results if r])
+            
             return matches
 
         # TURBO GEO-FILTER: Increased from 40 to 50 workers for v2.2.19

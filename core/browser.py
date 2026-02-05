@@ -126,9 +126,19 @@ class BrowserManager:
         # Disable tracking to reduce overhead involved with blocking lists
         options.set_preference("privacy.trackingprotection.enabled", False) 
         
-        # Optimize RAM
-        options.set_preference("browser.sessionhistory.max_entries", 5)
+        # Optimize RAM & Speed: SLIM MODE (v2.2.23)
+        options.set_preference("browser.sessionhistory.max_entries", 2)
         options.set_preference("browser.cache.disk.enable", False)
+        options.set_preference("browser.cache.memory.enable", True)
+        options.set_preference("browser.cache.memory.capacity", 51200) # 50MB cap
+        
+        # NUCLEAR RAM SAVER: Disable Images and Media
+        options.set_preference("permissions.default.image", 2) # 1=Allow, 2=Block
+        options.set_preference("media.autoplay.enabled", False)
+        options.set_preference("media.process.enabled", False)
+        options.set_preference("media.audio_video.enabled", False)
+        options.set_preference("pdfjs.disabled", True)
+        
 
         # HARDENED REGION: Force Spain regardless of IP
         options.set_preference("browser.search.region", "ES")
@@ -252,6 +262,13 @@ class BrowserManager:
         options.add_argument("--lang=es-ES")
         options.add_argument("--accept-lang=es-ES,es")
         options.add_argument("--disable-blink-features=AutomationControlled")
+        
+        # SLIM MODE Chrome (v2.2.23)
+        options.add_argument("--disable-gpu")
+        options.add_argument("--blink-settings=imagesEnabled=false")
+        options.add_argument("--disable-dev-shm-usage") # Prevents crashes in low RAM
+        options.add_argument("--no-sandbox")
+        
         
         # SSL Bypass Chrome
         options.add_argument("--ignore-certificate-errors")
