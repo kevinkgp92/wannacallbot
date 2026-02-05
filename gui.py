@@ -1,49 +1,62 @@
 import os
 import sys
-
-# Handle PyInstaller and compiled environments path resolution
-if hasattr(sys, '_MEIPASS'):
-    base_path = sys._MEIPASS
-else:
-    base_path = os.path.dirname(os.path.abspath(__file__))
-
-if base_path not in sys.path:
-    sys.path.insert(0, base_path)
-
-import customtkinter as ctk
-import threading
-import queue
 import time
-from PIL import Image
-
-from core.updater import AutoUpdater
-from core.proxy_scraper import scrape_proxies
-
-import re
-import json
-import core.utils
-import queue
-from tkinter import messagebox
-
-ctk.set_appearance_mode("Dark")
-ctk.set_default_color_theme("blue")
 
 def _boot_log(msg):
-    """Write diagnostic info to a file since terminal might be hidden or buffered."""
+    """Extreme primitive logging at the top to catch import hangs."""
     try:
-        # Use absolute path to ensure it writes next to the EXE/Script
-        if hasattr(sys, '_MEIPASS'):
-            log_dir = os.path.dirname(sys.executable)
-        else:
-            log_dir = os.path.abspath(".")
-        
-        log_path = os.path.join(log_dir, "DEBUG_BOOT.txt")
-        timestamp = time.strftime("%H:%M:%S")
+        log_path = "DEBUG_BOOT.txt"
         with open(log_path, "a", encoding="utf-8") as f:
-            f.write(f"[{timestamp}] {msg}\n")
+            f.write(f"[{time.strftime('%H:%M:%S')}] {msg}\n")
     except: pass
 
-_boot_log("--- SESSION START ---")
+_boot_log("--- COLD START ---")
+
+# Handle PyInstaller and compiled environments path resolution
+try:
+    if hasattr(sys, '_MEIPASS'):
+        base_path = sys._MEIPASS
+        _boot_log(f"MEIPASS active: {base_path}")
+    else:
+        base_path = os.path.dirname(os.path.abspath(__file__))
+    
+    if base_path not in sys.path:
+        sys.path.insert(0, base_path)
+    _boot_log("Base path resolved")
+except Exception as e:
+    _boot_log(f"Base path error: {e}")
+
+_boot_log("Importing customtkinter...")
+import customtkinter as ctk
+_boot_log("customtkinter imported")
+
+_boot_log("Importing standard libs...")
+import threading
+import queue
+import re
+import json
+from PIL import Image
+from tkinter import messagebox
+_boot_log("Standard libs imported")
+
+_boot_log("Importing core modules...")
+try:
+    from core.updater import AutoUpdater
+    _boot_log("AutoUpdater imported")
+    from core.proxy_scraper import scrape_proxies
+    _boot_log("proxy_scraper imported")
+    import core.utils
+    _boot_log("core.utils imported")
+except Exception as e:
+    _boot_log(f"Core import crash: {e}")
+
+_boot_log("Configuring CTK...")
+try:
+    ctk.set_appearance_mode("Dark")
+    ctk.set_default_color_theme("blue")
+    _boot_log("CTK configured")
+except Exception as e:
+     _boot_log(f"CTK config crash: {e}")
 
 class TextRedirector(object):
     def __init__(self, widget, tag="stdout"):
@@ -121,8 +134,10 @@ class OsintGUI(ctk.CTk):
         self.initialization_complete = False
         self.logo_image = None
         
-        _boot_log("OsintGUI.__init__ called")
-        self.show_splash()
+        _boot_log("OsintGUI.__init__ start")
+        # TEST: Disable splash temporarily to see if main window renders alone
+        # self.show_splash() 
+        _boot_log("Splash skipped (test mode)")
         self.version = "2.2.5" 
         _boot_log(f"Version: {self.version}")
 
