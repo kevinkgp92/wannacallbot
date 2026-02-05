@@ -2,6 +2,22 @@
 
 ---
 
+## 🔥 [2.2.20] - 2026-02-05 (ULTRA-STRICT GUARD & NUCLEAR CLEANUP)
+
+### 🇪🇸 ESPAÑOL
+- **FILTRO GEO 100%**: Re-habilitado el filtrado geográfico obligatorio para todos los proxys. Ya no se aceptan proxys "probables"; solo IPs con certificado ES verificado.
+- **PURIFICACIÓN**: Eliminadas fuentes mixtas que contaminaban la lista de España con IPs de otros países.
+- **LIMPIEZA NUCLEAR**: El builder ahora borra automáticamente archivos `.spec`, carpetas temporales y versiones antiguas para mantener el escritorio limpio.
+- **ESTABILIDAD**: Corregida la detección de país para evitar reyecciones por códigos "Unknown".
+
+### 🇺🇸 ENGLISH
+- **100% GEO-FILTER**: Re-enabled mandatory geographical filtering for all proxies. No more "likely" proxies; only verified ES IPs are accepted.
+- **PURIFICATION**: Removed mixed sources that contaminated the Spain list with foreign IPs.
+- **NUCLEAR CLEANUP**: Builder now auto-deletes `.spec` files, temporary folders, and old versions to keep the workspace clean.
+- **STABILITY**: Fixed country detection to avoid rejections caused by "Unknown" codes.
+
+---
+
 ## 🔥 [2.2.19] - 2026-02-05 (ULTIMATE RESILIENCE & TRIPLE-CHECK)
 
 ### 🇪🇸 ESPAÑOL

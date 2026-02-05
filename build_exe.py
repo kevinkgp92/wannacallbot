@@ -2,12 +2,29 @@ import os
 import subprocess
 import time
 import shutil
+import glob
 
 def build():
-    version = "2.2.19"
+    version = "2.2.20"
     print("===================================================")
     print(f"    WANNA CALL? - EXE BUILDER (v{version})")
     print("===================================================")
+    
+    print("\n[NUCLEAR CLEANUP] Iniciando limpieza de espacio de trabajo...")
+    # Remove all .spec files
+    for spec in glob.glob("*.spec"):
+        try:
+            os.remove(spec)
+            print(f"  🗑️ Borrado: {spec}")
+        except: pass
+    
+    # Remove build and dist folders
+    for folder in glob.glob("build_*") + glob.glob("dist_*") + ["build", "dist"]:
+        try:
+            if os.path.exists(folder):
+                shutil.rmtree(folder)
+                print(f"  🗑️ Purga: {folder}")
+        except: pass
     
     timestamp = int(time.time())
     dist_path = f"dist_{timestamp}"
@@ -26,7 +43,7 @@ def build():
         "--onefile",
         "--windowed",
         "--icon", "logo_v3.ico",
-        "--name", f"WannaCall_v2.2.19",
+        "--name", f"WannaCall_v2.2.20",
         "--distpath", dist_path,
         "--workpath", build_path,
         "--clean",
@@ -45,9 +62,11 @@ def build():
     
     if result.returncode == 0:
         print("\n[3/3] EXITO: CONSTRUCCION COMPLETADA")
-        exe_path = os.path.join(dist_path, f"WannaCall_v2.2.19.exe")
-        final_name = "WannaCall_v2.2.19_PORTABLE.exe"
+        exe_path = os.path.join(dist_path, f"WannaCall_v2.2.20.exe")
+        final_name = "WannaCall_v2.2.20_PORTABLE.exe"
         if os.path.exists(exe_path):
+            # Atomic swap
+            if os.path.exists(final_name): os.remove(final_name)
             shutil.copy(exe_path, final_name)
             print(f"\nUbicacion: {os.path.abspath(exe_path)}")
         else:

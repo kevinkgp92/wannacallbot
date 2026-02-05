@@ -147,7 +147,7 @@ class ProxyScraper:
 
         # --- SOURCES DEFINITION ---
         
-        # TIER 1: THE SPANISH ARMADA (v2.2.19) - 100% Targeted & Fresh
+        # TIER 1: THE SPANISH GUARD (v2.2.20) - Ultra-Strict Targeted
         es_sources = [
             "https://api.proxyscrape.com/v4/free-proxy-list/get?request=displayproxies&protocol=http&country=es",
             "https://api.proxyscrape.com/v4/free-proxy-list/get?request=displayproxies&protocol=socks4&country=es",
@@ -158,16 +158,12 @@ class ProxyScraper:
             "https://www.proxy-list.download/api/v1/get?type=socks5&country=ES",
             "https://raw.githubusercontent.com/mmpx12/proxy-list/master/proxies/es.txt",
             "https://raw.githubusercontent.com/proxifly/free-proxy-list/main/proxies/countries/es.txt",
-            "https://raw.githubusercontent.com/monosans/proxy-list/main/proxies/http.txt", # We'll filter this
             "https://raw.githubusercontent.com/vakhov/free-proxy-list/master/proxies/es.txt",
             "https://raw.githubusercontent.com/rdavydov/proxy-list/main/proxies/es.txt",
             "https://raw.githubusercontent.com/officialputuid/free-proxy-list/master/proxies/es.txt",
             "https://raw.githubusercontent.com/roosterkid/openproxylist/main/ES_RAW.txt",
             "https://www.proxyscan.io/api/proxy?country=es&format=txt",
-            "https://proxyspace.pro/spain.txt",
-            "https://proxydb.net/?country=ES",
-            "https://proxyservers.pro/proxy/spain",
-            "https://free-proxy-list.net/spanish-proxy.html"
+            "https://proxyspace.pro/spain.txt"
         ]
         
         # TIER 2: MASSIVE HAYSTACK (Polluted lists move here)
@@ -244,13 +240,15 @@ class ProxyScraper:
             print(f"  📥 Recolectedos {len(tier1_candidates)} candidatos ES.")
             
             if tier1_candidates:
-                # TRUST LOGIC: If source is Tier 1 (ES Targeted), we SKIP Geo-Check
-                # This saves 10-20 seconds of unnecessary API calls.
-                print(f"  ⚡ Trust Tier 1: Omitiendo Geo-Filtro para candidatos ES...")
-                live_matches = self._check_proxies_live(tier1_candidates, stop_signal)
-                if live_matches:
-                    self.proxies.extend(live_matches)
-                    print(f"  ✅ FASE 1 ÉXITO: {len(self.proxies)} proxies ES encontrados (Optimizado).")
+                # v2.2.20: MANDATORY Geo-Check re-enabled. No more trust loops.
+                print(f"  🛡️ Guardia ES: Verificando procedencia geográfica de {len(tier1_candidates)} candidatos...")
+                geo_es = self._batch_filter_country(tier1_candidates, "ES", stop_signal)
+                if geo_es:
+                    print(f"    📥 {len(geo_es)} proxys confirmados como ESPAÑOLES reales.")
+                    live_matches = self._check_proxies_live(geo_es, stop_signal)
+                    if live_matches:
+                        self.proxies.extend(live_matches)
+                        print(f"  ✅ FASE 1 ÉXITO: {len(self.proxies)} proxies ES 100% reales.")
             
             # EARLY EXIT if we found enough
             # v2.2.4: If we have even ONE good targeted proxy, we START.
