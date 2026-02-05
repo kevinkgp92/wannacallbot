@@ -164,6 +164,10 @@ class OsintGUI(ctk.CTk):
         self.initialization_complete = False
         self.logo_image = None
         
+        # Thread-safe update queue
+        import queue
+        self.update_queue = queue.Queue()
+        
         _boot_log("OsintGUI.__init__ start")
         # TEST: Disable splash temporarily to see if main window renders alone
         # self.show_splash() 
@@ -175,6 +179,7 @@ class OsintGUI(ctk.CTk):
         _boot_log("Starting AutoUpdater")
         self.updater = AutoUpdater(self.version)
         self.updater.check_updates_silent(callback=self._on_update_found)
+        self.after(2000, self._process_update_queue)
 
         self.title(f"WANNA CALL? v{self.version} [REPARADO - BOTON VERDE]")
         self.geometry("1100x700")
@@ -238,10 +243,25 @@ class OsintGUI(ctk.CTk):
         self.after(5000, self.deiconify)
         
     def _on_update_found(self, found, new_version):
-        """Callback triggered when an update is found."""
+        """Callback triggered when an update is found (from background thread)."""
         if found:
-            # Must run on main thread
-            self.after(1000, lambda: self.updater.prompt_update(self))
+            # Put update signal into thread-safe queue
+            self.update_queue.put(("update_found", new_version))
+
+    def _process_update_queue(self):
+        """Processes signals from the update thread in the main thread."""
+        try:
+            while True:
+                signal, data = self.update_queue.get_nowait()
+                if signal == "update_found":
+                    _boot_log(f"Signal received: Update to {data} ready.")
+                    self.updater.prompt_update(self)
+        except queue.Empty:
+            pass
+        finally:
+            # Check again soon
+            if not self.running or True: # Keep checking even if not 'attacking'
+                self.after(500, self._process_update_queue)
 
     def _build_main_ui(self):
         _boot_log("Building Sidebar...")
