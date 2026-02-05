@@ -98,11 +98,15 @@ class OSINTManager:
                     if attempted_clicks > 0:
                         print(f"[OSINT] Intentando bypass de captcha en {source_name}...")
                     else:
-                        print(f"[BLOQUEO] Captcha detectado en {source_name}. Esperando...")
-                    last_log_time = time.time()
-                time.sleep(1)
-            else:
-                return True
+                        pass 
+                last_log_time = time.time()
+            
+            # v2.2.27: ANTI-BUSY-WAIT SHIELD
+            # Without this sleep, the loop eats 100% CPU while waiting for the page/captcha
+            time.sleep(1)
+            
+            if not is_blocked:
+                break
                 
         # AUTO-RECOVERY: If still blocked, refresh once
         print(f"⚠️ Dificultad extrema en {source_name}. Reintentando carga...")

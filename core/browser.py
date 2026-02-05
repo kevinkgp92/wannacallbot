@@ -21,6 +21,18 @@ class BrowserManager:
         self.stop_check = stop_check
         self.scraper = ProxyScraper()
         self.driver = None
+        self._kill_zombies() # Clean start
+
+    def _kill_zombies(self):
+        """Nuclear cleanup of orphaned browser processes."""
+        if os.name == 'nt':
+            try:
+                # Kill any orphaned drivers that eat CPU
+                subprocess.run("taskkill /F /IM chromedriver.exe /T", capture_output=True, shell=True)
+                subprocess.run("taskkill /F /IM geckodriver.exe /T", capture_output=True, shell=True)
+                # Note: We don't kill chrome.exe/firefox.exe here because the user might be watching YouTube
+                # We only kill the automation drivers.
+            except: pass
 
     def _get_proxy(self):
         if self.proxy:

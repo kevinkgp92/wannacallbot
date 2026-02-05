@@ -218,9 +218,17 @@ class ProxyScraper:
             def fetch_one(url):
                 if stop_signal and stop_signal(): return []
                 try:
-                    r = requests.get(url, timeout=6)
+                    # v2.2.27: ANTI-FREEZE SHIELD
+                    # Don't download massive files that freeze the regex parser
+                    r = requests.get(url, timeout=5, stream=True)
+                    content = ""
+                    for chunk in r.iter_content(chunk_size=1024, decode_unicode=True):
+                        if chunk: content += chunk
+                        if len(content) > 512000: # 512KB Max per source
+                             print(f"  ⚠️ Fuente demasiado grande, truncando: {url[:30]}...")
+                             break
                     if r.status_code == 200:
-                        return re.findall(r'\d+\.\d+\.\d+\.\d+:\d+', r.text)
+                        return re.findall(r'\d+\.\d+\.\d+\.\d+:\d+', content)
                 except: pass
                 return []
 
