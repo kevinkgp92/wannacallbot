@@ -2,6 +2,20 @@
 
 ---
 
+## 🔥 [2.2.25] - 2026-02-05 (SAUL'S PREMIUM - CRITICAL BUGFIX)
+
+### 🇪🇸 ESPAÑOL
+- **CRITICAL FIX**: Corregido el error `'ProxyScraper' object has no attribute 'geo_cache'` que causaba crashes.
+- **PREMIUM BRANDING**: Nuevo README visual profesional con banners y tablas de rendimiento.
+- **OSINT OPTIMIZER**: Ajuste de latencia en hilos para una navegación aún más fluida y estable.
+
+### 🇺🇸 ENGLISH
+- **CRITICAL FIX**: Fixed `'ProxyScraper' object has no attribute 'geo_cache'` error that caused crashes.
+- **PREMIUM BRANDING**: New professional visual README with banners and performance tables.
+- **OSINT OPTIMIZER**: Thread latency adjustment for even smoother and more stable browsing.
+
+---
+
 ## 🔥 [2.2.24] - 2026-02-05 (COOLING & PROXY QUALITY)
 
 ### 🇪🇸 ESPAÑOL

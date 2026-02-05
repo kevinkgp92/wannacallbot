@@ -20,6 +20,7 @@ class ProxyScraper:
             "https://www.proxy-list.download/api/v1/get?type=http"
         ]
         self.proxies = []
+        self.geo_cache = {} # IP -> CountryCode
         self.last_scrape_time = 0
         self.golden_cache_file = "core/golden_proxies.json"
         self._load_cache()
