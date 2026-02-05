@@ -4,10 +4,13 @@ import webbrowser
 import tkinter as tk
 from tkinter import messagebox
 import logging
+import sys
+import os
+import subprocess
 
 # CONFIG
 REPO_USER = "kevinkgp92"
-REPO_NAME = "wannacallbot" # Asumido por el contexto
+REPO_NAME = "wannacallbot"
 VERSION_URL = f"https://raw.githubusercontent.com/{REPO_USER}/{REPO_NAME}/main/version.txt"
 RELEASE_URL = f"https://github.com/{REPO_USER}/{REPO_NAME}/releases/latest"
 
@@ -27,9 +30,8 @@ class AutoUpdater:
             r = requests.get(VERSION_URL, timeout=5)
             if r.status_code == 200:
                 remote_ver = r.text.strip()
-                # Simple string comparison (works for v2.2.5 vs v2.2.4)
-                # Ideally use semver, but string compare works fine for format vX.X.X
-                if remote_ver > self.current_version:
+                # Check if versions are different
+                if remote_ver != self.current_version:
                     self.latest_version = remote_ver
                     self.update_available = True
                     print(f"🔔 Actualización encontrada: {remote_ver} (Actual: {self.current_version})")
@@ -42,14 +44,31 @@ class AutoUpdater:
             print(f"⚠️ Error buscando actualizaciones: {e}")
             if callback: callback(False, None)
 
+    def apply_update_git(self):
+        """Perform a git pull and restart the application."""
+        try:
+            print("🚀 Iniciando actualización automática via Git...")
+            # 1. Force update
+            subprocess.run(["git", "fetch", "--all"], check=True, capture_output=True)
+            subprocess.run(["git", "reset", "--hard", "origin/main"], check=True, capture_output=True)
+            subprocess.run(["git", "pull", "origin", "main"], check=True, capture_output=True)
+            
+            print("✅ Código actualizado. Reiniciando...")
+            
+            # 2. Restart
+            if getattr(sys, 'frozen', False):
+                subprocess.Popen([sys.executable])
+            else:
+                subprocess.Popen([sys.executable, "gui.py"])
+            
+            os._exit(0)
+            
+        except Exception as e:
+            messagebox.showerror("Error de Actualización", f"No se pudo completar la actualización automática:\n{e}\n\nPor favor, usa el archivo AUTO_FIX_ULTIMATE.bat")
+
     def prompt_update(self):
         """Shows a GUI prompt to the user."""
-        msg = f"¡Nueva versión disponible!\n\nVersión Actual: {self.current_version}\nNueva Versión: {self.latest_version}\n\n¿Quieres descargarla ahora?"
+        msg = f"¡Nueva versión disponible (v{self.latest_version})!\n\n¿Quieres actualizar ahora?\n(El bot se reiniciará automáticamente)"
         response = messagebox.askyesno("Actualización Detectada 🚀", msg)
         if response:
-            self.download_update()
-
-    def download_update(self):
-        """Opens the download page."""
-        print("🚀 Abriendo página de descarga...")
-        webbrowser.open(RELEASE_URL)
+            self.apply_update_git()
