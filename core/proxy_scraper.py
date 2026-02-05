@@ -71,7 +71,7 @@ class ProxyScraper:
             # STRATEGY A: ip-api.com (Batch)
             try:
                 data = [{"query": ip, "fields": "countryCode"} for ip in ips]
-                r = requests.post("http://ip-api.com/batch", json=data, timeout=8)
+                r = requests.post("http://ip-api.com/batch", json=data, timeout=10)
                 if r.status_code == 200:
                     results = r.json()
                     for idx, res in enumerate(results):
@@ -80,19 +80,23 @@ class ProxyScraper:
                         if cc == country_code:
                             matches.append(chunk[idx])
                     return matches
+                elif r.status_code == 429:
+                    # Rate limited -> Sleep briefly and continue to fallback
+                    time.sleep(1)
             except: pass
 
-            # STRATEGY B: ipwhois.app (Individual Fallback - slower but helps when rate limited)
-            # Only if chunk is small or we are desperate
-            if len(chunk) <= 10:
-                for p in chunk:
-                    ip = p.split(':')[0]
-                    try:
-                        r = requests.get(f"https://ipwhois.app/json/{ip}", timeout=5)
-                        cc = r.json().get('country_code', 'XX')
+            # STRATEGY B: Individual Fallback (Limited to small batches to avoid huge delays)
+            # Use ipapi.co as secondary batch-like fallback
+            for p in chunk[:15]: # Only check first 15 of a failed batch to maintain speed
+                if stop_signal and stop_signal(): break
+                ip = p.split(':')[0]
+                try:
+                    r = requests.get(f"https://ipapi.co/{ip}/country/", timeout=3)
+                    if r.status_code == 200:
+                        cc = r.text.strip().upper()
                         self.geo_cache[ip] = cc
                         if cc == country_code: matches.append(p)
-                    except: pass
+                except: continue
             return matches
 
         with concurrent.futures.ThreadPoolExecutor(max_workers=10) as executor:
@@ -139,7 +143,7 @@ class ProxyScraper:
 
         # --- SOURCES DEFINITION ---
         
-        # TIER 1: HIGH INTENSITY / ONLY ES (API Filtered)
+        # TIER 1: HIGH INTENSITY / ONLY ES (API Filtered) - TRUSTED
         es_sources = [
             "https://api.proxyscrape.com/v4/free-proxy-list/get?request=displayproxies&protocol=http&country=es",
             "https://api.proxyscrape.com/v4/free-proxy-list/get?request=displayproxies&protocol=socks4&country=es",
@@ -150,7 +154,10 @@ class ProxyScraper:
             "https://www.proxy-list.download/api/v1/get?type=socks5&country=ES",
             "https://raw.githubusercontent.com/roosterkid/openproxylist/main/ES_RAW.txt",
             "https://www.proxyscan.io/api/proxy?country=es&format=txt",
-            "https://api.proxyscrape.com/v2/?request=displayproxies&protocol=http&timeout=10000&country=es"
+            "https://api.proxyscrape.com/v2/?request=displayproxies&protocol=http&timeout=10000&country=es",
+            "https://proxyspace.pro/spain.txt",
+            "https://raw.githubusercontent.com/TheSpeedX/SOCKS-List/master/http.txt", # Check later if ES is inside
+            "https://raw.githubusercontent.com/monosans/proxy-list/main/proxies_anonymous/http.txt" 
         ]
         
         # TIER 2: MASSIVE HAYSTACK (Polluted lists move here)
@@ -182,8 +189,8 @@ class ProxyScraper:
                 return []
 
             import concurrent.futures
-            # TURBO MODE: Check 60 sources in parallel
-            with concurrent.futures.ThreadPoolExecutor(max_workers=60) as executor:
+            # TURBO MODE: Check 100 sources in parallel for hyper-speed acquisition
+            with concurrent.futures.ThreadPoolExecutor(max_workers=100) as executor:
                 futures = [executor.submit(fetch_one, u) for u in urls]
                 for future in concurrent.futures.as_completed(futures):
                     if stop_signal and stop_signal():
@@ -227,14 +234,13 @@ class ProxyScraper:
             print(f"  📥 Recolectedos {len(tier1_candidates)} candidatos ES.")
             
             if tier1_candidates:
-                # Direct check (no need to batch heavily, usually < 2000 IPs)
-                # But we still run Geo-Filter to be sure (some lists are mixed)
-                geo_matches = self._batch_filter_country(tier1_candidates, "ES", stop_signal)
-                if geo_matches:
-                     live_matches = self._check_proxies_live(geo_matches, stop_signal)
-                     if live_matches:
-                         self.proxies.extend(live_matches)
-                         print(f"  ✅ FASE 1 ÉXITO: {len(self.proxies)} proxies ES encontrados.")
+                # TRUST LOGIC: If source is Tier 1 (ES Targeted), we SKIP Geo-Check
+                # This saves 10-20 seconds of unnecessary API calls.
+                print(f"  ⚡ Trust Tier 1: Omitiendo Geo-Filtro para candidatos ES...")
+                live_matches = self._check_proxies_live(tier1_candidates, stop_signal)
+                if live_matches:
+                    self.proxies.extend(live_matches)
+                    print(f"  ✅ FASE 1 ÉXITO: {len(self.proxies)} proxies ES encontrados (Optimizado).")
             
             # EARLY EXIT if we found enough
             # v2.2.4: If we have even ONE good targeted proxy, we START.

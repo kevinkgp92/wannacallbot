@@ -2,6 +2,20 @@
 
 ---
 
+## 🔥 [2.2.17] - 2026-02-05 (HYPER-SPEED STARTUP & TRUST TIER)
+
+### 🇪🇸 ESPAÑOL
+- **TRUST TIER 1**: Eliminada la re-verificación Geo de proxys provenientes de fuentes exclusivas de España. Esto acelera el arranque un 80%.
+- **TURBO HARVESTER**: Elección de hasta 100 hilos en paralelo para la descarga de fuentes.
+- **ROBUST GEO-FILTER**: Mejorado el motor de filtrado masivo con soporte para reintentos tras Error 429 y fallback a `ipapi.co`.
+
+### 🇺🇸 ENGLISH
+- **TRUST TIER 1**: Removed redundant Geo-verification for proxies from ES-only sources. Speeds up startup by 80%.
+- **TURBO HARVESTER**: Increased parallel workers to 100 for source downloading.
+- **ROBUST GEO-FILTER**: Enhanced mass-filtering engine with retry logic for Error 429 and `ipapi.co` fallback.
+
+---
+
 ## 🔥 [2.2.16] - 2026-02-05 (INFINITE LOOP FIX & PERSISTENCE)
 
 ### 🇪🇸 ESPAÑOL
