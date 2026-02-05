@@ -85,7 +85,10 @@ class ProxyScraper:
             "https://raw.githubusercontent.com/roosterkid/openproxylist/main/ES_RAW.txt",
             "https://raw.githubusercontent.com/TheSpeedX/PROXY-List/master/http.txt",
             "https://raw.githubusercontent.com/monosans/proxy-list/main/proxies/http.txt",
-            "https://raw.githubusercontent.com/hookzof/socks5_list/master/proxy.txt",
+            "https://raw.githubusercontent.com/Z4nzu/Free-Proxy-List/master/http.txt",
+            "https://raw.githubusercontent.com/RDX-Gamer/proxy-list/main/proxies.txt",
+            "https://raw.githubusercontent.com/jetkai/proxy-list/main/online-proxies/txt/proxies.txt",
+            "https://raw.githubusercontent.com/ErcinDedeoglu/proxies/main/proxies/http.txt",
             "https://www.proxyscan.io/api/proxy?country=es&format=txt",
             "https://spys.me/proxy.txt"
         ]
