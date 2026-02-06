@@ -1,5 +1,17 @@
 # ♈ WANNA CALL? - CHANGELOG
 
+## [v2.2.64] - Zenith Omega (Absolute Resilience) (2026-02-06)
+### 🇪🇸 ESPAÑOL
+- **🛰️ ZENITH OMEGA (Resiliencia Absoluta)**: Implementación de un gestor de bloqueos de API. Si una API nos da error 429, el bot la pone en "cuarentena" y rota instantáneamente a 4 alternativas más (ipapi.co, ipwho.is, freeipapi, findip).
+- **🛠️ FIX ARQUITECTURAL FINAL**: Reestructuración total de las funciones de filtrado para eliminar los errores de alcance (`UnboundLocalError`) de raíz.
+- **🚀 OPTIMIZACIÓN DE LOGS**: Reducción del ruido en consola para centrarse en los resultados de proxies residenciales españoles.
+
+### 🇺🇸 ENGLISH
+- **🛰️ ZENITH OMEGA (Absolute Resilience)**: API Lock Manager implementation. If an API returns a 429 error, the bot puts it in "quarantine" and instantly rotates to 4 more alternatives (ipapi.co, ipwho.is, freeipapi, findip).
+- **🛠️ FINAL ARCHITECTURAL FIX**: Total restructuring of filtering functions to eliminate scope errors (`UnboundLocalError`) once and for all.
+- **🚀 LOG OPTIMIZATION**: Reduced console noise to focus on Spanish residential proxy results.
+
+
 ## [v2.2.63] - Zenith Protocol (Stability Patch) (2026-02-06)
 ### 🇪🇸 ESPAÑOL
 - **🛠️ FIX CRÍTICO DE ESTABILIDAD**: Corregido un error de arquitectura (`UnboundLocalError`) que causaba el cierre del bot al activar el Tridente de Supervivencia.
