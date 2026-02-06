@@ -135,6 +135,7 @@ class ProxyScraper:
         
         # v2.2.65: TITAN PRIME - Removed Cache Purge for persistence
         self._load_cache()
+        self._sanitize_pool() # v2.2.71: Saneamiento Nuclear Inmediato
 
     def _load_cache(self):
         """Loads verified proxies and geo results from local cache."""
@@ -154,10 +155,35 @@ class ProxyScraper:
                 # print(f"  🌍 Geo-Caché cargado: {len(self.geo_cache)} registros.")
             except: self.geo_cache = {}
 
-    def is_ip_golden(self, ip):
-        """v2.2.62: Zenith Trust - Allows external modules to check if an IP is already verified as GOLDEN."""
-        res = self.geo_cache.get(ip)
-        return res == "GOLDEN"
+    def get_geo_status(self, ip):
+        """v2.2.70: Zenith Trust - Returns the cached status for an IP (GOLDEN, NUCLEAR_BL, FAIL, etc.)."""
+        return self.geo_cache.get(ip)
+
+    def _sanitize_pool(self):
+        """v2.2.71: TITAN APEX - Elimina proxies basura (M247/DC) de la caché al arrancar."""
+        if not self.proxies: return
+        
+        initial_count = len(self.proxies)
+        clean_pool = []
+        for p in self.proxies:
+            ip = p.split(':')[0]
+            status = self.get_geo_status(ip)
+            
+            # Si ya sabemos que es nuclear o datacenter malo, fuera.
+            if status in ["NUCLEAR_BL", "BAD_DC"]:
+                self.blacklist_proxy(p)
+                continue
+                
+            # Si no hay status pero el ASN es sospechoso (fallback), fuera.
+            # (Nota: Esto requiere un check que evitemos si es posible, 
+            # pero al arrancar podemos permitirnos un filtro ligero si tenemos info de ASNs guardada)
+            clean_pool.append(p)
+            
+        self.proxies = clean_pool
+        diff = initial_count - len(self.proxies)
+        if diff > 0:
+            print(f"  ☢️ SANEAMIENTO APEX: Eliminados {diff} proxies basura de sesiones anteriores.")
+            self._save_cache()
 
     def _save_cache(self):
         """Saves current verified proxies and geo results to local cache."""

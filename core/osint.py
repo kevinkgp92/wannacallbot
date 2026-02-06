@@ -188,179 +188,49 @@ class OSINTManager:
             browser = browser_manager.get_driver()
             
             # 0. CONNECTIVITY & PROXY CHECK (CRITICAL DEBUG)
-            # v2.2.70: ZENITH TRUST v2 - La inyección de confianza definitiva
+            # v2.2.71: TITAN APEX - DEPENDENCIA TOTAL ZENITH
+            # El OSINT ya NO consulta APIs externas de Geo-IP. Confía 100% en el Scraper.
             from core.browser import BrowserManager
             shared_scraper = getattr(BrowserManager, "_SHARED_SCRAPER", None)
             
             check_ok = False
             current_ip = None
+            
             if browser_manager.proxy or browser_manager.auto_proxy:
                 p_str = getattr(browser_manager, "current_proxy", None)
                 if p_str:
                     current_ip = p_str.split(':')[0]
-                    # Zenith Trust Check
-                    if shared_scraper and shared_scraper.is_ip_golden(current_ip):
-                        print(f"    ⭐ ZENITH TRUST: IP {current_ip} confiada plenamente (GOLDEN). Saltando pre-check.")
+                    status = shared_scraper.get_geo_status(current_ip) if shared_scraper else None
+                    
+                    if status == "GOLDEN":
+                        print(f"    ⭐ ZENITH APEX: IP {current_ip} confiada al 100% (GOLDEN).")
                         check_ok = True
-                    elif shared_scraper and shared_scraper.get_geo_status(current_ip) in ["NUCLEAR_BL", "BAD_DC"]:
-                        print(f"    ⛔ ZENITH REJECT: IP {current_ip} marcada como basura nuclear en el scraper. Rotando...")
+                    elif status in ["NUCLEAR_BL", "BAD_DC"]:
+                        print(f"    ⛔ ZENITH APEX REJECT: IP {current_ip} es basura nuclear ({status}). Rotando...")
+                        browser_manager.mark_current_proxy_bad()
+                        browser_manager.close()
+                        rotation_count += 1
+                        continue
+                    else:
+                        print(f"    ⚠️ ZENITH APEX: IP {current_ip} no validada por el Scraper. Forzando rotación por seguridad.")
                         browser_manager.mark_current_proxy_bad()
                         browser_manager.close()
                         rotation_count += 1
                         continue
 
             if not check_ok:
-                if self.last_verified_ip and (current_time - self.last_ip_check_time) < 60:
-                    print(f"[OSINT] 🛡️ IP verificada recientemente ({self.last_verified_ip}). Saltando check redundante.")
-                    check_ok = True
-                else:
-                    print("[OSINT] 🛡️ Verificando IP y Localización antes de iniciar...")
-                try:
-                    if stop_check and stop_check(): break
-                    
-                    # v2.2.42: Titan Robust Check (Sync with Scraper)
-                    browser.get("http://ip-api.com/json/?fields=status,countryCode,as,query")
-                    import json
-                    text_data = browser.find_element(By.TAG_NAME, "body").text.strip()
-                    
-                    # Titan Robust JSON
-                    if not text_data or not (text_data.startswith('{') or text_data.startswith('[')):
-                         raise ConnectionError("Geo-Check Returned Empty/Invalid response")
-                         
-                    geo_data = json.loads(text_data)
-                    
-                    if geo_data.get("status") == "success":
-                        cc = geo_data.get("countryCode", "Unknown")
-                        as_org = geo_data.get("as", "").lower()
-                        my_ip = geo_data.get("query", "Unknown")
-                        
-                        # Hosting Guard (M247/Romania segments)
-                        if "m247" in as_org or "romania" in as_org:
-                             cc = "RO_FAKE"
-                    else:
-                        raise ConnectionError("Geo-Check Locked/Failed")
-
-                    print(f"    🌍 IP ACTUAL: {my_ip} | PAÍS DETECTADO: {cc}")
-                    
-                    if stop_check and stop_check(): break
-
-                    # STRICT GEO-GUARD: KILL SWITCH
-                    if cc != "ES":
-                        print(f"    ⛔ GEO-BLOCK: IP rechazada ({cc}). Solo se permite ESPAÑA Real.")
-                        raise ConnectionError(f"Proxy Non-ES/Hosting: {cc}")
-                    
-                    # Cache the success
-                    self.last_verified_ip = my_ip
-                    self.last_ip_check_time = current_time
-                    check_ok = True
-                        
-                except Exception as e:
-                    err_msg = str(e)
-                    # v2.2.52: TITAN QUANTUM CHECK (Multi-API Resilience)
-                    print(f"    🛡️  Iniciando Titan Quantum Check (Fallo inicial: {err_msg[:50]}...)")
-                    
-                    # v2.2.62: ZENITH TRUST - Check Shared Geo-Cache First
-                    try:
-                        from core.browser import BrowserManager
-                        shared_scraper = BrowserManager._SHARED_SCRAPER
-                    except: shared_scraper = None
-
-                    check_apis = [
-                        {"url": "http://ip-api.com/json/?fields=status,countryCode,as,query", "cc": "countryCode", "as": "as"},
-                        {"url": "https://ipwho.is/", "cc": "country_code", "as": "connection.asn"},
-                        {"url": "https://freeipapi.com/api/json/", "cc": "countryCode", "as": "as"},
-                        {"url": "https://ipapi.co/json/", "cc": "country_code", "as": "org"}
-                    ]
-                    
-                    # Resolve real external IP once to check cache
-                    try:
-                        r_ip = requests.get("https://api.ipify.org?format=json", timeout=3)
-                        current_ip = r_ip.json().get("ip")
-                        if current_ip and shared_scraper:
-                            if shared_scraper.is_ip_golden(current_ip):
-                                print(f"    ⭐ ZENITH TRUST: IP {current_ip} ya verificada como GOLDEN por el Scraper. Saltando pre-check.")
-                                check_ok = True
-                                continue
-                    except: pass
-
-                    for api in check_apis:
-                        if check_ok: break
-                        try:
-                            headers = {'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/121.0.0.0 Safari/537.36'}
-                            api_url = api["url"]
-                            
-                            # Special case: some APIs need the IP appended
-                            if api_url.endswith("="):
-                                # We don't have the IP yet, so we use it as a generic check if possible
-                                # but usually we want to know the browser's IP
-                                continue 
-
-                            r_test = requests.get(api_url, timeout=4, headers=headers)
-                            if r_test.status_code == 200:
-                                g_data = r_test.json()
-                                
-                                # Resolve Country Code
-                                path_cc = api.get("cc", "").split('.')
-                                val_cc = g_data
-                                for p in path_cc:
-                                    if isinstance(val_cc, dict): val_cc = val_cc.get(p)
-                                
-                                # Resolve AS/ISP (to filter Datacenters)
-                                path_as = api.get("as", "").split('.')
-                                val_as = g_data
-                                for p in path_as:
-                                    if isinstance(val_as, dict): val_as = val_as.get(p)
-                                val_as = str(val_as or "").lower()
-
-                                # Smart Resolve if API only gives IP
-                                if api.get("needs_sub") or not val_cc:
-                                    det_ip = g_data.get("ip") or g_data.get("query")
-                                    if det_ip:
-                                        r_s = requests.get(f"http://ip-api.com/json/{det_ip}?fields=countryCode,as", timeout=3)
-                                        s_d = r_s.json()
-                                        val_cc = s_d.get("countryCode")
-                                        val_as = str(s_d.get("as", "")).lower()
-
-                                # v2.2.60: ULTIMATUM - Residential White-List (Expanded & Synchronized)
-                                residential_asns = [
-                                    "as3352", "as12430", "as11831", "as6739", "as15704", "as13134", "as204229", "as30722",
-                                    "as12348", "as57269", "as200902", "as201264", "as206411", "as213327"
-                                ]
-                                is_golden = any(asn in val_as for asn in residential_asns)
-                                
-                                # TITAN FILTER: Only Real ES (Absolute Zero Policy)
-                                bad_orgs = ["m247", "romania", "datacenter", "hosting", "cloud", "digitalocean", "vultr", "ovh", "hetzner", "as9009"]
-                                if any(x in val_as for x in bad_orgs) or not is_golden:
-                                    print(f"    ⛔ DC-BLOCK: Proxy no residencial o hosting detectado ({val_as}). Rehusando.")
-                                    val_cc = "BAD_DC"
-                                
-                                if val_cc == "ES" or is_golden:
-                                    # Double check requirement: must be ES AND Golden
-                                    # Special case: some residential IPs are marked as "ES" but not in the ASN list yet
-                                    # But for the user's "Zero OSINT", we only trust the list.
-                                    if (val_cc == "ES" or val_cc == "GOLDEN") and is_golden:
-                                        print(f"    ✅ TITAN-CHECK SUCCESS ({api_url.split('/')[2]}): IP verificada como ES Residencial (GOLDEN).")
-                                        check_ok = True
-                                        break
-                                    else:
-                                        print(f"    ⏳ {api_url.split('/')[2]}: Pais/Red no apto ({val_cc}/{val_as})")
-                        except Exception as sub_e:
-                            # print(f"    ⚠️  {api['url'].split('/')[2]} falló: {sub_e}")
-                            continue
-                    
-                    if check_ok: continue
-
-                    # v2.2.54: Titan God Mode - Smart Rotation
-                    print(f"    ⚠️ Proxy invalido o no es español ({err_msg}). Rotando...")
-                    if any(x in err_msg.lower() for x in ["locked", "failed", "empty", "invalid", "ro_fake", "bad_dc"]):
-                        print("    🔄 Activando Smart Rotation: Purgando pool para aire fresco...")
-                        
-                    browser_manager.mark_current_proxy_bad()
-                    browser_manager.close() 
-                    rotation_count += 1
-                    time.sleep(1.0) # v2.2.54: Slightly more cooldown for CPU stability
-                    if stop_check and stop_check(): break
-                    continue 
+                 # Si no es proxy (IP Real), permitimos pasar con un check local mínimo o cacheado
+                 if not browser_manager.proxy and not browser_manager.auto_proxy:
+                     check_ok = True
+                     print(f"[OSINT] 🛡️ Usando IP Local (Modo Sin Proxy).")
+                 else:
+                     # Fallback de emergencia si algo falla en la lógica Zenith
+                     print(f"    🔥 ERROR ZENITH: No se puede confiar en la IP. Rotando pool...")
+                     browser_manager.mark_current_proxy_bad()
+                     browser_manager.close()
+                     rotation_count += 1
+                     continue
+                pass # redundant block removed in v2.2.71
             
             if check_ok:
                 try:

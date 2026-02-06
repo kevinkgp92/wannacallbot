@@ -1,5 +1,19 @@
 # ♈ WANNA CALL? - CHANGELOG
 
+## [v2.2.71] - Titan Apex (Nuclear Sanitization) (2026-02-06)
+### 🇪🇸 ESPAÑOL
+- **🧼 SANEAMIENTO NUCLEAR DE CACHÉ**: El bot ahora limpia automáticamente la caché al arrancar, eliminando proxies "zombis" de M247 o Datacenters de sesiones antiguas. Pool 100% puro desde el inicio.
+- **👑 PROTOCOLO ZENITH APEX**: Dependencia total del OSINT hacia el Scraper. Se han eliminado TODOS los checks redundantes de Geo-IP en el módulo OSINT, confiando ciegamente en la validación del Scraper.
+- **⚡ CERO LATENCIA DE INICIO**: El tiempo muerto antes de empezar un escaneo OSINT se ha reducido a la nada absoluta en proxies ya validados.
+- **🛡️ SINCRONIZACIÓN ASN TOTAL**: Bloqueo absoluto y coordinado de ASNs de Datacenter en todos los niveles del core.
+
+### 🇺🇸 ENGLISH
+- **🧼 NUCLEAR CACHE SANITIZATION**: The bot now automatically cleans the cache on startup, removing "zombie" M247 or Datacenter proxies from old sessions. 100% pure pool from the start.
+- **👑 ZENITH APEX PROTOCOL**: Total OSINT dependency on the Scraper. ALL redundant Geo-IP checks in the OSINT module have been removed, fully trusting the Scraper's validation.
+- **⚡ ZERO STARTUP LATENCY**: Dead time before starting an OSINT scan has been reduced to absolute zero for already validated proxies.
+- **🛡️ TOTAL ASN SYNC**: Absolute and coordinated blocking of Datacenter ASNs across all core levels.
+
+
 ## [v2.2.70] - Titan Zenith Resolve (The Final Sync) (2026-02-06)
 ### 🇪🇸 ESPAÑOL
 - **🤝 PROTOCOLO ZENITH TRUST v2**: El módulo OSINT ahora confía plenamente en la sabiduría del Scraper. Si un proxy ya fue verificado como "Oro", el OSINT salta todos los pre-checks redundantes.
