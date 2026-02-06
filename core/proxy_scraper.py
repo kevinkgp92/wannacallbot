@@ -4,6 +4,7 @@ import random
 import time
 import json
 import concurrent.futures
+import threading # v2.2.35: Storm Shield Lock
 import os
 
 CACHE_FILE = "core/proxies_cache.json"
@@ -22,6 +23,8 @@ class ProxyScraper:
         self.proxies = []
         self.geo_cache = {} # IP -> CountryCode
         self.last_scrape_time = 0
+        self.last_full_scrape_time = 0 # v2.2.35: Cooldown for source download
+        self.scrape_lock = threading.Lock() # v2.2.35: Prevent parallel storm
         self.golden_cache_file = "core/golden_proxies.json"
         self._load_cache()
 
@@ -165,76 +168,8 @@ class ProxyScraper:
     def scrape(self, country=None, allow_fallback=False, stop_signal=None):
         """Mass Scrapes and HUNTS for valid proxies using a TIERED approach."""
         target_country = country if country else "Global"
-        print(f"ℹ️ Escaneando proxies ({target_country})...")
         
         if stop_signal and stop_signal(): return []
-
-        # --- SOURCES DEFINITION ---
-        
-        # TIER 1: THE SPANISH ARMADA 5.0 (v2.2.22) - Elite Targeted
-        es_sources = [
-            "https://raw.githubusercontent.com/TheSpeedX/SOCKS-List/master/http.txt", # Spanish included
-            "https://raw.githubusercontent.com/Zaeem20/free-proxy-list/master/proxies/es.txt",
-            "https://raw.githubusercontent.com/ObcbS/free-proxy-list/master/proxies/es.txt",
-            "https://raw.githubusercontent.com/officialputuid/free-proxy-list/master/proxies/es.txt",
-            "https://raw.githubusercontent.com/vakhov/free-proxy-list/master/proxies/es.txt",
-            "https://proxy-list.download/api/v1/get?type=http&country=ES",
-            "https://api.proxyscrape.com/v2/?request=displayproxies&protocol=http&timeout=5000&country=es",
-            "https://raw.githubusercontent.com/clketlow/proxy-list/master/http.txt", # Global but good
-            "https://api.openproxylist.xyz/http.txt"
-        ]
-        
-        # TIER 2: MASSIVE HAYSTACK (Polluted lists move here)
-        global_sources = [
-            "https://raw.githubusercontent.com/jetkai/proxy-list/main/online-proxies/txt/proxies-all.txt",
-            "https://spys.me/proxy.txt",
-            "https://raw.githubusercontent.com/TheSpeedX/PROXY-List/master/http.txt",
-            "https://raw.githubusercontent.com/TheSpeedX/PROXY-List/master/socks4.txt",
-            "https://raw.githubusercontent.com/TheSpeedX/PROXY-List/master/socks5.txt",
-            "https://raw.githubusercontent.com/ErcinDedeoglu/proxies/main/proxies/http.txt",
-            "https://raw.githubusercontent.com/ErcinDedeoglu/proxies/main/proxies/socks5.txt",
-            "https://raw.githubusercontent.com/monosans/proxy-list/main/proxies/http.txt",
-            "https://raw.githubusercontent.com/prxchk/proxy-list/main/http.txt",
-            "https://api.proxyscrape.com/v2/?request=displayproxies&protocol=http&timeout=10000&country=all&ssl=all&anonymity=all"
-        ]
-
-        # Helper to fetch a list of URLs
-        def fetch_sources(urls, label=""):
-            print(f"  📡 Descargando {len(urls)} fuentes {label}...")
-            collected = set()
-            
-            def fetch_one(url):
-                if stop_signal and stop_signal(): return []
-                try:
-                    # v2.2.27: ANTI-FREEZE SHIELD
-                    # Don't download massive files that freeze the regex parser
-                    r = requests.get(url, timeout=5, stream=True)
-                    content = ""
-                    for chunk in r.iter_content(chunk_size=1024, decode_unicode=True):
-                        if chunk: content += chunk
-                        if len(content) > 512000: # 512KB Max per source
-                             print(f"  ⚠️ Fuente demasiado grande, truncando: {url[:30]}...")
-                             break
-                    if r.status_code == 200:
-                        matches = re.findall(r'\d+\.\d+\.\d+\.\d+:\d+', content)
-                        # v2.2.33: Yielding during heavy parsing
-                        if len(matches) > 100: time.sleep(0.01) 
-                        return matches
-                except: pass
-                return []
-
-            import concurrent.futures
-            # COOLING MODE: Throttled to 5 workers for v2.2.28 (Arctic Stability)
-            with concurrent.futures.ThreadPoolExecutor(max_workers=5) as executor:
-                futures = [executor.submit(fetch_one, u) for u in urls]
-                for future in concurrent.futures.as_completed(futures):
-                    time.sleep(0.1) # Yield to system
-                    if stop_signal and stop_signal():
-                        executor.shutdown(wait=False, cancel_futures=True)
-                        return set()
-                    found = future.result()
-                    if found: collected.update(found)
-            return collected
 
         # =========================================================================
         # PHASE 0: PERSISTENCE & CACHE CHECK (Instant Startup)
@@ -242,12 +177,12 @@ class ProxyScraper:
         current_time = time.time()
         
         # PERSISTENCE (v2.2.34): If we have enough valid proxies and rescrape is too soon, EXIT.
-        # This prevents redundant scrapes when rotating quickly.
         if self.proxies and (current_time - self.last_scrape_time) < 120:
-             print(f"🚀 FASE 0: Usando proxies activos (Cooldown: {int(120 - (current_time - self.last_scrape_time))}s).")
+             # print(f"🚀 FASE 0: Usando proxies activos (Cooldown: {int(120 - (current_time - self.last_scrape_time))}s).")
              return self.proxies
 
         if self.proxies:
+            # v2.2.35: Only log if we are actually checking something significant
             print(f"🚀 FASE 0: Verificando proxies en caché...")
             cached_live = self._check_proxies_live(self.proxies, stop_signal)
             if cached_live:
@@ -257,7 +192,20 @@ class ProxyScraper:
                     self.last_scrape_time = current_time
                     return self.proxies
         
-        self.proxies = [] # Reset for fresh scrape
+        # v2.2.35: STORM SHIELD - Guard current scan with a lock
+        # If another thread is already scraping, wait for it instead of starting a new scan
+        with self.scrape_lock:
+            # Check cache AGAIN after obtaining lock (Double-Check Pattern)
+            if self.proxies and (time.time() - self.last_scrape_time) < 30:
+                return self.proxies
+            
+            # v2.2.35: SOURCE COOLDOWN - Don't hammer remote sources if we did it recently
+            if (time.time() - self.last_full_scrape_time) < 60:
+                print(f"⚠️ FASE 1/2 OMITIDA: Escaneo masivo recientemente completado (Cooldown < 60s).")
+                return self.proxies
+
+            print(f"ℹ️ Escaneando proxies ({target_country})...")
+            self.proxies = [] # Reset for fresh scrape
 
         # =========================================================================
         # PHASE 1: TIER 1 (TARGETED) - Fast & High Quality
@@ -373,6 +321,7 @@ class ProxyScraper:
 
         print(f"✅ LISTA FINAL: {len(self.proxies)} proxies operativos.")
         self.last_scrape_time = time.time()
+        self.last_full_scrape_time = time.time() # v2.2.35: Mark full scan complete
         self._save_cache()
         return self.proxies
 

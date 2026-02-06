@@ -1,5 +1,12 @@
 # ♈ WANNA CALL? - CHANGELOG
 
+## [v2.2.35] - Saul's Law (2026-02-06)
+### 🐞 LOOP & STORM SHIELD
+- **Iterative Lookup**: Refactorizada la búsqueda de OSINT a un bucle iterativo (`while rotation_count < max_rotations`). Adiós a la recursividad infinita que causaba bucles de escaneo.
+- **Scraper Storm Shield**: Implementado `threading.Lock` en el `ProxyScraper`. Si varios dorks piden proxies a la vez, el sistema ahora hace cola en lugar de descargar fuentes masivamente en paralelo.
+- **Hardened Cooldown**: Añadido `last_full_scrape_time`. No se repetirán descargas de fuentes de proxies si se completó una hace menos de 60 segundos.
+- **Log Order Fix**: Movido el mensaje "ℹ️ Escaneando..." tras el chequeo de caché para evitar logs engañosos en Phase 0.
+
 ## [v2.2.34] - Arctic Freeze (2026-02-06)
 ### ❄️ TOTAL STUTTER ELIMINATION
 - **GIL Guard**: Reducidos workers de verificación de 10 a 5 e implementados micro-pulsos de `time.sleep(0.02)` para garantizar suavidad total del ratón.
