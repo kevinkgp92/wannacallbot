@@ -290,18 +290,24 @@ class OSINTManager:
                                         val_cc = s_d.get("countryCode")
                                         val_as = str(s_d.get("as", "")).lower()
 
-                                # TITAN FILTER: Only Real ES (No M247, No Datacenters if possible)
+                                # v2.2.59: ULTIMATUM - Residential White-List (Synchronized)
+                                residential_asns = ["as3352", "as12430", "as11831", "as6739", "as15704", "as13134", "as204229", "as30722"]
+                                is_golden = any(asn in val_as for asn in residential_asns)
+                                
+                                # TITAN FILTER: Only Real ES (Absolute Zero Policy)
                                 bad_orgs = ["m247", "romania", "datacenter", "hosting", "cloud", "digitalocean", "vultr", "ovh"]
-                                if any(x in val_as for x in bad_orgs):
-                                    print(f"    ⛔ DC-BLOCK: Proxy de hosting detectado ({val_as}). Rehusando.")
+                                if any(x in val_as for x in bad_orgs) or not is_golden:
+                                    print(f"    ⛔ DC-BLOCK: Proxy no residencial o hosting detectado ({val_as}). Rehusando.")
                                     val_cc = "BAD_DC"
                                 
-                                if val_cc == "ES":
-                                    print(f"    ✅ TITAN-CHECK SUCCESS ({api_url.split('/')[2]}): IP verificada como ES Residencial.")
-                                    check_ok = True
-                                    break
-                                else:
-                                    print(f"    ⏳ {api_url.split('/')[2]}: Pais incorrecto ({val_cc})")
+                                if val_cc == "ES" or is_golden:
+                                    # Double check: must be ES AND Golden to be sure
+                                    if val_cc == "ES" and is_golden:
+                                        print(f"    ✅ TITAN-CHECK SUCCESS ({api_url.split('/')[2]}): IP verificada como ES Residencial (GOLDEN).")
+                                        check_ok = True
+                                        break
+                                    else:
+                                        print(f"    ⏳ {api_url.split('/')[2]}: Pais/Red no apto ({val_cc}/{val_as})")
                         except Exception as sub_e:
                             # print(f"    ⚠️  {api['url'].split('/')[2]} falló: {sub_e}")
                             continue

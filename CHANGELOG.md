@@ -1,5 +1,19 @@
 # ♈ WANNA CALL? - CHANGELOG
 
+## [v2.2.59] - Titan Ultimatum (The God Particle) (2026-02-06)
+### 🇪🇸 ESPAÑOL
+- **🏁 PURGA ATÓMICA DE CACHÉ**: El bot ahora limpia automáticamente todos los proxies antiguos al iniciar para evitar contaminación por hostings obsoletos.
+- **🥇 POLÍTICA GOLDEN-ONLY**: Tolerancia cero absoluta. Solo se permiten proxies identificados como puramente residenciales (GOLDEN) mediante ASN verificado.
+- **🛡️ GUARDIA ASN SINCRONIZADA**: La misma lista blanca de redes residenciales se aplica ahora tanto en el escaneo inicial como en el pre-check del OSINT.
+- **🚫 BLOQUEO RADICAL DE HOSTING**: Cualquier IP de M247, centros de datos o segmentos no residenciales se descarta en milisegundos.
+
+### 🇺🇸 ENGLISH
+- **🏁 ATOMIC CACHE PURGE**: The bot now automatically clears all old proxies on startup to avoid contamination by obsolete hostings.
+- **🥇 GOLDEN-ONLY POLICY**: Absolute zero tolerance. Only proxies identified as purely residential (GOLDEN) via verified ASN are allowed.
+- **🛡️ SYNCHRONIZED ASN GUARD**: The same residential network whitelist is now applied in both the initial scan and the OSINT pre-check.
+- **🚫 RADICAL HOSTING BLOCK**: Any IP from M247, data centers, or non-residential segments is discarded in milliseconds.
+
+
 ## [v2.2.58] - Titan Finality (The Absolute Zero) (2026-02-06)
 ### 🇪🇸 ESPAÑOL
 - **🧹 PURGA DE FUENTES**: Eliminación drástica de fuentes de proxies de baja calidad y listas contaminadas de GitHub. Solo quedan fuentes UHQ balanceadas.

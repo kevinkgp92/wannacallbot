@@ -105,6 +105,13 @@ class ProxyScraper:
             "adamo", "lowi", "simyo"
         ]
         
+        # v2.2.59: Titan Ultimatum - Absolute Zero Cache Purge
+        try:
+            if os.path.exists(CACHE_FILE): os.remove(CACHE_FILE)
+            if os.path.exists(GEO_CACHE_FILE): os.remove(GEO_CACHE_FILE)
+            # print("  🧹 Titan Ultimatum: Caché purgada (Absolute Zero).")
+        except: pass
+        
         self._load_cache()
 
     def _load_cache(self):
@@ -190,7 +197,7 @@ class ProxyScraper:
                             cc = res.get('countryCode', 'XX')
                             as_org = res.get('as', '').lower()
                             
-                            # v2.2.58: Atomic ASN Check (Highest Priority)
+                            # v2.2.59: God Particle - Golden Only Policy
                             is_golden_asn = any(asn in as_org for asn in self.residential_asns)
                             is_residential_name = any(x in as_org for x in self.residential_isps)
                             
@@ -198,14 +205,15 @@ class ProxyScraper:
                                 cc = "RO_FAKE" 
                                 self.session_blacklist.add(chunk[idx])
                             elif (is_golden_asn or is_residential_name) and cc == country_code:
-                                # GOLDEN PROXY: Residential network confirmed
                                 cc = "GOLDEN"
 
                             self.geo_cache[ip_key] = cc
-                            if cc == country_code or cc == "GOLDEN":
+                            
+                            # v2.2.59: ULTIMATUM - Only GOLDEN IPs are allowed for OSINT
+                            if cc == "GOLDEN":
                                 matches.append(chunk[idx])
                             else:
-                                # v2.2.58: Pure ES or Failure for anything else (hosting leaks)
+                                # v2.2.59: Absolute Zero - Reject everything else
                                 self.session_blacklist.add(chunk[idx])
                         else:
                             self.geo_cache[ip_key] = "FAIL"
