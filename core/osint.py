@@ -287,8 +287,8 @@ class OSINTManager:
             if circuit_breaker_tripped and "google.com" in url:
                 # v2.2.30: Instead of full abort, force a rotation and long sleep once
                 print(f"⚠️ PENALIZACIÓN ACTIVA: Rotando para saltar bloqueo en Google...")
-                    b_mgr.rotate()
-                    browser = b_mgr.get_driver()
+                b_mgr.rotate()
+                browser = b_mgr.get_driver()
                 time.sleep(5) # Penalty sleep
                 circuit_breaker_tripped = False # Reset for this specific attempt
 
