@@ -696,19 +696,11 @@ class ProxyScraper:
                             print(f"  ⚠️ Geo-Guard Falló (Error): {e} -> RECHAZADO.")
                             return False
                         
-                    if real_cc != check_country.upper() and real_cc != "GOLDEN":
+                    if str(real_cc).strip().upper() not in [check_country.upper(), "GOLDEN"]:
                         print(f"  ⚠️ Proxy funcional pero país incorrecto ({real_cc} != {check_country}). Rechazado.")
                         return False
                     print(f"  🌍 Geo-Guard: Proxy confirmado en {real_cc}.")
 
-                # v2.2.54: Titan God Mode - FINAL BOSS CHECK (Real Spanish Domain)
-                try:
-                    # Test against a purely Spanish resident-facing domain
-                    requests.get("https://www.marca.com", proxies=proxies, timeout=4)
-                    print(f"  🇪🇸 Genuino ES (Detección Residencial Exitosa).")
-                except:
-                    print(f"  ⚠️ Proxy funcional pero rechazado por Dominio Local (Marca.com Fail).")
-                    return False
 
                 # Second check: Google connectivity (Strict check for OSINT)
                 start_google = time.time()

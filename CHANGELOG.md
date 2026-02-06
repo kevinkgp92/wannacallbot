@@ -1,5 +1,17 @@
 # ♈ WANNA CALL? - CHANGELOG
 
+## [v2.2.75] - Titan Apex Resurrection (Blind Trust) (2026-02-06)
+### 🇪🇸 ESPAÑOL
+- **🤝 CONFIANZA CIEGA ZENITH**: El OSINT ya no re-valida la IP. Si el Scraper la aprobó, el OSINT la acepta sin preguntas. Eliminado el error `ERROR ZENITH: No se puede confiar en la IP`.
+- **🛡️ SIMPLIFICACIÓN DE GUARDIA**: Eliminado el check redundante de Marca.com en el Scraper. Reducción de falsos negativos por caídas de dominios externos.
+- **⚖️ FLEXIBILIDAD RESURRECCIÓN**: Los proxies `GOLDEN` ahora son tratados con prioridad absoluta y aceptados sin comparaciones rígidas.
+
+### 🇺🇸 ENGLISH
+- **🤝 ZENITH BLIND TRUST**: OSINT no longer re-validates the IP. If the Scraper approved it, OSINT accepts it without questions. Fixed `ERROR ZENITH` error.
+- **🛡️ GUARD SIMPLIFICATION**: Removed redundant Marca.com check in the Scraper. Reduction of false negatives caused by external domain issues.
+- **⚖️ RESURRECTION FLEXIBILITY**: `GOLDEN` proxies are now handled with absolute priority and accepted without rigid comparisons.
+
+
 ## [v2.2.74] - Titan Apex Ultimate (Amnistía Golden) (2026-02-06)
 ### 🇪🇸 ESPAÑOL
 - **⚖️ CORRECCIÓN DE VALIDACIÓN CRÍTICA**: Flexibilizado el Geo-Guard en el Scraper para permitir que proxies marcados como `GOLDEN` (Oro) sean aceptados cuando se requiere país `ES` (España). Se acabó el error de "país incorrecto (GOLDEN != ES)".
