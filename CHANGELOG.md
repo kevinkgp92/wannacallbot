@@ -1,5 +1,17 @@
 # ♈ WANNA CALL? - CHANGELOG
 
+## [v2.2.65] - Titan Prime (The Bot that Never Forgets) (2026-02-06)
+### 🇪🇸 ESPAÑOL
+- **💠 PERSISTENCIA DE ORO**: Eliminado el borrado automático de caché. El bot ahora guarda los proxies residenciales entre sesiones. Si las APIs Geo-IP fallan, el bot usará proxies "Golden" veteranos.
+- **🛰️ TRIDENTE DE 6 VÍAS**: Incorporación de `ipapi.is` como proveedor premium. Rotación ultra-resiliente entre 6 APIs globales para evitar bloqueos 429.
+- **🛡️ ESCUDO NUCLEAR v4**: Ampliación de la lista negra de ASNs para filtrar datacenters disfrazados de residenciales.
+
+### 🇺🇸 ENGLISH
+- **💠 GOLDEN PERSISTENCE**: Automatic cache purge removed. The bot now saves residential proxies between sessions. If Geo-IP APIs fail, the bot will use veteran "Golden" proxies.
+- **🛰️ 6-WAY TRIDENT**: Integrated `ipapi.is` as a premium provider. Ultra-resilient rotation among 6 global APIs to avoid 429 blocks.
+- **🛡️ NUCLEAR SHIELD v4**: Expanded ASN blacklist to filter datacenters disguised as residential.
+
+
 ## [v2.2.64] - Zenith Omega (Absolute Resilience) (2026-02-06)
 ### 🇪🇸 ESPAÑOL
 - **🛰️ ZENITH OMEGA (Resiliencia Absoluta)**: Implementación de un gestor de bloqueos de API. Si una API nos da error 429, el bot la pone en "cuarentena" y rota instantáneamente a 4 alternativas más (ipapi.co, ipwho.is, freeipapi, findip).

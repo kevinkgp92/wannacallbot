@@ -116,16 +116,10 @@ class ProxyScraper:
             "adamo", "lowi", "simyo", "r cable", "telecable", "guuk"
         ]
         
-        # v2.2.59: Titan Ultimatum - Absolute Zero Cache Purge
-        try:
-            if os.path.exists(CACHE_FILE): os.remove(CACHE_FILE)
-            if os.path.exists(GEO_CACHE_FILE): os.remove(GEO_CACHE_FILE)
-            # print("  🧹 Titan Ultimatum: Caché purgada (Absolute Zero).")
-        except: pass
-        
         # v2.2.64: ZENITH OMEGA API LOCKS
         self.api_locks = {} # {api_name: lock_until_timestamp}
         
+        # v2.2.65: TITAN PRIME - Removed Cache Purge for persistence
         self._load_cache()
 
     def _load_cache(self):
@@ -188,9 +182,10 @@ class ProxyScraper:
             cc = self.geo_cache[ip]
             return "GOLDEN" if (cc == country_code or cc == "GOLDEN") else None
 
-        # 2. Rotation Chain
+        # 2. Rotation Chain (v2.2.65 Expanded to 6 Providers)
         strategies = [
             ("ip-api", f"http://ip-api.com/json/{ip}?fields=status,countryCode,as"),
+            ("ipapi-is", f"https://api.ipapi.is/?ip={ip}"),
             ("ipapi-co", f"https://ipapi.co/{ip}/json/"),
             ("ipwho-is", f"https://ipwho.is/{ip}"),
             ("freeipapi", f"https://freeipapi.com/api/json/{ip}"),
@@ -206,7 +201,7 @@ class ProxyScraper:
                 r = requests.get(url, timeout=5, headers=headers)
                 
                 if r.status_code == 429:
-                    self._lock_api(name)
+                    self._lock_api(name, 60)
                     continue
                 
                 if r.status_code == 200:
@@ -218,6 +213,9 @@ class ProxyScraper:
                     if name == "ip-api" and data.get("status") == "success":
                         cc = data.get("countryCode")
                         as_org = str(data.get("as", "")).lower()
+                    elif name == "ipapi-is":
+                        cc = data.get("location", {}).get("country_code")
+                        as_org = str(data.get("asn", {}).get("org", "")).lower()
                     elif name == "ipapi-co":
                         cc = data.get("country_code")
                         as_org = str(data.get("org", "")).lower()
