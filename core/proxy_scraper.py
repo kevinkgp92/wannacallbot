@@ -9,6 +9,54 @@ import os
 
 CACHE_FILE = "core/proxies_cache.json"
 
+# v2.2.36.2: Restored Spanish Armada Source Lists & Fetcher
+global_sources = [
+    "https://api.proxyscrape.com/v2/?request=displayproxies&protocol=http&timeout=10000&country=all&ssl=all&anonymity=all",
+    "https://raw.githubusercontent.com/TheSpeedX/SOCKS-List/master/http.txt",
+    "https://raw.githubusercontent.com/ShiftyTR/Proxy-List/master/http.txt",
+    "https://raw.githubusercontent.com/monosans/proxy-list/main/proxies/http.txt",
+    "https://raw.githubusercontent.com/hookzof/socks5_list/master/proxy.txt",
+    "https://raw.githubusercontent.com/clketlow/proxy-list/master/http.txt",
+    "https://www.proxy-list.download/api/v1/get?type=http",
+    "https://www.proxyscan.io/download?type=http"
+]
+
+es_sources = [
+    "https://www.proxy-list.download/api/v1/get?type=http&country=ES",
+    "https://api.proxyscrape.com/v2/?request=displayproxies&protocol=http&timeout=10000&country=es&ssl=all&anonymity=all",
+    "https://raw.githubusercontent.com/clketlow/proxy-list/master/http.txt",
+    "https://proxyspace.pro/http.txt",
+    "https://raw.githubusercontent.com/mmpx12/proxy-list/master/http.txt"
+]
+
+def fetch_sources(urls, label="", stop_signal=None):
+    """v2.2.36.2: Restored Parallel fetcher with Arctic Throttling."""
+    all_proxies = set()
+    
+    def fetch_one(url):
+        if stop_signal and stop_signal(): return set()
+        try:
+            r = requests.get(url, timeout=12, headers={"User-Agent": "Mozilla/5.0"})
+            if r.status_code == 200:
+                matches = re.findall(r'\d+\.\d+\.\d+\.\d+:\d+', r.text)
+                return set(matches)
+        except: pass
+        return set()
+
+    import concurrent.futures
+    with concurrent.futures.ThreadPoolExecutor(max_workers=5) as executor:
+        futures = [executor.submit(fetch_one, u) for u in urls]
+        for future in concurrent.futures.as_completed(futures):
+            time.sleep(0.01) # v2.2.36.3: Reduced from 0.1s to 0.01s for smoother UI
+            if stop_signal and stop_signal():
+                executor.shutdown(wait=False, cancel_futures=True)
+                return set()
+            try:
+                all_proxies.update(future.result())
+            except: pass
+    
+    return all_proxies
+
 class ProxyScraper:
     def __init__(self):
         self.sources = [
@@ -129,7 +177,7 @@ class ProxyScraper:
         with concurrent.futures.ThreadPoolExecutor(max_workers=5) as executor:
             futures = [executor.submit(process_chunk, chunk) for chunk in chunks]
             for future in concurrent.futures.as_completed(futures):
-                time.sleep(0.2) # Give some air to the OS
+                time.sleep(0.05) # v2.2.36.3: Balanced for Geo-Filter smoothness
                 found = future.result()
                 if found: valid_proxies.extend(found)
 

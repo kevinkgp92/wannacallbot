@@ -47,7 +47,11 @@ class AutoUpdater:
             print("✅ Aplicación actualizada.")
             if callback: callback(False, None)
         except Exception as e:
-            print(f"⚠️ Error buscando actualizaciones: {e}")
+            # v2.2.36.1 (Hotfix): Silence connection errors (Socket [WinError 10013]) for a cleaner experience
+            if any(x in str(e).lower() for x in ["connection", "socket", "10013", "timeout", "retries"]):
+                print("⚠️  Actualización: Saltada (Desconectado o Firewall).")
+            else:
+                print(f"⚠️ Error buscando actualizaciones: {e}")
             if callback: callback(False, None)
 
     def _fetch_changelog(self):
@@ -142,7 +146,7 @@ class AutoUpdater:
 class ServiceUpdater:
     """Compatibility stub for service definition updates."""
     def __init__(self):
-        self.local_version = "2.2.36"
+        self.local_version = "2.2.36.3"
 
     def check_for_updates(self):
         # For now, we integrate service updates into main AutoUpdater

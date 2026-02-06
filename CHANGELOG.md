@@ -1,5 +1,34 @@
 # ♈ WANNA CALL? - CHANGELOG
 
+## [v2.2.36.3] - Smooth Release (2026-02-06)
+### 🇪🇸 ESPAÑOL
+- **❄️ CERO STUTTER**: Recalibrados los micro-pulsos de sueño (GIL pulses) a 0.01s-0.05s para eliminar el lag del ratón.
+- **🛡️ ARMADA ESTABLE**: Consolidada la restauración de la función `fetch_sources` y fuentes ES.
+- **🧹 SYNC TOTAL**: Sincronización completa de tags y commits en el repositorio oficial.
+
+### 🇺🇸 ENGLISH
+- **❄️ ZERO STUTTER**: Recalibrated micro-sleep pulses (GIL pulses) to 0.01s-0.05s to eliminate mouse lag.
+- **🛡️ STABLE ARMADA**: Consolidated the restoration of `fetch_sources` and ES sources.
+- **🧹 TOTAL SYNC**: Full tag and commit synchronization in the official repository.
+
+## [v2.2.36.2] - Emergency Fix (2026-02-06)
+### 🇪🇸 ESPAÑOL
+- **🦅 REPARACIÓN ARMADA**: Recuperada la lógica de recolección de proxies (`fetch_sources`) perdida en la limpieza.
+- **🐞 FIX NAMEERROR**: Corregido fallo crítico que impedía el inicio del escaneo en v2.2.36.1.
+
+### 🇺🇸 ENGLISH
+- **🦅 ARMADA RESTORE**: Recovered proxy harvesting logic (`fetch_sources`) lost during cleanup.
+- **🐞 NAMEERROR FIX**: Fixed critical bug preventing scan startup in v2.2.36.1.
+
+## [v2.2.36.1] - Silent Shield (2026-02-06)
+### 🇪🇸 ESPAÑOL
+- **🛡️ ESCUDO SILENCIOSO**: El buscador de actualizaciones ahora ignora errores de socket/permisos (Firewall) sin ensuciar la consola.
+- **🔌 ROBUSTNEZ DE RED**: Manejo mejorado para fallos de conexión hacia raw.githubusercontent.com.
+
+### 🇺🇸 ENGLISH
+- **🛡️ SILENT SHIELD**: Update checker now ignores socket/permission errors (Firewall) without cluttering the console.
+- **🔌 NETWORK ROBUSTNESS**: Improved handling for connection failures to raw.githubusercontent.com.
+
 ## [v2.2.36] - Saul's Premium (2026-02-06)
 
 ### 🇪🇸 ESPAÑOL
