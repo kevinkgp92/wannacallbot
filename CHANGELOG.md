@@ -1,5 +1,17 @@
 # ♈ WANNA CALL? - CHANGELOG
 
+## [v2.2.38] - Turbo Stability & Geo-Precision (2026-02-06)
+### 🇪🇸 ESPAÑOL
+- **🏎️ TURBO START**: El bot ahora inicia el OSINT tan pronto como encuentra los primeros proxies ES válidos (Arranque instantáneo).
+- **🌍 GEO-PRECISION**: Unificada la validación de IP entre el buscador y el gestor para eliminar discrepancias y bucles infinitos.
+- **🧹 SOURCE CLEANUP**: Limpieza de listas de proxies para eliminar falsos positivos de Rumanía y otros países.
+
+### 🇺🇸 ENGLISH
+- **🏎️ TURBO START**: The bot now starts OSINT as soon as the first valid ES proxies are found (Instant startup).
+- **🌍 GEO-PRECISION**: Unified IP validation between the scraper and manager to eliminate discrepancies and infinite loops.
+- **🧹 SOURCE CLEANUP**: Proxy list cleanup to remove false positives from Romania and other countries.
+
+
 ## [v2.2.37] - Quantum Stability & OSINT Overlord (2026-02-06)
 ### 🇪🇸 ESPAÑOL
 - **🌌 QUANTUM YIELD**: Aumentado el límite de candidatos a 1500 y añadido filtro de latencia crítica (< 2.5s) para proxies ES.

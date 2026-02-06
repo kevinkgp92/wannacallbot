@@ -24,7 +24,6 @@ global_sources = [
 es_sources = [
     "https://www.proxy-list.download/api/v1/get?type=http&country=ES",
     "https://api.proxyscrape.com/v2/?request=displayproxies&protocol=http&timeout=10000&country=es&ssl=all&anonymity=all",
-    "https://raw.githubusercontent.com/clketlow/proxy-list/master/http.txt",
     "https://proxyspace.pro/http.txt",
     "https://raw.githubusercontent.com/mmpx12/proxy-list/master/http.txt"
 ]
@@ -125,17 +124,18 @@ class ProxyScraper:
             matches = []
             ips = [p.split(':')[0] for p in chunk]
             
-            # STRATEGY A: ip-api.com (Batch)
+            # STRATEGY A: ip-api.com (Batch) - v2.2.38: Unified with field-level precision
             try:
-                data = [{"query": ip, "fields": "countryCode"} for ip in ips]
-                r = requests.post("http://ip-api.com/batch", json=data, timeout=10)
+                data = [{"query": ip, "fields": "status,countryCode,query"} for ip in ips]
+                r = requests.post("http://ip-api.com/batch", json=data, timeout=8)
                 if r.status_code == 200:
                     results = r.json()
                     for idx, res in enumerate(results):
-                        cc = res.get('countryCode', 'XX')
-                        self.geo_cache[ips[idx]] = cc
-                        if cc == country_code:
-                            matches.append(chunk[idx])
+                        if res.get("status") == "success":
+                            cc = res.get('countryCode', 'XX')
+                            self.geo_cache[ips[idx]] = cc
+                            if cc == country_code:
+                                matches.append(chunk[idx])
                     return matches
                 elif r.status_code == 429:
                     # Rate limited -> Sleep briefly and continue to fallback
@@ -271,15 +271,21 @@ class ProxyScraper:
             print(f"  📥 Candidatos listos para validación.")
             
             if tier1_candidates:
-                # v2.2.20: MANDATORY Geo-Check re-enabled. No more trust loops.
-                print(f"  🛡️ Guardia ES: Verificando procedencia geográfica de {len(tier1_candidates)} candidatos...")
+                # v2.2.38: TURBO PRIORITY - Process ES-targeted lists in tiny batches for instant start
+                print(f"  🛡️ Guardia ES (Tier 1): Verificando procedencia geográfica...")
+                # Small batch for Tier 1 to return even faster
                 geo_es = self._batch_filter_country(tier1_candidates, "ES", stop_signal)
                 if geo_es:
                     print(f"    📥 {len(geo_es)} proxys confirmados como ESPAÑOLES reales.")
                     live_matches = self._check_proxies_live(geo_es, stop_signal)
                     if live_matches:
                         self.proxies.extend(live_matches)
-                        print(f"  ✅ FASE 1 ÉXITO: {len(self.proxies)} proxies ES 100% reales.")
+                        print(f"  ✅ FASE 1 ÉXITO: {len(self.proxies)} proxies ES confirmados.")
+                        # TURBO EXIT: If we found enough Tier 1, START NOW.
+                        if len(self.proxies) >= 2:
+                            print(f"  🏎️ TURBO START: Meta mínima alcanzada. Iniciando...")
+                            self.last_scrape_time = time.time()
+                            return self.proxies
             
             # EARLY EXIT if we found enough
             # v2.2.4: If we have even ONE good targeted proxy, we START.
