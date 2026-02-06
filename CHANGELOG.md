@@ -1,5 +1,19 @@
 # ♈ WANNA CALL? - CHANGELOG
 
+## [v2.2.58] - Titan Finality (The Absolute Zero) (2026-02-06)
+### 🇪🇸 ESPAÑOL
+- **🧹 PURGA DE FUENTES**: Eliminación drástica de fuentes de proxies de baja calidad y listas contaminadas de GitHub. Solo quedan fuentes UHQ balanceadas.
+- **⚛️ FILTRADO ASN NUCLEAR (BATCH FIX)**: Corrección del motor de procesamiento por lotes. Ahora el bloqueo de hostings (M247/Rumanía) es atómico e inevitable.
+- **🛡️ ZERO-TOLERANCE POLICY**: Si una IP no pertenece a un ASN residencial verificado (Movistar, Orange, Vodafone, Digi), se descarta de inmediato para el OSINT.
+- **🎯 OPTIMIZACIÓN ZENITH+**: Refinamiento de la lógica de reconexión y rotación para evitar el agotamiento de proxies útiles.
+
+### 🇺🇸 ENGLISH
+- **🧹 SOURCE PURGE**: Drastic removal of low-quality proxy sources and contaminated GitHub lists. Only balanced UHQ sources remain.
+- **⚛️ ATOMIC ASN FILTERING (BATCH FIX)**: Correction of the batch processing engine. Hosting blocking (M247/Romania) is now atomic and unavoidable.
+- **🛡️ ZERO-TOLERANCE POLICY**: If an IP does not belong to a verified residential ASN (Movistar, Orange, Vodafone, Digi), it is immediately discarded for OSINT.
+- **🎯 ZENITH+ OPTIMIZATION**: Refinement of reconnection and rotation logic to prevent depletion of useful proxies.
+
+
 ## [v2.2.57] - Titan Zenith (Zero-Fail Edition) (2026-02-06)
 ### 🇪🇸 ESPAÑOL
 - **💎 FILTRADO ATÓMICO POR ASN**: Sistema de verificación por red (DNI de Internet) infalible. Solo se permiten ISPs españoles residenciales (Movistar, Vodafone, Orange, etc.).

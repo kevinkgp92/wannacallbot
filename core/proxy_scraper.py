@@ -22,7 +22,7 @@ global_sources = [
     "https://www.proxyscan.io/download?type=http"
 ]
 
-# v2.2.55: Titan Supreme - Final Boss Elite Sources
+# v2.2.58: Titan Finality - Source Purge (UHQ Only)
 def get_es_sources():
     today = time.strftime("%Y-%m-%d")
     return [
@@ -30,22 +30,13 @@ def get_es_sources():
         "https://www.proxyscan.io/download?type=http&country=es",
         "https://proxylist.geonode.com/api/proxy-list?limit=500&page=1&sort_by=lastChecked&sort_type=desc&country=ES&protocols=http",
         "https://api.openproxy.space/v1/proxies?country=ES&type=http",
-        "https://raw.githubusercontent.com/rdavydov/proxy-list/main/proxies/es.txt",
+        "https://raw.githubusercontent.com/rdavydov/proxy-list/main/proxies/es.txt", # Targeted ES
         "https://raw.githubusercontent.com/yemixzy/proxy-list/main/proxies/http.txt", 
-        "https://raw.githubusercontent.com/clarketm/proxy-list/master/proxy-list-raw.txt",
-        "https://raw.githubusercontent.com/monosans/proxy-list/main/proxies/http.txt",
         "https://raw.githubusercontent.com/vakhov/fresh-proxy-list/master/http.txt",
         "https://raw.githubusercontent.com/prxchk/proxy-list/main/http.txt",
-        "https://raw.githubusercontent.com/Zaeem20/FREE_PROXIES_LIST/master/http.txt",
-        "https://raw.githubusercontent.com/mmpx12/proxy-list/master/http.txt",
-        "https://raw.githubusercontent.com/Seven0sh/Free_Proxy_List/main/proxies.txt", 
-        "https://raw.githubusercontent.com/andrei6842/proxylists/master/proxies.txt", 
-        "https://raw.githubusercontent.com/ShiftyTR/Proxy-List/master/http.txt", # v2.2.55 NEW
-        "https://raw.githubusercontent.com/jetkai/proxy-list/main/online-proxies/txt/proxies-http.txt", # v2.2.55 NEW
+        "https://raw.githubusercontent.com/monosans/proxy-list/main/proxies/http.txt", # Filtered by country below anyway
         "https://api.proxyscrape.com/v2/?request=displayproxies&protocol=socks5&timeout=10000&country=es&ssl=all&anonymity=all",
         "https://www.proxyscan.io/download?type=socks5&country=es",
-        "https://raw.githubusercontent.com/vakhov/fresh-proxy-list/master/proxylist.txt",
-        "https://raw.githubusercontent.com/TheSpeedX/SOCKS-List/master/socks5.txt",
         f"https://checkerproxy.net/api/archive/{today}"
     ]
 
@@ -199,13 +190,23 @@ class ProxyScraper:
                             cc = res.get('countryCode', 'XX')
                             as_org = res.get('as', '').lower()
                             
+                            # v2.2.58: Atomic ASN Check (Highest Priority)
+                            is_golden_asn = any(asn in as_org for asn in self.residential_asns)
+                            is_residential_name = any(x in as_org for x in self.residential_isps)
+                            
                             if "m247" in as_org or "romania" in as_org:
                                 cc = "RO_FAKE" 
-                                self.session_blacklist.add(chunk[idx]) # Add to session ignore
+                                self.session_blacklist.add(chunk[idx])
+                            elif (is_golden_asn or is_residential_name) and cc == country_code:
+                                # GOLDEN PROXY: Residential network confirmed
+                                cc = "GOLDEN"
 
                             self.geo_cache[ip_key] = cc
-                            if cc == country_code:
+                            if cc == country_code or cc == "GOLDEN":
                                 matches.append(chunk[idx])
+                            else:
+                                # v2.2.58: Pure ES or Failure for anything else (hosting leaks)
+                                self.session_blacklist.add(chunk[idx])
                         else:
                             self.geo_cache[ip_key] = "FAIL"
                             self.session_blacklist.add(chunk[idx])
