@@ -21,13 +21,13 @@
 ## 🎨 Galería / Gallery
 
 - **Panel de Control Principal / Main Dashboard**
-![Dashboard](assets/dashboard.png)
+![Dashboard](assets/dashboard_saul.png)
 
-- **Configuración y Estilo / Settings & Customization**
-![Settings](assets/settings.png)
+- **Servicios Activos y Configuración / Active Services & Config**
+![Settings](assets/settings_saul.png)
 
-- **Investigación OSINT Real / Real-World OSINT Research**
-![OSINT Results](assets/osint_results.png)
+- **Buscador OSINT Especializado / Specialized OSINT Research**
+![OSINT Results](assets/osint_saul.png)
 
 ---
 
