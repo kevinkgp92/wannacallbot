@@ -172,7 +172,7 @@ class OsintGUI(ctk.CTk):
         # TEST: Disable splash temporarily to see if main window renders alone
         # self.show_splash() 
         _boot_log("Splash skipped (test mode)")
-        self.version = "2.2.29" 
+        self.version = "2.2.32" 
         _boot_log(f"Version: {self.version}")
 
         # Setup Auto-Updater (Silent)
@@ -932,7 +932,7 @@ class OsintGUI(ctk.CTk):
         else:
             print(f"📡 {message}")
             
-        if self.updater and self.updater.update_ready:
+        if self.updater and self.updater.update_available:
             # Show a professional update prompt
             def show_update_prompt():
                 # Check ensures we don't spam prompts

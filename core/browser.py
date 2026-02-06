@@ -8,6 +8,13 @@ from webdriver_manager.firefox import GeckoDriverManager
 # REMOVED: selenium_stealth (Caused path errors in bundled EXE)
 import undetected_chromedriver as uc
 from core.proxy_scraper import ProxyScraper
+import subprocess
+import os
+# v2.2.32: Conditional import for psutil to handle bundle edge cases
+try:
+    import psutil
+except:
+    psutil = None
 
 class BrowserManager:
     _CACHED_GECKO = None
@@ -63,6 +70,7 @@ class BrowserManager:
             try:
                 print("🦊 Iniciando Firefox (Modo Ligero)...")
                 self.driver = self._setup_firefox()
+                self._apply_priority_guard() # v2.2.30: Freeze Protection
                 return self.driver
             except Exception as e:
                 print(f"⚠️ Firefox falló ({e}). Intentando Chrome...")
@@ -71,12 +79,14 @@ class BrowserManager:
         try:
             print("⚪ Iniciando Chrome (Modo Compatibilidad)...")
             self.driver = self._setup_chrome()
+            self._apply_priority_guard()
             return self.driver
         except Exception as e:
              # Last resort: Undetected Chrome (Unstable)
              try:
                  print(f"⚠️ Chrome estándar falló. Intentando UC ({e})...")
                  self.driver = self._setup_chrome(is_osint=True)
+                 self._apply_priority_guard()
                  return self.driver
              except Exception as final_e:
                  print(f"❌ CRITICAL ERROR: Ningún navegador pudo iniciarse: {final_e}")
@@ -138,12 +148,25 @@ class BrowserManager:
         # Disable tracking to reduce overhead involved with blocking lists
         options.set_preference("privacy.trackingprotection.enabled", False) 
         
+        # v2.2.32: STUTTER ELIMINATION - Disable GPU and HW Acceleration
+        options.add_argument("--disable-gpu")
+        options.add_argument("--disable-software-rasterizer")
+        options.add_argument("--disable-dev-shm-usage")
+        options.add_argument("--no-sandbox")
+        options.add_argument("--disable-accelerated-2d-canvas")
+        options.add_argument("--disable-gpu-compositing")
+        options.add_argument("--disable-gpu-rasterization")
+        
         # Optimize RAM & Speed: SLIM MODE (v2.2.23)
         options.set_preference("browser.sessionhistory.max_entries", 2)
         options.set_preference("browser.cache.disk.enable", False)
         options.set_preference("browser.cache.memory.enable", True)
         options.set_preference("browser.cache.memory.capacity", 51200) # 50MB cap
         
+        # v2.2.32: STUTTER ELIMINATION - Firefox Logic
+        options.set_preference("layers.acceleration.disabled", True)
+        options.set_preference("gfx.direct2d.disabled", True)
+        options.set_preference("canvas.accelerated", False)
         # NUCLEAR RAM SAVER: Disable Images and Media
         options.set_preference("permissions.default.image", 2) # 1=Allow, 2=Block
         options.set_preference("media.autoplay.enabled", False)
@@ -317,6 +340,29 @@ class BrowserManager:
             self.close()
         # The next time any setup method is called, it will call _get_proxy() which picks a new one
         return True
+
+    def _apply_priority_guard(self):
+        """v2.2.30: Forces the browser process to use IDLE PRIORITY.
+        v2.2.32: Hardened logic for psutil bundling.
+        """
+        if not self.driver or not psutil: return
+        try:
+            pid = None
+            if hasattr(self.driver, "service") and self.driver.service.process:
+                pid = self.driver.service.process.pid
+            
+            if pid:
+                p = psutil.Process(pid)
+                if os.name == 'nt':
+                    try: p.nice(psutil.IDLE_PRIORITY_CLASS)
+                    except: pass
+                    
+                    # Extensive children coverage
+                    for child in p.children(recursive=True):
+                        try: child.nice(psutil.IDLE_PRIORITY_CLASS)
+                        except: pass
+        except Exception as e:
+            print(f"  ⚠️ Priority Guard Error: {e}")
 
     def close(self):
         if self.driver:

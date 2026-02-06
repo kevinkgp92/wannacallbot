@@ -4,7 +4,41 @@
 
 ---
 
-## 🔥 [2.2.29] - 2026-02-05 (ARCTIC COOLING V2 - OSINT THROTTLE)
+## 🔥 [2.2.32] - 2026-02-06 (SAUL EDITION - NO GPU & ES ARMADA)
+
+### 🇪🇸 ESPAÑOL
+- **🚀 ZERO MICRO-LAG**: Desactivada la Aceleración por Hardware y GPU en navegadores para eliminar tirones en el ratón.
+- **📦 PSUTIL BUNDLING**: Corregido el error de módulo faltante al compilar el EXE.
+- **🇪🇸 LA ARMADA ESPAÑOLA 6.0**: Nuevas fuentes de proxys ES premium y tiempos de verificación ultra-rápidos (5s timeout).
+
+### 🇺🇸 ENGLISH
+- **🚀 ZERO MICRO-LAG**: Disabled Hardware Acceleration and GPU in browsers to eliminate mouse stutters.
+- **📦 PSUTIL BUNDLING**: Fixed missing module error when bundling the EXE.
+- **🇪🇸 THE SPANISH ARMADA 6.0**: New premium ES proxy sources and ultra-fast verification times (5s timeout).
+
+---
+
+### 🇪🇸 ESPAÑOL
+- **🛠️ BUGFIX CRITICAL**: Corregido error `AttributeError: update_ready` que causaba el cierre inesperado al iniciar.
+- **⚖️ COMPARACIÓN SEMÁNTICA**: El bot ahora distingue correctamente entre versiones (v2.2.31 > v2.2.30) evitando avisos falsos de actualización.
+
+### 🇺🇸 ENGLISH
+- **🛠️ CRITICAL BUGFIX**: Fixed `AttributeError: update_ready` which caused crashes on startup.
+- **⚖️ SEMANTIC COMPARISON**: The bot now correctly identifies version hierarchy (v2.2.31 > v2.2.30), preventing false update alerts.
+
+---
+
+### 🇪🇸 ESPAÑOL
+- **☢️ PRIORITY GUARD**: Forzado del navegador a prioridad "IDLE" (Baja). Windows siempre prioriza tu ratón y sistema, eliminando congelamientos.
+- **🔍 DORKING RECONSTRUCTION**: Rehechos los selectores de DuckDuckGo y Google para recuperar los resultados perdidos.
+- **🕊️ CIRCUIT BREAKER DYNAMISM**: El sistema de bloqueo ahora es dinámico; en lugar de rendirse, rota de proxy e intenta una recuperación agresiva.
+
+### 🇺🇸 ENGLISH
+- **☢️ PRIORITY GUARD**: Forced browser to "IDLE" priority. Windows now prioritizes your mouse and UI over the bot's background tasks.
+- **🔍 DORKING RECONSTRUCTION**: Rebuilt DuckDuckGo and Google selectors to restore missing results.
+- **🕊️ DYNAMIC CIRCUIT BREAKER**: The blocking system is now dynamic; instead of giving up, it rotates proxies and attempts aggressive recovery.
+
+---
 
 ### 🇪🇸 ESPAÑOL
 - **❄️ ENFRIAMIENTO OSINT**: Implementadas pausas obligatorias de 2s entre búsquedas de Google/DuckDuckGo y 1.5s entre chequeos de plataformas.

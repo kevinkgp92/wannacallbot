@@ -262,10 +262,14 @@ class OSINTManager:
                 print("🛑 OPERACIÓN ABORTADA POR EL USUARIO.")
                 raise InterruptedError("User Stop")
 
-            # 1. Circuit Breaker Check
+            # 1. Circuit Breaker vs Penalty (v2.2.30)
             if circuit_breaker_tripped and "google.com" in url:
-                print(f"⚡ CIRCUIT BREAKER ACTIVO: Saltando búsqueda en Google ({url.split('q=')[1][:20]}...)")
-                return False
+                # v2.2.30: Instead of full abort, force a rotation and long sleep once
+                print(f"⚠️ PENALIZACIÓN ACTIVA: Rotando para saltar bloqueo en Google...")
+                browser_manager.rotate()
+                browser = browser_manager.get_driver()
+                time.sleep(5) # Penalty sleep
+                circuit_breaker_tripped = False # Reset for this specific attempt
 
             for attempt in range(timeout_retries):
                 try:
@@ -605,10 +609,10 @@ class OSINTManager:
                         
                     links = browser.find_elements(By.CSS_SELECTOR, "a[data-testid='result-title-a']")
                     if not links:
-                         # Fallback selector
-                         links = browser.find_elements(By.CSS_SELECTOR, "article h2 a")
+                        # Fallback selectors (Updated v2.2.30 for DuckDuckGo/Google changes)
+                        links = browser.find_elements(By.CSS_SELECTOR, "article h2 a, [data-testid='result-title-a'], .result__a")
                          
-                    for lnk in links[:2]: # Top 2 results per dork
+                    for lnk in links[:3]: # Top 3 results (v2.2.30 increased confidence)
                         title = lnk.text.strip()
                         url = lnk.get_attribute("href")
                         

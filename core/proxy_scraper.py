@@ -173,27 +173,14 @@ class ProxyScraper:
         
         # TIER 1: THE SPANISH ARMADA 5.0 (v2.2.22) - Elite Targeted
         es_sources = [
-            "https://api.proxyscrape.com/v4/free-proxy-list/get?request=displayproxies&protocol=http&country=es",
-            "https://api.proxyscrape.com/v4/free-proxy-list/get?request=displayproxies&protocol=socks4&country=es",
-            "https://api.proxyscrape.com/v4/free-proxy-list/get?request=displayproxies&protocol=socks5&country=es",
-            "https://www.proxy-list.download/api/v1/get?type=http&country=ES",
-            "https://www.proxy-list.download/api/v1/get?type=https&country=ES",
-            "https://www.proxy-list.download/api/v1/get?type=socks4&country=ES",
-            "https://www.proxy-list.download/api/v1/get?type=socks5&country=ES",
-            "https://raw.githubusercontent.com/mmpx12/proxy-list/master/proxies/es.txt",
-            "https://raw.githubusercontent.com/proxifly/free-proxy-list/main/proxies/countries/es.txt",
-            "https://raw.githubusercontent.com/vakhov/free-proxy-list/master/proxies/es.txt",
-            "https://raw.githubusercontent.com/rdavydov/proxy-list/main/proxies/es.txt",
-            "https://raw.githubusercontent.com/officialputuid/free-proxy-list/master/proxies/es.txt",
-            "https://raw.githubusercontent.com/roosterkid/openproxylist/main/ES_RAW.txt",
-            "https://www.proxyscan.io/api/proxy?country=es&format=txt",
-            "https://proxyspace.pro/spain.txt",
-            "https://raw.githubusercontent.com/Anonymouse-prox/free-proxy-list/master/proxies/es.txt",
+            "https://raw.githubusercontent.com/TheSpeedX/SOCKS-List/master/http.txt", # Spanish included
             "https://raw.githubusercontent.com/Zaeem20/free-proxy-list/master/proxies/es.txt",
             "https://raw.githubusercontent.com/ObcbS/free-proxy-list/master/proxies/es.txt",
-            "https://raw.githubusercontent.com/hookzof/socks5_list/master/proxy.txt", # High speed
-            "https://github.com/ErcinDedeoglu/proxies/raw/main/proxies/http.txt", # Spanish heavy
-            "https://raw.githubusercontent.com/monosans/proxy-list/main/proxies/http.txt", # Filtered
+            "https://raw.githubusercontent.com/officialputuid/free-proxy-list/master/proxies/es.txt",
+            "https://raw.githubusercontent.com/vakhov/free-proxy-list/master/proxies/es.txt",
+            "https://proxy-list.download/api/v1/get?type=http&country=ES",
+            "https://api.proxyscrape.com/v2/?request=displayproxies&protocol=http&timeout=5000&country=es",
+            "https://raw.githubusercontent.com/clketlow/proxy-list/master/http.txt", # Global but good
             "https://api.openproxylist.xyz/http.txt"
         ]
         
@@ -394,25 +381,25 @@ class ProxyScraper:
             proxy_dict = {proto: f"{proto}://{actual_proxy}"}
             headers = {"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36"}
             
-            # Check 1: Google (The OSINT standard)
+            # Check 1: Google (v2.2.32: FAST CHECK - 6s)
             try:
                 r = requests.get("https://clients3.google.com/generate_204", 
-                                 proxies=proxy_dict, timeout=12, headers=headers)
+                                 proxies=proxy_dict, timeout=6, headers=headers)
                 if r.status_code == 204: checks_passed += 1
             except: pass
 
-            # Check 2: Icanhazip (Reliable IP reflector)
+            # Check 2: Icanhazip (v2.2.32: FAST CHECK - 5s)
             try:
                 r = requests.get("https://ipv4.icanhazip.com", 
-                                 proxies=proxy_dict, timeout=10, headers=headers)
+                                 proxies=proxy_dict, timeout=5, headers=headers)
                 if r.status_code == 200 and len(r.text.strip()) <= 15: checks_passed += 1
             except: pass
 
-            # Check 3: Bing (Backup search engine)
+            # Check 3: Bing (v2.2.32: FAST CHECK - 5s)
             if checks_passed < 2:
                 try:
                     r = requests.get("https://www.bing.com", 
-                                     proxies=proxy_dict, timeout=10, headers=headers)
+                                     proxies=proxy_dict, timeout=5, headers=headers)
                     if r.status_code == 200: checks_passed += 1
                 except: pass
 

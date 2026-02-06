@@ -12,3 +12,4 @@ beautifulsoup4
 selenium-stealth
 undetected-chromedriver
 PySocks
+psutil

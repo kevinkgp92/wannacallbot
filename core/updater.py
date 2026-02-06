@@ -33,7 +33,7 @@ class AutoUpdater:
             r = requests.get(VERSION_URL, timeout=5)
             if r.status_code == 200:
                 remote_ver = r.text.strip()
-                if remote_ver != self.current_version:
+                if self._is_newer(remote_ver, self.current_version):
                     self.latest_version = remote_ver
                     self.update_available = True
                     
@@ -66,6 +66,20 @@ class AutoUpdater:
                     self.changelog_data = self.changelog_data.split("---")[0].strip()
         except:
             pass
+
+    def _is_newer(self, remote, local):
+        """Semantic version comparison (e.g. 2.2.31 > 2.2.30)"""
+        try:
+            r_parts = [int(p) for p in re.findall(r'\d+', remote)]
+            l_parts = [int(p) for p in re.findall(r'\d+', local)]
+            for i in range(max(len(r_parts), len(l_parts))):
+                rv = r_parts[i] if i < len(r_parts) else 0
+                lv = l_parts[i] if i < len(l_parts) else 0
+                if rv > lv: return True
+                if rv < lv: return False
+            return False
+        except:
+            return remote != local # Fallback
 
     def prompt_update(self, master):
         """Shows the premium visual update window."""
@@ -128,7 +142,7 @@ class AutoUpdater:
 class ServiceUpdater:
     """Compatibility stub for service definition updates."""
     def __init__(self):
-        self.local_version = "2.2.29"
+        self.local_version = "2.2.32"
 
     def check_for_updates(self):
         # For now, we integrate service updates into main AutoUpdater
