@@ -236,11 +236,32 @@ class OSINTManager:
                     check_ok = True
                         
                 except Exception as e:
+                    # v2.2.48: TITAN GEO-HEAL FALLBACK
+                    # If browser fails to read JSON, attempt a direct HTTP ping (Request-level)
+                    try:
+                        print(f"    🔄 FALLBACK: Browser Geo-Check failed ({e}). Usando Ping Directo...")
+                        proxy_parts = browser_manager.current_proxy.split(':')
+                        px_ip = proxy_parts[0]
+                        # Use requests directly (bypassing browser) for a split-second check
+                        # NOTE: This assumes proxies are HTTP/SOCKS compatible for requests
+                        r_test = requests.get(f"http://ip-api.com/json/{px_ip}?fields=status,countryCode,as,query", timeout=5)
+                        if r_test.status_code == 200:
+                            g_data = r_test.json()
+                            if g_data.get("status") == "success":
+                                cc = g_data.get("countryCode", "Unknown")
+                                as_org = g_data.get("as", "").lower()
+                                if "m247" in as_org or "romania" in as_org: cc = "RO_FAKE"
+                                if cc == "ES":
+                                    print(f"    ✅ FALLBACK ÉXITO: IP {px_ip} verificada como ES.")
+                                    check_ok = True
+                                    continue # Jump to lookup logic
+                    except: pass
+
                     print(f"    ⚠️ Proxy invalido o no es español ({e}). Rotando...")
                     browser_manager.mark_current_proxy_bad()
                     browser_manager.close() # CORRECT TEARDOWN
                     rotation_count += 1
-                    time.sleep(2) # v2.2.42: Rotation Pulse (Sync)
+                    time.sleep(0.5) # v2.2.48: Hyper-Rotation (from 2s to 0.5s)
                     if stop_check and stop_check(): break
                     continue # Try next rotation
             

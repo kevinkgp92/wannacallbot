@@ -30,10 +30,10 @@ def get_es_sources():
         "https://proxylist.geonode.com/api/proxy-list?limit=100&page=1&sort_by=lastChecked&sort_type=desc&country=ES&protocols=http",
         "https://api.openproxy.space/v1/proxies?country=ES&type=http",
         "https://raw.githubusercontent.com/rdavydov/proxy-list/main/proxies/es.txt",
-        "https://api.proxifly.dev/get-proxy?country=ES&protocol=http",
-        "https://raw.githubusercontent.com/proxifly/free-proxy-list/main/proxies/countries/ES/data.txt", # v2.2.47 Gold
-        "https://raw.githubusercontent.com/monosans/proxy-list/main/proxies_anonymous/http.txt", # v2.2.47 Gold (Anon)
-        "https://raw.githubusercontent.com/Androz2091/free-proxy-list/master/proxies.txt", # v2.2.47 Gold
+        "https://api.proxyscrape.com/v2/?request=displayproxies&protocol=socks5&timeout=10000&country=es&ssl=all&anonymity=all", # v2.2.48 SOCKS5
+        "https://www.proxyscan.io/download?type=socks5&country=es", # v2.2.48 SOCKS5
+        "https://raw.githubusercontent.com/vakhov/fresh-proxy-list/master/proxylist.txt", # v2.2.48 Elite
+        "https://raw.githubusercontent.com/TheSpeedX/SOCKS-List/master/socks5.txt", # v2.2.48 Global Elite
         f"https://checkerproxy.net/api/archive/{today}" # v2.2.47: Real-time Date Injection
     ]
 

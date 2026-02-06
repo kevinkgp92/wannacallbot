@@ -1,5 +1,19 @@
 # ♈ WANNA CALL? - CHANGELOG
 
+## [v2.2.48] - Titan Perfecta (2026-02-06)
+### 🇪🇸 ESPAÑOL
+- **🚀 ZERO-STUTTER CORE**: Eliminado el `Priority Guard`. El sistema ya no reduce la prioridad del navegador, eliminando los micro-parones en la interfaz y el sistema.
+- **🛡️ OSINT GEO-HEAL**: Implementado fallback de validación de IP. Si el navegador no puede verificar la localización por sí mismo, el motor realiza una petición HTTP directa para confirmar el origen español.
+- **💎 ELITE PROXY REFILL**: Añadidas fuentes SOCKS5 de España y listas globales de élite para maximizar la estabilidad durante el OSINT.
+- **⚡ HYPER-ROTATION**: Reducido el tiempo de espera entre rotaciones de 2s a 0.5s para búsquedas más ágiles.
+
+### 🇺🇸 ENGLISH
+- **🚀 ZERO-STUTTER CORE**: Removed `Priority Guard`. The system no longer lowers browser priority, eliminating micro-stutters in the UI and system.
+- **🛡️ OSINT GEO-HEAL**: Implemented IP validation fallback. If the browser fails to verify location, the engine performs a direct HTTP request to confirm Spanish origin.
+- **💎 ELITE PROXY REFILL**: Added Spain SOCKS5 sources and global elite lists to maximize stability during OSINT.
+- **⚡ HYPER-ROTATION**: Reduced rotation delay from 2s to 0.5s for faster searches.
+
+
 ## [v2.2.47] - Titan Gold Harvest (2026-02-06)
 ### 🇪🇸 ESPAÑOL
 - **💎 ES GOLD INJECTION**: Añadidas 5 nuevas fuentes VIP de GitHub y APIs residenciales gratuitas para maximizar el hallazgo de proxies en España.

@@ -76,7 +76,6 @@ class BrowserManager:
             try:
                 print("🦊 Iniciando Firefox (Modo Ligero)...")
                 self.driver = self._setup_firefox()
-                self._apply_priority_guard() # v2.2.30: Freeze Protection
                 return self.driver
             except Exception as e:
                 print(f"⚠️ Firefox falló ({e}). Intentando Chrome...")
@@ -85,14 +84,12 @@ class BrowserManager:
         try:
             print("⚪ Iniciando Chrome (Modo Compatibilidad)...")
             self.driver = self._setup_chrome()
-            self._apply_priority_guard()
             return self.driver
         except Exception as e:
              # Last resort: Undetected Chrome (Unstable)
              try:
                  print(f"⚠️ Chrome estándar falló. Intentando UC ({e})...")
                  self.driver = self._setup_chrome(is_osint=True)
-                 self._apply_priority_guard()
                  return self.driver
              except Exception as final_e:
                  print(f"❌ CRITICAL ERROR: Ningún navegador pudo iniciarse: {final_e}")
@@ -362,22 +359,6 @@ class BrowserManager:
         # The next time any setup method is called, it will call _get_proxy() which picks a new one
         return True
 
-    def _apply_priority_guard(self):
-        """v2.2.30: Forces the browser process to use IDLE PRIORITY.
-        v2.2.32: Hardened logic for psutil bundling.
-        """
-        if not self.driver or not psutil: return
-        try:
-            pid = None
-            if hasattr(self.driver, "service") and self.driver.service.process:
-                pid = self.driver.service.process.pid
-            
-            if pid:
-                p = psutil.Process(pid)
-                if os.name == 'nt':
-                    try: p.nice(psutil.IDLE_PRIORITY_CLASS)
-                    except: pass
-                    
                     # Extensive children coverage
                     for child in p.children(recursive=True):
                         try: child.nice(psutil.IDLE_PRIORITY_CLASS)
