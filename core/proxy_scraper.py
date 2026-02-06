@@ -107,7 +107,11 @@ class ProxyScraper:
             "as200902", # MasMovil Broadband
             "as201264", # MasMovil
             "as206411", # Digi Spain v2
-            "as213327"  # Digi Spain v3
+            "as213327", # Digi Spain v3
+            "as12430",  # Vodafone Spain
+            "as11831",  # Movistar/Telefonica v2
+            "as15835",  # Yoigo
+            "as5067"    # Pepephone
         ]
         
         # v2.2.69: TITAN ETERNAL - Nuclear Blacklist (Proxies de Datacenter/VPN)

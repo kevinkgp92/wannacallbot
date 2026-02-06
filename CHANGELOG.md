@@ -1,5 +1,17 @@
 # ♈ WANNA CALL? - CHANGELOG
 
+## [v2.2.73] - Titan Apex Final (Global Sync) (2026-02-06)
+### 🇪🇸 ESPAÑOL
+- **🤝 SINCRONIZACIÓN DE CONFIANZA DEFINITIVA**: El OSINT ahora acepta cualquier proxy validado como español (`ES` o `GOLDEN`) por el Scraper. Se acabó el rechazo de proxies válidos y el bucle de rotación infinita.
+- **🛡️ EXPANSIÓN DE LISTA BLANCA ASN**: Añadidas más redes residenciales españolas (Yoigo, Pepephone, Vodafone Retail) para maximizar la calidad del pool.
+- **⚡ CERO SALTOS EN FALSO**: Eliminado el error "ERROR ZENITH" que causaba que el bot se rindiera aun teniendo proxies vivos.
+
+### 🇺🇸 ENGLISH
+- **🤝 ULTIMATE TRUST SYNC**: OSINT now accepts any proxy validated as Spanish (`ES` or `GOLDEN`) by the Scraper. No more rejection of valid proxies and infinite rotation loops.
+- **🛡️ ASN WHITELIST EXPANSION**: Added more Spanish residential networks (Yoigo, Pepephone, Vodafone Retail) to maximize pool quality.
+- **⚡ ZERO FALSE SKIPS**: Removed the "ERROR ZENITH" error that caused the bot to give up even with live proxies available.
+
+
 ## [v2.2.72] - Titan Apex Hotfix (Binary Integrity) (2026-02-06)
 ### 🇪🇸 ESPAÑOL
 - **🚀 HOTFIX DE COMPILACIÓN**: Corregido un error de indentación crítico en `core/osint.py` que impedía que el binario se ejecutara correctamente (`ModuleNotFoundError`).

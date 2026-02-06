@@ -202,8 +202,8 @@ class OSINTManager:
                     current_ip = p_str.split(':')[0]
                     status = shared_scraper.get_geo_status(current_ip) if shared_scraper else None
                     
-                    if status == "GOLDEN":
-                        print(f"    ⭐ ZENITH APEX: IP {current_ip} confiada al 100% (GOLDEN).")
+                    if status in ["GOLDEN", "ES"]:
+                        print(f"    ⭐ ZENITH APEX: IP {current_ip} confiada plenamente ({status}).")
                         check_ok = True
                     elif status in ["NUCLEAR_BL", "BAD_DC"]:
                         print(f"    ⛔ ZENITH APEX REJECT: IP {current_ip} es basura nuclear ({status}). Rotando...")
@@ -212,7 +212,7 @@ class OSINTManager:
                         rotation_count += 1
                         continue
                     else:
-                        print(f"    ⚠️ ZENITH APEX: IP {current_ip} no validada por el Scraper. Forzando rotación por seguridad.")
+                        print(f"    ⚠️ ZENITH APEX: IP {current_ip} no verificada plenamente ({status}). Forzando rotación por seguridad.")
                         browser_manager.mark_current_proxy_bad()
                         browser_manager.close()
                         rotation_count += 1
