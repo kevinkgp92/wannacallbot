@@ -8,6 +8,7 @@ import threading # v2.2.35: Storm Shield Lock
 import os
 
 CACHE_FILE = "core/proxies_cache.json"
+GEO_CACHE_FILE = "core/geo_cache.json"
 
 # v2.2.36.2: Restored Spanish Armada Source Lists & Fetcher
 global_sources = [
@@ -95,7 +96,7 @@ class ProxyScraper:
         self._load_cache()
 
     def _load_cache(self):
-        """Loads verified proxies from local cache."""
+        """Loads verified proxies and geo results from local cache."""
         if os.path.exists(CACHE_FILE):
             try:
                 with open(CACHE_FILE, "r") as f:
@@ -103,15 +104,27 @@ class ProxyScraper:
                 if self.proxies:
                     print(f"  📦 Caché cargada: {len(self.proxies)} proxies guardados.")
             except: self.proxies = []
+        
+        # Load Geo Cache (v2.2.53 Persistence)
+        if os.path.exists(GEO_CACHE_FILE):
+            try:
+                with open(GEO_CACHE_FILE, "r") as f:
+                    self.geo_cache = json.load(f)
+                # print(f"  🌍 Geo-Caché cargado: {len(self.geo_cache)} registros.")
+            except: self.geo_cache = {}
 
     def _save_cache(self):
-        """Saves current verified proxies to local cache."""
+        """Saves current verified proxies and geo results to local cache."""
         try:
             # Keep only unique and non-empty
             clean = list(set([p for p in self.proxies if p]))
             with open(CACHE_FILE, "w") as f:
                 json.dump(clean, f)
             
+            # Save Geo Cache (v2.2.53 Persistence)
+            with open(GEO_CACHE_FILE, "w") as f:
+                json.dump(self.geo_cache, f)
+
             # Save "Golden" (known good ES) proxies separately for faster reuse
             if hasattr(self, 'golden_proxies') and self.golden_proxies:
                 with open(self.golden_cache_file, "w") as f:
@@ -185,32 +198,47 @@ class ProxyScraper:
                 print(f"  ⚠️ Geo-Check Error: {e}")
                 pass
 
-            # STRATEGY B: Turbo Resilient Fallback (v2.2.23 - Parallelized)
-            # Parallelize individual checks to avoid linear delays
-            sub_chunk = chunk[:30] # Check up to 30 candidates per batch failure
+            # STRATEGY B: Turbo Resilient Fallback (v2.2.53 - Deep Detect)
+            sub_chunk = chunk[:40] 
             
             def check_single_candidate(p):
                 if stop_signal and stop_signal(): return None
                 ip = p.split(':')[0]
                 if ip in self.geo_cache:
-                    return p if self.geo_cache[ip] == country_code else None
+                    cc = self.geo_cache[ip]
+                    return p if cc == country_code else None
 
                 try:
-                    # Use a short timeout for turbo mode
-                    r = requests.get(f"https://ipapi.co/{ip}/country/", timeout=3)
+                    # v2.2.53: Using a more detailed fallback API
+                    # Use ip-api direct with fields
+                    r = requests.get(f"http://ip-api.com/json/{ip}?fields=status,countryCode,as", timeout=4)
                     if r.status_code == 200:
-                        cc = r.text.strip().upper()
-                        self.geo_cache[ip] = cc
-                        return p if cc == country_code else None
-                    elif r.status_code == 429:
-                        r2 = requests.get(f"http://ip-api.com/json/{ip}?fields=countryCode", timeout=2)
-                        cc = r2.json().get("countryCode", "XX")
+                        res = r.json()
+                        if res.get("status") == "success":
+                            cc = res.get('countryCode', 'XX')
+                            as_org = str(res.get('as', '')).lower()
+                            
+                            if any(x in as_org for x in ["m247", "romania", "datacenter", "hosting", "cloud", "digitalocean", "vultr", "ovh", "hetzner"]):
+                                cc = "RO_FAKE"
+                                self.session_blacklist.add(p)
+                            
+                            self.geo_cache[ip] = cc
+                            return p if cc == country_code else None
+                        
+                    # Fallback to ipapi.co if ip-api is down but it's less reliable for ISP
+                    r2 = requests.get(f"https://ipapi.co/{ip}/json/", timeout=3)
+                    if r2.status_code == 200:
+                        res = r2.json()
+                        cc = res.get("country_code", "XX")
+                        org = str(res.get("org", "")).lower()
+                        if any(x in org for x in ["m247", "romania", "datacenter", "hosting"]):
+                            cc = "RO_FAKE"
                         self.geo_cache[ip] = cc
                         return p if cc == country_code else None
                 except: pass
                 return None
 
-            with concurrent.futures.ThreadPoolExecutor(max_workers=5) as executor: # Dropped from 20 to 5 for CPU
+            with concurrent.futures.ThreadPoolExecutor(max_workers=8) as executor:
                 results = list(executor.map(check_single_candidate, sub_chunk))
                 matches.extend([r for r in results if r])
             

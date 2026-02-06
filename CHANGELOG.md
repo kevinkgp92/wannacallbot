@@ -1,5 +1,19 @@
 # ♈ WANNA CALL? - CHANGELOG
 
+## [v2.2.53] - Titan Supreme UHQ (2026-02-06)
+### 🇪🇸 ESPAÑOL
+- **🚀 SUPREME PROXY ENGINE**: Rediseñado el motor de búsqueda de proxies para priorizar IPs residenciales españolas de alta calidad (UHQ).
+- **🛡️ DEEP ISP DETECT**: Bloqueo implacable de Datacenters y Hosting (M247, Hetzner, OVH, etc.) integrado directamente en la fase de scraping.
+- **💾 GEO-CACHE PERSISTENCE**: El bot ahora "recuerda" la ubicación y calidad de las IPs entre sesiones, eliminando tiempos de espera y duplicidad de peticiones.
+- **🛡️ ENHANCED QUANTUM VERIFIER**: Lógica optimizada para evitar falsos positivos y asegurar que el OSINT trabaje solo con conexiones indetectables.
+
+### 🇺🇸 ENGLISH
+- **🚀 SUPREME PROXY ENGINE**: Redesigned proxy search engine to prioritize high-quality Spanish residential IPs (UHQ).
+- **🛡️ DEEP ISP DETECT**: Relentless blocking of Datacenters and Hosting (M247, Hetzner, OVH, etc.) integrated directly into the scraping phase.
+- **💾 GEO-CACHE PERSISTENCE**: The bot now "remembers" IP location and quality between sessions, eliminating wait times and duplicate requests.
+- **🛡️ ENHANCED QUANTUM VERIFIER**: Optimized logic to avoid false positives and ensure OSINT works only with undetectable connections.
+
+
 ## [v2.2.52] - Titan Quantum Check (2026-02-06)
 ### 🇪🇸 ESPAÑOL
 - **🛡️ TITAN QUANTUM CHECK**: Rediseñado el motor de verificación Geo-IP. Ahora utiliza un sistema dinámico de 8+ APIs con parsers específicos para asegurar la validación incluso bajo bloqueos masivos.
