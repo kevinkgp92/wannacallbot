@@ -177,7 +177,7 @@ class TextRedirector(object):
 class OsintGUI(ctk.CTk):
     def __init__(self):
         super().__init__()
-        self.version = "2.2.48"
+        self.version = "2.2.49"
         
         # NITRO: Init attributes BEFORE splash to avoid AttributeError
         self.updater_ready = False

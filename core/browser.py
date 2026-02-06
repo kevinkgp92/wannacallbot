@@ -359,13 +359,6 @@ class BrowserManager:
         # The next time any setup method is called, it will call _get_proxy() which picks a new one
         return True
 
-                    # Extensive children coverage
-                    for child in p.children(recursive=True):
-                        try: child.nice(psutil.IDLE_PRIORITY_CLASS)
-                        except: pass
-        except Exception as e:
-            print(f"  ⚠️ Priority Guard Error: {e}")
-
     def close(self):
         if self.driver:
             try: self.driver.quit()

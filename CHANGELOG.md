@@ -1,5 +1,15 @@
 # ♈ WANNA CALL? - CHANGELOG
 
+## [v2.2.49] - Titan Fix (2026-02-06)
+### 🇪🇸 ESPAÑOL
+- **🛠️ CRITICAL SYNTAX REPAIR**: Eliminado el código huérfano en `core/browser.py` que provocaba el error `ModuleNotFoundError` en compilaciones anteriores.
+- **📦 IMPORT CONSOLIDATION**: Añadida la importación de `requests` al motor OSINT para estabilizar el sistema de validación de IP (Geo-Heal).
+
+### 🇺🇸 ENGLISH
+- **🛠️ CRITICAL SYNTAX REPAIR**: Removed orphaned code in `core/browser.py` that caused `ModuleNotFoundError` in previous builds.
+- **📦 IMPORT CONSOLIDATION**: Added `requests` import to the OSINT engine to stabilize the IP validation system (Geo-Heal).
+
+
 ## [v2.2.48] - Titan Perfecta (2026-02-06)
 ### 🇪🇸 ESPAÑOL
 - **🚀 ZERO-STUTTER CORE**: Eliminado el `Priority Guard`. El sistema ya no reduce la prioridad del navegador, eliminando los micro-parones en la interfaz y el sistema.

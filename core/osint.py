@@ -1,4 +1,5 @@
 import phonenumbers
+import requests
 from phonenumbers import geocoder
 from phonenumbers import carrier as phone_carrier
 import time
