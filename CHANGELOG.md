@@ -1,5 +1,19 @@
 # ♈ WANNA CALL? - CHANGELOG
 
+## [v2.2.43] - Titan Ultra Stability (2026-02-06)
+### 🇪🇸 ESPAÑOL
+- **🛑 FULMINANT STOP SIGNAL**: Reducido el tamaño de lote de escaneo a 100. El bot ahora comprueba la señal de parada cada 2 segundos, eliminando hilos "zombie".
+- **🛡️ RESILIENT GEO-GUARD**: Si la API de Geo-IP falla (429/Timeout), el proxy ya no es blacklisteado, sino que se reserva para reintento.
+- **💎 ELITE SOURCES v2**: Purgadas fuentes redundantes y añadidas rutas VIP ES directas para un mejor yield inicial.
+- **📉 LOG GOVERNOR v3**: Optimizado el refresco de GUI para eliminar micro-tirones durante el modo OSINT.
+
+### 🇺🇸 ENGLISH
+- **🛑 FULMINANT STOP SIGNAL**: Reduced scan batch size to 100. The bot now checks for the stop signal every 2 seconds, eliminating "zombie" threads.
+- **🛡️ RESILIENT GEO-GUARD**: If the Geo-IP API fails (429/Timeout), the proxy is no longer blacklisted but reserved for retry.
+- **💎 ELITE SOURCES v2**: Purged redundant sources and added direct VIP ES routes for better initial yield.
+- **📉 LOG GOVERNOR v3**: Optimized GUI refresh to eliminate micro-stutters during OSINT mode.
+
+
 ## [v2.2.42] - Titan Spanish Elite (2026-02-06)
 ### 🇪🇸 ESPAÑOL
 - **🛑 TITAN STOP SIGNAL**: Inyectados micro-chequeos de parada en cada paso de red. Al pulsar "DETENER", el bot aborta el hilo de forma absoluta e inmediata.

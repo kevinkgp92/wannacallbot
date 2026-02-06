@@ -150,8 +150,13 @@ class ProxyScraper:
                             self.geo_cache[ip_key] = "FAIL"
                     return matches
                 elif r.status_code == 429:
+                    # v2.2.43: FAIL-SAFE GEO - Don't blacklist on rate limit
+                    print("  ⚠️ Geo-Check Rate Limited (429). Saltando lote para reintento.")
                     time.sleep(2)
-            except: pass
+                    return [] # Return empty match without fail status for cache
+            except Exception as e: 
+                print(f"  ⚠️ Geo-Check Error: {e}")
+                pass
 
             # STRATEGY B: Turbo Resilient Fallback (v2.2.23 - Parallelized)
             # Parallelize individual checks to avoid linear delays
@@ -338,8 +343,8 @@ class ProxyScraper:
              return self.proxies
 
         # HUNTING LOOP for ES in Tier 2
-        BATCH_SIZE = 1500 # Smaller batches for more frequent updates
-        GOAL = 3
+        BATCH_SIZE = 100 # v2.2.43: Ultra-Responsive (Reduced from 1500 to 100)
+        GOAL = 6 # v2.2.43: Target increased for better diversity
         MAX_SCAN = 60000 
         START_TIME = time.time()
         
