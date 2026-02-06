@@ -1,5 +1,19 @@
 # ♈ WANNA CALL? - CHANGELOG
 
+## [v2.2.37] - Quantum Stability & OSINT Overlord (2026-02-06)
+### 🇪🇸 ESPAÑOL
+- **🌌 QUANTUM YIELD**: Aumentado el límite de candidatos a 1500 y añadido filtro de latencia crítica (< 2.5s) para proxies ES.
+- **🦆 DUCK ENGINE 2.0**: Corregidos los timeouts de navegación (35s) y mejorada la resiliencia ante bloqueos.
+- **💬 WHATSAPP SNIPER**: Reparada la detección de cuentas activa con nuevos selectores más robustos.
+- **❄️ CERO MICRO-CORTES**: Optimización del hilo de UI y el registro de logs para una fluidez total.
+
+### 🇺🇸 ENGLISH
+- **🌌 QUANTUM YIELD**: Increased candidate limit to 1500 and added critical latency filter (< 2.5s) for ES proxies.
+- **🦆 DUCK ENGINE 2.0**: Fixed navigation timeouts (35s) and improved block resilience.
+- **💬 WHATSAPP SNIPER**: Repaired active account detection with robust new selectors.
+- **❄️ ZERO MICRO-CUTS**: UI thread and log registration optimization for total smoothness.
+
+
 ## [v2.2.36.3] - Smooth Release (2026-02-06)
 ### 🇪🇸 ESPAÑOL
 - **❄️ CERO STUTTER**: Recalibrados los micro-pulsos de sueño (GIL pulses) a 0.01s-0.05s para eliminar el lag del ratón.

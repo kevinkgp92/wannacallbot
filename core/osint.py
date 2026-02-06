@@ -256,8 +256,8 @@ class OSINTManager:
     def _do_lookup_logic(self, browser, phone_str, name_hint, update_progress, stop_check):
         # GLOBAL TIMEOUT & CIRCUIT BREAKER
         circuit_breaker_tripped = False
-        browser.set_page_load_timeout(20) # STRICT TIMEOUT (20s) - Relaxed from 10s
-        browser.set_script_timeout(20)
+        browser.set_page_load_timeout(35) # v2.2.37: Boosted from 20s to 35s for Quantum OSINT
+        browser.set_script_timeout(35)
         
         # UNIVERSAL JS INJECTOR: "Nuclear Spain Mode" (Optimized v2.2.29)
         def force_spain_universal(driver):
@@ -349,7 +349,7 @@ class OSINTManager:
                         print("🚫 LÍMITE DE ROTACIÓN ALCANZADO: Demasiados bloqueos. Saltando fuente.")
                         return False
                     browser = browser_manager.get_driver()
-                    browser.set_page_load_timeout(20) # Re-apply 20s
+                    browser.set_page_load_timeout(35) # Re-apply 35s
             
             print(f"❌ Error persistente en {url}. Saltando fuente.")
             if "google.com" in url:
@@ -729,43 +729,43 @@ class OSINTManager:
 
         # 6. WhatsApp Public Bridge (Enriched & Sanitized + INFO SCRAPE)
         try:
-            print(f"[OSINT] Extrayendo rastro de WhatsApp (Deep Check)...")
+            print(f"[OSINT] Extrayendo rastro de WhatsApp (Quantum Sniper)...")
             wa_urls = [
                 f"https://api.whatsapp.com/send/?phone={clean_phone}&text=Hi",
-                f"https://web.whatsapp.com/send?phone={clean_phone}"
+                # Web version removed as it stalls too much for portable use
             ]
             
             for wurl in wa_urls:
                 try:
-                    _safe_get(wurl, timeout_retries=0) # Quick check, no retry for WA
-                    time.sleep(4)
+                    # Quick check for WA existence (Quantum resilient detection)
+                    _safe_get(wurl, timeout_retries=0) 
+                    time.sleep(3)
+                    
+                    page_text = browser.page_source.lower()
+                    # Check for "Invalid" or "Not on WhatsApp"
+                    if "invalid" in page_text or "inválido" in page_text or "no está en whatsapp" in page_text:
+                         print("    ❌ WhatsApp: No registrado.")
+                         continue
                     
                     title = browser.title
-                    found_wa = False
-                    if title:
+                    if title and "-" in title:
                          clean_wa = title.split("-")[0].strip()
                          if is_clean_name(clean_wa) and clean_phone not in clean_wa:
                              report['intel']['social'].append(f"WA: {clean_wa}")
                              report['sources'].append("WhatsApp")
                              print(f"  ✅ WhatsApp: {clean_wa}")
-                             found_wa = True
+                             break
                     
-                    # If title failed, look at page text (often says "Chat with John Doe")
-                    if not found_wa:
-                        try:
-                            body_text = browser.find_element(By.TAG_NAME, "body").text
-                            # Look for "Chatea con X", "Chat with X"
-                            match = re.search(r"(?:Chatea con|Chat with)\s+([a-zA-Z\s]{3,30})", body_text)
-                            if match:
-                                nm = match.group(1).strip()
-                                if is_clean_name(nm):
-                                    report['intel']['social'].append(f"WA: {nm}")
-                                    report['sources'].append("WhatsApp")
-                                    print(f"  ✅ WhatsApp (Body): {nm}")
-                                    found_wa = True
-                        except: pass
-                    
-                    if found_wa: break
+                    # Direct check for "Chat with" text
+                    match = re.search(r"(?:Chatea con|Chat with)\s+([a-zA-Z\s]{3,30})", page_text)
+                    if match:
+                        nm = match.group(1).strip()
+                        if is_clean_name(nm):
+                            report['intel']['social'].append(f"WA: {nm}")
+                            report['sources'].append("WhatsApp")
+                            print(f"  ✅ WhatsApp (Sniper): {nm}")
+                            break
+                                    
                 except: pass
         except: pass
         

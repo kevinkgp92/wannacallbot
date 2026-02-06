@@ -262,11 +262,11 @@ class ProxyScraper:
             print(f"🚀 FASE 1: Buscando en fuentes ES específicas (Prioridad Alta)...")
             tier1_candidates = list(fetch_sources(es_sources, "(ES/Targeted)"))
             
-            # v2.2.33: ARCTIC SILENCE - Candidate Capping
-            if len(tier1_candidates) > 500:
-                print(f"  ❄️ Arctic Silence: Truncando {len(tier1_candidates)} a 500 candidatos top.")
+            # v2.2.37: QUANTUM YIELD - Candidate Capping increased from 500 to 1500
+            if len(tier1_candidates) > 1500:
+                print(f"  🌌 Quantum Yield: Truncando {len(tier1_candidates)} a 1500 candidatos premium.")
                 random.shuffle(tier1_candidates)
-                tier1_candidates = tier1_candidates[:500]
+                tier1_candidates = tier1_candidates[:1500]
             
             print(f"  📥 Candidatos listos para validación.")
             
@@ -313,10 +313,10 @@ class ProxyScraper:
         tier2_candidates = list(fetch_sources(target_list, "(Global)"))
         random.shuffle(tier2_candidates)
         
-        # v2.2.33: ARCTIC SILENCE - Candidate Capping Tier 2
-        if country == "ES" and len(tier2_candidates) > 500:
-            print(f"  ❄️ Arctic Silence: Truncando {len(tier2_candidates)} a 500 candidatos masivos.")
-            tier2_candidates = tier2_candidates[:500]
+        # v2.2.37: QUANTUM YIELD - Candidate Capping Tier 2
+        if country == "ES" and len(tier2_candidates) > 1500:
+            print(f"  🌌 Quantum Yield: Truncando {len(tier2_candidates)} a 1500 candidatos masivos.")
+            tier2_candidates = tier2_candidates[:1500]
         
         print(f"  📥 Candidatos listos para caza.")
         
@@ -478,10 +478,17 @@ class ProxyScraper:
                         return False
 
                 # Second check: Google connectivity (Strict check for OSINT)
+                start_google = time.time()
                 r2 = requests.get("https://www.google.com/gen_204", proxies=proxies, timeout=5)
+                latency = time.time() - start_google
+                
                 if r2.status_code == 204 or r2.status_code == 200:
-                    print(f"  ✅ Proxy OK: {proxy_str}")
-                    return True
+                    if latency < 2.5: # v2.2.37: Extreme Latency Filter
+                         print(f"  ✅ Proxy Elite ({latency:.2f}s): {proxy_str}")
+                         return True
+                    else:
+                         print(f"  ⚠️ Proxy funcional pero lento ({latency:.2f}s). Descartado.")
+                         return False
                 else:
                     print(f"  ⚠️ Proxy funcional pero bloqueado por Google: {proxy_str}")
         except:

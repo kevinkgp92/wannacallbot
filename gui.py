@@ -106,6 +106,10 @@ class TextRedirector(object):
         target.tag_config("OSINT", foreground="#1abc9c")   # Turquoise
         target.tag_config("GOD", foreground="#ff4500")     # Orange-Red
 
+        # v2.2.37: Quantum Batching - Queue for log messages
+        self.msg_queue = queue.Queue()
+        self._is_polling = False
+
     def write(self, str_out):
         if not str_out: return
         
@@ -115,44 +119,57 @@ class TextRedirector(object):
         
         if not clean_str: return
 
-        # Thread-safe UI update
-        def _update():
-            # CRITICAL: Check if widget still exists to avoid crash on close
-            try:
-                if not self.widget.winfo_exists(): return
-                
-                self.widget.configure(state="normal")
-                
-                # Determine color based on content
-                tag_to_use = self.tag
-                if "✔" in clean_str or "SUCCESS" in clean_str or "EXITO" in clean_str:
-                    tag_to_use = "SUCCESS"
-                elif "✘" in clean_str or "ERROR" in clean_str or "Exception" in clean_str or "Falla" in clean_str:
-                    tag_to_use = "ERROR"
-                elif "⚠" in clean_str or "WARN" in clean_str:
-                    tag_to_use = "WARN"
-                elif "ℹ" in clean_str or "INFO" in clean_str:
-                    tag_to_use = "INFO"
-                elif "🛡️" in clean_str or "SISTEMA" in clean_str:
-                    tag_to_use = "SYSTEM"
-                elif "🔍" in clean_str or "OSINT" in clean_str or "📧" in clean_str or "🆔" in clean_str:
-                    tag_to_use = "OSINT"
-                elif "♈" in clean_str or "GOD" in clean_str or "╔═" in clean_str or "║" in clean_str:
-                    tag_to_use = "GOD"
-                    
-                self.widget.insert("end", clean_str, (tag_to_use,))
-                self.widget.see("end")
-                self.widget.configure(state="disabled")
-            except:
-                pass # Silent fail to avoid recursion if logging fails
-            
-        try:
-            self.widget.after(0, _update)
-        except:
-            pass
+        # Push to queue
+        self.msg_queue.put(clean_str)
         
-    def flush(self):
-        pass
+        # Start polling loop if not already running
+        if not self._is_polling:
+            self._is_polling = True
+            try:
+                self.widget.after(50, self._process_batch) # v2.2.37: 50ms pulse for smooth logs
+            except: pass
+
+    def _process_batch(self):
+        """Processes logs in batches to avoid UI micro-stutters."""
+        try:
+            if not self.widget.winfo_exists():
+                self._is_polling = False
+                return
+
+            messages = []
+            try:
+                while len(messages) < 100: # Batch max 100 lines at once
+                    messages.append(self.msg_queue.get_nowait())
+            except queue.Empty: pass
+
+            if not messages:
+                self._is_polling = False
+                return
+
+            self.widget.configure(state="normal")
+            for msg in messages:
+                tag_to_use = self.tag
+                # Logic to determine color (kept from v2.2.36)
+                if "✔" in msg or "SUCCESS" in msg or "EXITO" in msg: tag_to_use = "SUCCESS"
+                elif "✘" in msg or "ERROR" in msg or "Exception" in msg or "Falla" in msg: tag_to_use = "ERROR"
+                elif "⚠" in msg or "WARN" in msg: tag_to_use = "WARN"
+                elif "ℹ" in msg or "INFO" in msg: tag_to_use = "INFO"
+                elif "🛡️" in msg or "SISTEMA" in msg: tag_to_use = "SYSTEM"
+                elif "🔍" in msg or "OSINT" in msg or "📧" in msg or "🆔" in msg: tag_to_use = "OSINT"
+                elif "♈" in msg or "GOD" in msg or "╔═" in msg or "║" in msg: tag_to_use = "GOD"
+                    
+                self.widget.insert("end", msg, (tag_to_use,))
+            
+            self.widget.see("end")
+            self.widget.configure(state="disabled")
+            
+            # Continue polling if there's more
+            if not self.msg_queue.empty():
+                self.widget.after(30, self._process_batch)
+            else:
+                self._is_polling = False
+        except:
+            self._is_polling = False
 
 class OsintGUI(ctk.CTk):
     def __init__(self):
@@ -172,7 +189,7 @@ class OsintGUI(ctk.CTk):
         # TEST: Disable splash temporarily to see if main window renders alone
         # self.show_splash() 
         _boot_log("Splash skipped (test mode)")
-        self.version = "2.2.36.3" 
+        self.version = "2.2.37" 
         _boot_log(f"Version: {self.version}")
 
         # Setup Auto-Updater (Silent)
