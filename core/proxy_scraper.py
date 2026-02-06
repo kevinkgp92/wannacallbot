@@ -21,15 +21,23 @@ global_sources = [
     "https://www.proxyscan.io/download?type=http"
 ]
 
-es_sources = [
-    "https://api.proxyscrape.com/v2/?request=displayproxies&protocol=http&timeout=10000&country=es&ssl=all&anonymity=all",
-    "https://www.proxyscan.io/download?type=http&country=es",
-    "https://proxylist.geonode.com/api/proxy-list?limit=100&page=1&sort_by=lastChecked&sort_type=desc&country=ES&protocols=http",
-    "https://api.openproxy.space/v1/proxies?country=ES&type=http",
-    "https://raw.githubusercontent.com/rdavydov/proxy-list/main/proxies/es.txt",
-    "https://api.proxifly.dev/get-proxy?country=ES&protocol=http", # v2.2.46: Hyperion Elite
-    "https://checkerproxy.net/api/archive/2026-02-06" # v2.2.46: Archivo diario
-]
+# v2.2.47: Titan Gold Harvest - Dynamic Source Generation
+def get_es_sources():
+    today = time.strftime("%Y-%m-%d")
+    return [
+        "https://api.proxyscrape.com/v2/?request=displayproxies&protocol=http&timeout=10000&country=es&ssl=all&anonymity=all",
+        "https://www.proxyscan.io/download?type=http&country=es",
+        "https://proxylist.geonode.com/api/proxy-list?limit=100&page=1&sort_by=lastChecked&sort_type=desc&country=ES&protocols=http",
+        "https://api.openproxy.space/v1/proxies?country=ES&type=http",
+        "https://raw.githubusercontent.com/rdavydov/proxy-list/main/proxies/es.txt",
+        "https://api.proxifly.dev/get-proxy?country=ES&protocol=http",
+        "https://raw.githubusercontent.com/proxifly/free-proxy-list/main/proxies/countries/ES/data.txt", # v2.2.47 Gold
+        "https://raw.githubusercontent.com/monosans/proxy-list/main/proxies_anonymous/http.txt", # v2.2.47 Gold (Anon)
+        "https://raw.githubusercontent.com/Androz2091/free-proxy-list/master/proxies.txt", # v2.2.47 Gold
+        f"https://checkerproxy.net/api/archive/{today}" # v2.2.47: Real-time Date Injection
+    ]
+
+es_sources = get_es_sources()
 
 def fetch_sources(urls, label="", stop_signal=None):
     """v2.2.36.2: Restored Parallel fetcher with Arctic Throttling."""

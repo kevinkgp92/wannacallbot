@@ -1,5 +1,17 @@
 # ♈ WANNA CALL? - CHANGELOG
 
+## [v2.2.47] - Titan Gold Harvest (2026-02-06)
+### 🇪🇸 ESPAÑOL
+- **💎 ES GOLD INJECTION**: Añadidas 5 nuevas fuentes VIP de GitHub y APIs residenciales gratuitas para maximizar el hallazgo de proxies en España.
+- **📅 DYNAMIC DATE HARVESTING**: El bot ahora inyecta la fecha actual en fuentes como `checkerproxy.net`, asegurando que siempre se descarguen las listas más recientes.
+- **🛡️ DEEP CLEAN FILTER**: Optimizado el motor de filtrado para eliminar duplicados de forma más agresiva entre fuentes globales y las exclusivas de España.
+
+### 🇺🇸 ENGLISH
+- **💎 ES GOLD INJECTION**: Added 5 new VIP GitHub sources and free residential APIs to maximize proxy finding in Spain.
+- **📅 DYNAMIC DATE HARVESTING**: The bot now injects the current date into sources like `checkerproxy.net`, ensuring recent lists are always downloaded.
+- **🛡️ DEEP CLEAN FILTER**: Optimized the filtering engine to more aggressively remove duplicates across global and Spain-exclusive sources.
+
+
 ## [v2.2.46] - Titan Resurrection (2026-02-06)
 ### 🇪🇸 ESPAÑOL
 - **🛠️ CRITICAL REPAIR**: Corregido el error de sintaxis en el motor OSINT que impedía el arranque del buscador en la versión anterior.
