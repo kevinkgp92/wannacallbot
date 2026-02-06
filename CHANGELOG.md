@@ -1,5 +1,19 @@
 # ♈ WANNA CALL? - CHANGELOG
 
+## [v2.2.55] - Titan Supreme (Final Boss Edition) (2026-02-06)
+### 🇪🇸 ESPAÑOL
+- **📋 BOTÓN COPIAR LOGS**: Nueva utilidad en la interfaz para copiar el registro de operaciones al portapapeles con un clic.
+- **🌍 GEOLOCALIZACIÓN CONDICIONAL**: La geolocalización forzada en España ahora solo se activa si hay un proxy activo, permitiendo navegación real sin proxy.
+- **🚀 ELITE SOURCES v2**: Inyección de nuevas fuentes de proxies UHQ de alta fidelidad residencial.
+- **🛡️ HARDENED ANTI-DC**: Filtro reforzado contra proveedores de hosting rumanos y falsos proxies españoles.
+
+### 🇺🇸 ENGLISH
+- **📋 COPY LOGS BUTTON**: New utility in the interface to copy the operation log to the clipboard with one click.
+- **🌍 CONDITIONAL GEOLOCATION**: Forced Spain geolocation now only activates if an active proxy is present, allowing real navigation without proxy.
+- **🚀 ELITE SOURCES v2**: Injection of new high-fidelity residential UHQ proxy sources.
+- **🛡️ HARDENED ANTI-DC**: Reinforced filtering against Romanian hosting providers and fake Spanish proxies.
+
+
 ## [v2.2.54] - Titan God Mode (2026-02-06)
 ### 🇪🇸 ESPAÑOL
 - **🚀 TITAN GOD MODE PROXYING**: Sistema de adquisición de proxies de grado militar con validación de dominio residencial `.es` (Marca.com/Google.es).

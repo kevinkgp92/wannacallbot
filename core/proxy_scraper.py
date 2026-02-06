@@ -22,13 +22,13 @@ global_sources = [
     "https://www.proxyscan.io/download?type=http"
 ]
 
-# v2.2.54: Titan God Mode - Ultimate Residential Sources
+# v2.2.55: Titan Supreme - Final Boss Elite Sources
 def get_es_sources():
     today = time.strftime("%Y-%m-%d")
     return [
         "https://api.proxyscrape.com/v2/?request=displayproxies&protocol=http&timeout=10000&country=es&ssl=all&anonymity=all",
         "https://www.proxyscan.io/download?type=http&country=es",
-        "https://proxylist.geonode.com/api/proxy-list?limit=200&page=1&sort_by=lastChecked&sort_type=desc&country=ES&protocols=http",
+        "https://proxylist.geonode.com/api/proxy-list?limit=500&page=1&sort_by=lastChecked&sort_type=desc&country=ES&protocols=http",
         "https://api.openproxy.space/v1/proxies?country=ES&type=http",
         "https://raw.githubusercontent.com/rdavydov/proxy-list/main/proxies/es.txt",
         "https://raw.githubusercontent.com/yemixzy/proxy-list/main/proxies/http.txt", 
@@ -38,8 +38,10 @@ def get_es_sources():
         "https://raw.githubusercontent.com/prxchk/proxy-list/main/http.txt",
         "https://raw.githubusercontent.com/Zaeem20/FREE_PROXIES_LIST/master/http.txt",
         "https://raw.githubusercontent.com/mmpx12/proxy-list/master/http.txt",
-        "https://raw.githubusercontent.com/Seven0sh/Free_Proxy_List/main/proxies.txt", # v2.2.54 VIP
-        "https://raw.githubusercontent.com/andrei6842/proxylists/master/proxies.txt", # v2.2.54 VIP
+        "https://raw.githubusercontent.com/Seven0sh/Free_Proxy_List/main/proxies.txt", 
+        "https://raw.githubusercontent.com/andrei6842/proxylists/master/proxies.txt", 
+        "https://raw.githubusercontent.com/ShiftyTR/Proxy-List/master/http.txt", # v2.2.55 NEW
+        "https://raw.githubusercontent.com/jetkai/proxy-list/main/online-proxies/txt/proxies-http.txt", # v2.2.55 NEW
         "https://api.proxyscrape.com/v2/?request=displayproxies&protocol=socks5&timeout=10000&country=es&ssl=all&anonymity=all",
         "https://www.proxyscan.io/download?type=socks5&country=es",
         "https://raw.githubusercontent.com/vakhov/fresh-proxy-list/master/proxylist.txt",

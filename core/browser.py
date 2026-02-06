@@ -225,7 +225,11 @@ class BrowserManager:
         return driver
     
     def _force_spain_context(self, driver):
-        """Forces Spanish geolocation, timezone, and regional signals."""
+        """Forces Spanish geolocation, timezone, and regional signals (Conditional)."""
+        # v2.2.55: Only apply if using a proxy or auto-proxy to allow real-IP browsing
+        if not self.proxy and not self.auto_proxy:
+            return
+
         try:
             # For Chrome/Edge (CDP)
             if hasattr(driver, "execute_cdp_cmd"):

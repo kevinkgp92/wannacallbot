@@ -85,7 +85,7 @@ class BootstrapSplash:
         self.progress.pack(pady=10)
         
         # Version Tag
-        tk.Label(self.root, text="Titan Perfecta v2.2.54", font=("Arial", 8), fg="#333", bg="#16161d").pack(side="bottom", pady=5)
+        tk.Label(self.root, text="Titan Perfecta v2.2.55", font=("Arial", 8), fg="#333", bg="#16161d").pack(side="bottom", pady=5)
         
         self.root.update()
 
@@ -233,7 +233,7 @@ class TextRedirector(object):
 class OsintGUI(ctk.CTk):
     def __init__(self):
         super().__init__()
-        self.version = "2.2.54"
+        self.version = "2.2.55"
         
         # NITRO: Init attributes BEFORE splash to avoid AttributeError
         self.updater_ready = False
@@ -623,8 +623,16 @@ class OsintGUI(ctk.CTk):
         self.log_frame.grid(row=2, column=0, padx=20, pady=20, sticky="nsew")
         self.main_frame.grid_rowconfigure(2, weight=1)
 
-        self.log_label = ctk.CTkLabel(self.log_frame, text="Registros de Operación:", anchor="w", font=ctk.CTkFont(size=14, weight="bold"), text_color="gray70")
-        self.log_label.pack(fill="x", pady=(0, 5))
+        self.log_header = ctk.CTkFrame(self.log_frame, fg_color="transparent")
+        self.log_header.pack(fill="x", pady=(0, 5))
+        
+        self.log_label = ctk.CTkLabel(self.log_header, text="Registros de Operación:", anchor="w", font=ctk.CTkFont(size=14, weight="bold"), text_color="gray70")
+        self.log_label.pack(side="left")
+        
+        self.btn_copy_logs = ctk.CTkButton(self.log_header, text="📋 COPIAR LOGS", width=120, height=24, 
+                                           fg_color="#34495e", hover_color="#2c3e50", font=ctk.CTkFont(size=10, weight="bold"),
+                                           command=self.copy_logs_to_clipboard)
+        self.btn_copy_logs.pack(side="right")
 
         self.log_box = ctk.CTkTextbox(self.log_frame, width=400, height=450, state="disabled", font=("Consolas", 12),
                                       fg_color="#13131a", text_color="#ff4500", border_width=1, border_color="#33334d")
@@ -1332,6 +1340,20 @@ class OsintGUI(ctk.CTk):
         self.batch_targets = normalized
         print(f"✅ Normalizados {len(normalized)} números.")
         self.progress_label.configure(text=f"Lista normalizada: {len(normalized)} números")
+
+    def copy_logs_to_clipboard(self):
+        """Copies all text from the log box to the system clipboard."""
+        try:
+            log_text = self.log_box.get("1.0", "end-1c")
+            if log_text.strip():
+                self.clipboard_clear()
+                self.clipboard_append(log_text)
+                self.update() # Required to finalize clipboard on Windows
+                print("SISTEMA: Logs copiados al portapapeles con éxito.")
+            else:
+                print("SISTEMA: Nada que copiar (logs vacíos).")
+        except Exception as e:
+            print(f"SISTEMA: Error al copiar logs: {e}")
 
     def update_stats(self, success, error):
         self.total_success += success
