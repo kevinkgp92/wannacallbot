@@ -197,10 +197,17 @@ class OSINTManager:
             else:
                 print("[OSINT] 🛡️ Verificando IP y Localización antes de iniciar...")
                 try:
-                    # v2.2.40: Unified Hardened Check (Sync with Scraper)
+                    if stop_check and stop_check(): break
+                    
+                    # v2.2.42: Titan Robust Check (Sync with Scraper)
                     browser.get("http://ip-api.com/json/?fields=status,countryCode,as,query")
                     import json
-                    text_data = browser.find_element(By.TAG_NAME, "body").text
+                    text_data = browser.find_element(By.TAG_NAME, "body").text.strip()
+                    
+                    # Titan Robust JSON
+                    if not text_data or not (text_data.startswith('{') or text_data.startswith('[')):
+                         raise ConnectionError("Geo-Check Returned Empty/Invalid response")
+                         
                     geo_data = json.loads(text_data)
                     
                     if geo_data.get("status") == "success":
@@ -216,6 +223,8 @@ class OSINTManager:
 
                     print(f"    🌍 IP ACTUAL: {my_ip} | PAÍS DETECTADO: {cc}")
                     
+                    if stop_check and stop_check(): break
+
                     # STRICT GEO-GUARD: KILL SWITCH
                     if cc != "ES":
                         print(f"    ⛔ GEO-BLOCK: IP rechazada ({cc}). Solo se permite ESPAÑA Real.")
@@ -231,7 +240,8 @@ class OSINTManager:
                     browser_manager.mark_current_proxy_bad()
                     browser_manager.close() # CORRECT TEARDOWN
                     rotation_count += 1
-                    time.sleep(2) # v2.2.40: Rotation Pulse to stabilize GUI
+                    time.sleep(2) # v2.2.42: Rotation Pulse (Sync)
+                    if stop_check and stop_check(): break
                     continue # Try next rotation
             
             if check_ok:

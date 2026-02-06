@@ -24,8 +24,8 @@ global_sources = [
 es_sources = [
     "https://www.proxy-list.download/api/v1/get?type=http&country=ES",
     "https://api.proxyscrape.com/v2/?request=displayproxies&protocol=http&timeout=10000&country=es&ssl=all&anonymity=all",
-    "https://www.proxyscan.io/download?type=http&country=es" # v2.2.41: Strict ES source
-    # v2.2.41: Purged global sources (proxyspace, mmpx12, clketlow) to ensure 100% ES candidates.
+    "https://www.proxyscan.io/download?type=http&country=es",
+    "https://proxylist.geonode.com/api/proxy-list?limit=100&page=1&sort_by=lastChecked&sort_type=desc&country=ES&protocols=http" # v2.2.42: Titan ES source
 ]
 
 def fetch_sources(urls, label="", stop_signal=None):
@@ -124,21 +124,33 @@ class ProxyScraper:
             matches = []
             ips = [p.split(':')[0] for p in chunk]
             
-            # STRATEGY A: ip-api.com (Batch)
+            # STRATEGY A: ip-api.com (Batch) - v2.2.42: Titan Hardened
             try:
-                data = [{"query": ip, "fields": "countryCode"} for ip in ips]
+                data = [{"query": ip, "fields": "status,countryCode,as"} for ip in ips]
                 r = requests.post("http://ip-api.com/batch", json=data, timeout=10)
                 if r.status_code == 200:
                     results = r.json()
+                    # Robust JSON Handle: Ensure results is a list
+                    if not isinstance(results, list): return []
+                    
                     for idx, res in enumerate(results):
-                        cc = res.get('countryCode', 'XX')
-                        self.geo_cache[ips[idx]] = cc
-                        if cc == country_code:
-                            matches.append(chunk[idx])
+                        if idx >= len(ips): break
+                        ip_key = ips[idx]
+                        if res.get("status") == "success":
+                            cc = res.get('countryCode', 'XX')
+                            as_org = res.get('as', '').lower()
+                            
+                            if "m247" in as_org or "romania" in as_org:
+                                cc = "RO_FAKE" 
+
+                            self.geo_cache[ip_key] = cc
+                            if cc == country_code:
+                                matches.append(chunk[idx])
+                        else:
+                            self.geo_cache[ip_key] = "FAIL"
                     return matches
                 elif r.status_code == 429:
-                    # Rate limited -> Sleep briefly and continue to fallback
-                    time.sleep(1)
+                    time.sleep(2)
             except: pass
 
             # STRATEGY B: Turbo Resilient Fallback (v2.2.23 - Parallelized)

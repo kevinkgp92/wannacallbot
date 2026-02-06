@@ -1,5 +1,19 @@
 # ♈ WANNA CALL? - CHANGELOG
 
+## [v2.2.42] - Titan Spanish Elite (2026-02-06)
+### 🇪🇸 ESPAÑOL
+- **🛑 TITAN STOP SIGNAL**: Inyectados micro-chequeos de parada en cada paso de red. Al pulsar "DETENER", el bot aborta el hilo de forma absoluta e inmediata.
+- **🛡️ VERSION FREEZE FIX**: Localizado y eliminado un override interno que bloqueaba la interfaz en la v2.2.37.
+- **💎 TITAN SOURCES**: Integración de nuevas fuentes ES VIP (`geonode`) y depuración de falsos positivos en Geo-IP.
+- **🧩 ROBUST JSON**: Mejorado el motor de validación de IP para manejar errores de red y respuestas vacías sin crashear.
+
+### 🇺🇸 ENGLISH
+- **🛑 TITAN STOP SIGNAL**: Injected micro-stop checks at every network step. Clicking "STOP" now aborts threads absolutely and instantly.
+- **🛡️ VERSION FREEZE FIX**: Located and removed an internal override that was locking the interface to v2.2.37.
+- **💎 TITAN SOURCES**: Integrated new VIP ES sources (`geonode`) and debugged Geo-IP false positives.
+- **🧩 ROBUST JSON**: Improved IP validation engine to handle network errors and empty responses without crashing.
+
+
 ## [v2.2.41] - Elite Spanish Armada (2026-02-06)
 ### 🇪🇸 ESPAÑOL
 - **🚀 SOURCE PURIFICATION**: Eliminadas listas globales residuales (`proxyspace`, `mmpx12`, `clketlow`) de la Fase 1. El escaneo ahora es 100% ES nativo.

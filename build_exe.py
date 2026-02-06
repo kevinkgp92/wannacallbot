@@ -5,7 +5,7 @@ import shutil
 import glob
 
 def build():
-    version = "2.2.41"
+    version = "2.2.42"
     print("===================================================")
     print(f"    WANNA CALL? - EXE BUILDER (v{version})")
     print("===================================================")
