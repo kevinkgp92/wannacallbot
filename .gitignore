@@ -1,7 +1,7 @@
 # WANNA CALL - GITHUB BASELINE .GITIGNORE
 
 # Build Artifacts
-build/
+build*/
 dist*/
 *.spec
 *.exe
