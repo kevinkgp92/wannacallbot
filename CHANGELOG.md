@@ -1,5 +1,19 @@
 # ♈ WANNA CALL? - CHANGELOG
 
+## [v2.2.70] - Titan Zenith Resolve (The Final Sync) (2026-02-06)
+### 🇪🇸 ESPAÑOL
+- **🤝 PROTOCOLO ZENITH TRUST v2**: El módulo OSINT ahora confía plenamente en la sabiduría del Scraper. Si un proxy ya fue verificado como "Oro", el OSINT salta todos los pre-checks redundantes.
+- **⚡ ELIMINACIÓN DE API LOCKS**: Reducción drástica de llamadas a APIs de Geo-IP (ip-api.com). Se acabó el error "Geo-Check Locked" causado por el bot pisándose a sí mismo.
+- **🛡️ SINCRONIZACIÓN ASN INTEGRAL**: El OSINT hereda la lista negra nuclear del scraper. Los proxies de M247 y otros datacenters se rechazan en milisegundos.
+- **🏎️ INICIO ULTRA-RÁPIDO**: El tiempo muerto entre encontrar un proxy e iniciar el escaneo se ha reducido de ~40s a ~0.1s en proxies cacheados.
+
+### 🇺🇸 ENGLISH
+- **🤝 ZENITH TRUST v2 PROTOCOL**: OSINT module now fully trusts Scraper metadata. If a proxy is already "GOLDEN", OSINT skips all redundant pre-checks.
+- **⚡ API LOCK ELIMINATION**: Drastic reduction in Geo-IP API calls. Fixed "Geo-Check Locked" errors caused by redundant module requests.
+- **🛡️ INTEGRAL ASN SYNC**: OSINT inherits the scraper's nuclear blacklist. M247 and datacenter proxies are rejected in milliseconds.
+- **🏎️ ULTRA-FAST START**: Dead time between finding a proxy and starting the scan reduced from ~40s to ~0.1s for cached proxies.
+
+
 ## [v2.2.69] - Titan Eternal (The Final Resolve) (2026-02-06)
 ### 🇪🇸 ESPAÑOL
 - **☢️ FILTRADO ASN NUCLEAR**: Implementación de una lista negra de datacenters (M247, Akamai, DigitalOcean, etc.). Estos proxies se filtran instantáneamente, ahorrando un 90% de tiempo en la validación.

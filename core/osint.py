@@ -188,15 +188,33 @@ class OSINTManager:
             browser = browser_manager.get_driver()
             
             # 0. CONNECTIVITY & PROXY CHECK (CRITICAL DEBUG)
-            # v2.2.34: Arctic Freeze - Avoid redundant checks if last check was < 60s ago
-            current_time = time.time()
-            check_ok = False
+            # v2.2.70: ZENITH TRUST v2 - La inyección de confianza definitiva
+            from core.browser import BrowserManager
+            shared_scraper = getattr(BrowserManager, "_SHARED_SCRAPER", None)
             
-            if self.last_verified_ip and (current_time - self.last_ip_check_time) < 60:
-                print(f"[OSINT] 🛡️ IP verificada recientemente ({self.last_verified_ip}). Saltando check redundante.")
-                check_ok = True
-            else:
-                print("[OSINT] 🛡️ Verificando IP y Localización antes de iniciar...")
+            check_ok = False
+            current_ip = None
+            if browser_manager.proxy or browser_manager.auto_proxy:
+                p_str = getattr(browser_manager, "current_proxy", None)
+                if p_str:
+                    current_ip = p_str.split(':')[0]
+                    # Zenith Trust Check
+                    if shared_scraper and shared_scraper.is_ip_golden(current_ip):
+                        print(f"    ⭐ ZENITH TRUST: IP {current_ip} confiada plenamente (GOLDEN). Saltando pre-check.")
+                        check_ok = True
+                    elif shared_scraper and shared_scraper.get_geo_status(current_ip) in ["NUCLEAR_BL", "BAD_DC"]:
+                        print(f"    ⛔ ZENITH REJECT: IP {current_ip} marcada como basura nuclear en el scraper. Rotando...")
+                        browser_manager.mark_current_proxy_bad()
+                        browser_manager.close()
+                        rotation_count += 1
+                        continue
+
+            if not check_ok:
+                if self.last_verified_ip and (current_time - self.last_ip_check_time) < 60:
+                    print(f"[OSINT] 🛡️ IP verificada recientemente ({self.last_verified_ip}). Saltando check redundante.")
+                    check_ok = True
+                else:
+                    print("[OSINT] 🛡️ Verificando IP y Localización antes de iniciar...")
                 try:
                     if stop_check and stop_check(): break
                     
