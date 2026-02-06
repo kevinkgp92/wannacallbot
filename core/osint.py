@@ -290,19 +290,24 @@ class OSINTManager:
                                         val_cc = s_d.get("countryCode")
                                         val_as = str(s_d.get("as", "")).lower()
 
-                                # v2.2.59: ULTIMATUM - Residential White-List (Synchronized)
-                                residential_asns = ["as3352", "as12430", "as11831", "as6739", "as15704", "as13134", "as204229", "as30722"]
+                                # v2.2.60: ULTIMATUM - Residential White-List (Expanded & Synchronized)
+                                residential_asns = [
+                                    "as3352", "as12430", "as11831", "as6739", "as15704", "as13134", "as204229", "as30722",
+                                    "as12348", "as57269", "as200902", "as201264", "as206411", "as213327"
+                                ]
                                 is_golden = any(asn in val_as for asn in residential_asns)
                                 
                                 # TITAN FILTER: Only Real ES (Absolute Zero Policy)
-                                bad_orgs = ["m247", "romania", "datacenter", "hosting", "cloud", "digitalocean", "vultr", "ovh"]
+                                bad_orgs = ["m247", "romania", "datacenter", "hosting", "cloud", "digitalocean", "vultr", "ovh", "hetzner", "as9009"]
                                 if any(x in val_as for x in bad_orgs) or not is_golden:
                                     print(f"    ⛔ DC-BLOCK: Proxy no residencial o hosting detectado ({val_as}). Rehusando.")
                                     val_cc = "BAD_DC"
                                 
                                 if val_cc == "ES" or is_golden:
-                                    # Double check: must be ES AND Golden to be sure
-                                    if val_cc == "ES" and is_golden:
+                                    # Double check requirement: must be ES AND Golden
+                                    # Special case: some residential IPs are marked as "ES" but not in the ASN list yet
+                                    # But for the user's "Zero OSINT", we only trust the list.
+                                    if (val_cc == "ES" or val_cc == "GOLDEN") and is_golden:
                                         print(f"    ✅ TITAN-CHECK SUCCESS ({api_url.split('/')[2]}): IP verificada como ES Residencial (GOLDEN).")
                                         check_ok = True
                                         break

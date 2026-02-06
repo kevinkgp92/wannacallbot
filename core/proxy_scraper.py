@@ -88,6 +88,7 @@ class ProxyScraper:
         self.scrape_lock = threading.Lock() # v2.2.35: Prevent parallel storm
         self.session_blacklist = set() # v2.2.44: Global session blacklist for RO_FAKE/M247
         # v2.2.57: Titan Zenith - Atomic ASN Whitelist (Unforgeable)
+        # v2.2.60: Titan Ultimatum - Expanded Residential Whitelist
         self.residential_asns = [
             "as3352",   # Telefonica / Movistar
             "as12430",  # Vodafone Spain
@@ -96,13 +97,19 @@ class ProxyScraper:
             "as15704",  # Digi Spain
             "as13134",  # Jazztel
             "as204229", # Avatel
-            "as30722"   # Vodafone Enabler
+            "as30722",  # Vodafone Enabler
+            "as12348",  # Euskaltel
+            "as57269",  # Adamo
+            "as200902", # MasMovil Broadband
+            "as201264", # MasMovil
+            "as206411", # Digi Spain v2
+            "as213327"  # Digi Spain v3
         ]
         
         self.residential_isps = [
             "movistar", "telefonica", "orange", "vodafone", "digi", 
             "masmovil", "yoigo", "jazztel", "euskaltel", "pepephone", 
-            "adamo", "lowi", "simyo"
+            "adamo", "lowi", "simyo", "r cable", "telecable", "guuk"
         ]
         
         # v2.2.59: Titan Ultimatum - Absolute Zero Cache Purge
@@ -164,10 +171,11 @@ class ProxyScraper:
             ip = p.split(':')[0]
             if ip in self.geo_cache:
                 cc = self.geo_cache[ip]
-                if cc == country_code:
+                # v2.2.60: FIX CRITICO CACHÉ - Aceptar GOLDEN como ES válido
+                if cc == country_code or cc == "GOLDEN":
                     valid_proxies.append(p)
-                elif cc == "RO_FAKE" or cc == "FAIL":
-                    self.session_blacklist.add(p) # Persistent hide
+                elif cc == "RO_FAKE" or cc == "FAIL" or cc == "BAD_DC":
+                    self.session_blacklist.add(p) 
             else:
                 uncached.append(p)
         
@@ -237,7 +245,8 @@ class ProxyScraper:
                 ip = p.split(':')[0]
                 if ip in self.geo_cache:
                     cc = self.geo_cache[ip]
-                    return p if cc == country_code else None
+                    # v2.2.60: FIX CRITICO - Golden es ES
+                    return p if (cc == country_code or cc == "GOLDEN") else None
 
                 try:
                     # v2.2.53: Using a more detailed fallback API
@@ -256,17 +265,18 @@ class ProxyScraper:
                             dc_keywords = [
                                 "m247", "romania", "datacenter", "hosting", "cloud", "digitalocean", "vultr", 
                                 "ovh", "hetzner", "linode", "aws", "amazon", "google", "azure", "microsoft",
-                                "stablepoint", "as9009", "as41853", "as200676", "as202422", "as212238"
+                                "stablepoint", "as9009", "as41853", "as200676", "as202422", "as212238", "as16276"
                             ]
                             
                             if any(x in as_org for x in dc_keywords):
                                 cc = "RO_FAKE"
                                 self.session_blacklist.add(p)
-                            elif (is_golden_asn or is_residential_name) and cc == country_code:
+                            elif (is_golden_asn or is_residential_name) and (cc == country_code or cc == "ES"):
                                 cc = "GOLDEN"
 
                             self.geo_cache[ip] = cc
-                            return p if (cc == country_code or cc == "GOLDEN") else None
+                            # v2.2.60: TOLERANCIA CERO - Solo GOLDEN pasa el filtro
+                            return p if cc == "GOLDEN" else None
                         
                     # v2.2.57: ZENITH TRIDENTE (Strategy B: ipapi.co)
                     r2 = requests.get(f"https://ipapi.co/{ip}/json/", timeout=4)
@@ -278,13 +288,13 @@ class ProxyScraper:
                         
                         is_golden = any(asn_id in asn or asn_id in org for asn_id in self.residential_asns)
                         
-                        if any(x in org for x in ["m247", "romania", "datacenter", "hosting"]):
+                        if any(x in org for x in ["m247", "romania", "datacenter", "hosting", "as9009"]):
                             cc = "RO_FAKE"
-                        elif is_golden and cc == country_code:
+                        elif is_golden and (cc == country_code or cc == "ES"):
                             cc = "GOLDEN"
                             
                         self.geo_cache[ip] = cc
-                        return p if (cc == country_code or cc == "GOLDEN") else None
+                        return p if cc == "GOLDEN" else None
                     
                     # v2.2.57: ZENITH TRIDENTE (Strategy C: findip.net)
                     # Use findip.net as ultimate fallback
@@ -293,9 +303,17 @@ class ProxyScraper:
                          res = r3.json()
                          cc = res.get("country", {}).get("iso_code", "XX")
                          org = str(res.get("traits", {}).get("autonomous_system_organization", "")).lower()
-                         if cc == country_code:
-                             self.geo_cache[ip] = cc
+                         asn = str(res.get("traits", {}).get("autonomous_system_number", "")).lower()
+                         
+                         is_golden = any(asn_id in f"as{asn}" or asn_id in org for asn_id in self.residential_asns)
+                         is_dc = any(x in org for x in ["m247", "romania", "datacenter", "hosting", "as9009"])
+                         
+                         if is_golden and not is_dc and (cc == country_code or cc == "ES"):
+                             self.geo_cache[ip] = "GOLDEN"
                              return p
+                         else:
+                             self.geo_cache[ip] = "BAD_DC"
+                             self.session_blacklist.add(p)
                 except: pass
                 return None
 

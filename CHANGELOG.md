@@ -1,5 +1,19 @@
 # ♈ WANNA CALL? - CHANGELOG
 
+## [v2.2.60] - Titan Ultimatum (Absolute Zero Edition) (2026-02-06)
+### 🇪🇸 ESPAÑOL
+- **🔥 CORRECCIÓN CRÍTICA DE CACHÉ**: Reparado el bug que ignoraba proxies residenciales guardados. Ahora el bot "recuerda" y prioriza las IPs GOLDEN correctamente.
+- **🛡️ GUARDIA ASN EXPANDIDA**: Inclusión de nuevos rangos residenciales (Euskaltel, Adamo, MasMovil, R, Telecable) para maximizar el éxito en España.
+- **🚫 BLOQUEO NUCLEAR M247**: Refuerzo total contra hostings rumanos. Si el ASN no es puramente residencial ESPAÑOL, el proxy se fulmina en el acto.
+- **⚡ OPTIMIZACIÓN DE ROTACIÓN**: Reducción drástica de rotaciones fallidas al filtrar la basura antes de que llegue al motor OSINT.
+
+### 🇺🇸 ENGLISH
+- **🔥 CRITICAL CACHE FIX**: Fixed the bug that ignored saved residential proxies. The bot now correctly "remembers" and prioritizes GOLDEN IPs.
+- **🛡️ EXPANDED ASN GUARD**: Inclusion of new residential ranges (Euskaltel, Adamo, MasMovil, R, Telecable) to maximize success in Spain.
+- **🚫 M247 NUCLEAR BLOCK**: Total reinforcement against Romanian hostings. If the ASN is not purely SPANISH residential, the proxy is killed instantly.
+- **⚡ ROTATION OPTIMIZATION**: Drastic reduction in failed rotations by filtering trash before it reaches the OSINT engine.
+
+
 ## [v2.2.59] - Titan Ultimatum (The God Particle) (2026-02-06)
 ### 🇪🇸 ESPAÑOL
 - **🏁 PURGA ATÓMICA DE CACHÉ**: El bot ahora limpia automáticamente todos los proxies antiguos al iniciar para evitar contaminación por hostings obsoletos.
