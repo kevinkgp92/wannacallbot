@@ -1,5 +1,19 @@
 # ♈ WANNA CALL? - CHANGELOG
 
+## [v2.2.41] - Elite Spanish Armada (2026-02-06)
+### 🇪🇸 ESPAÑOL
+- **🚀 SOURCE PURIFICATION**: Eliminadas listas globales residuales (`proxyspace`, `mmpx12`, `clketlow`) de la Fase 1. El escaneo ahora es 100% ES nativo.
+- **💎 VIP SOURCES**: Integración de `proxyscan.io` con filtrado geográfico estricto por servidor.
+- **⚡ ELITE LATENCY**: Reducción del timeout de validación de Google a 6s para asegurar solo proxies de alta velocidad.
+- **📊 FASTER START**: Conteo de candidatos inicial reducido drásticamente para un arranque inmediato.
+
+### 🇺🇸 ENGLISH
+- **🚀 SOURCE PURIFICATION**: Removed residual global lists (`proxyspace`, `mmpx12`, `clketlow`) from Phase 1. Scouting is now 100% native ES.
+- **💎 VIP SOURCES**: Integrated `proxyscan.io` with strict server-side geographic filtering.
+- **⚡ ELITE LATENCY**: Reduced Google validation timeout to 6s to ensure high-speed proxies only.
+- **📊 FASTER START**: Drastically reduced initial candidate count for near-instant startup.
+
+
 ## [v2.2.37] - Quantum Stability & OSINT Overlord (2026-02-06)
 ### 🇪🇸 ESPAÑOL
 - **🌌 QUANTUM YIELD**: Aumentado el límite de candidatos a 1500 y añadido filtro de latencia crítica (< 2.5s) para proxies ES.

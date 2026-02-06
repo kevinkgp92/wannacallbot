@@ -24,9 +24,8 @@ global_sources = [
 es_sources = [
     "https://www.proxy-list.download/api/v1/get?type=http&country=ES",
     "https://api.proxyscrape.com/v2/?request=displayproxies&protocol=http&timeout=10000&country=es&ssl=all&anonymity=all",
-    "https://raw.githubusercontent.com/clketlow/proxy-list/master/http.txt",
-    "https://proxyspace.pro/http.txt",
-    "https://raw.githubusercontent.com/mmpx12/proxy-list/master/http.txt"
+    "https://www.proxyscan.io/download?type=http&country=es" # v2.2.41: Strict ES source
+    # v2.2.41: Purged global sources (proxyspace, mmpx12, clketlow) to ensure 100% ES candidates.
 ]
 
 def fetch_sources(urls, label="", stop_signal=None):
