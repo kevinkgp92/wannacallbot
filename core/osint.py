@@ -214,7 +214,7 @@ class OSINTManager:
                       # v2.2.76: PATIENCE MODE - Si no hay proxy listo aún, esperamos en lugar de entrar en pánico.
                       print(f"    ⏳ SISTEMA: Esperando sincronización de proxy español (Zenith Amnesty)...")
                       time.sleep(5)
-                      rotation_count += 0.2 # Penalización mínima para evitar bucle infinito, pero no quema el pool.
+                      # rotation_count += 0.2  <- ELIMINADO v2.2.77: La espera de sincronización ahora es GRATUITA.
                       continue
             
             if check_ok:

@@ -729,6 +729,11 @@ class ProxyScraper:
         while attempts < max_attempts:
             if stop_signal and stop_signal(): return None
             
+            # v2.2.77: REALITY BYPASS - Si ya tenemos proxies validados en la lista activa, usarlos DIRECTO.
+            # No preguntamos dos veces lo mismo. Si está en self.proxies, es porque el scrape() lo aprobó.
+            if self.proxies:
+                return self.proxies.pop(0) # Entrega inmediata (FIFO)
+            
             proxy = self.get_random_proxy()
             if not proxy: 
                 # v2.2.40: ABSOLUTE COOLDOWN
@@ -736,7 +741,7 @@ class ProxyScraper:
                 time.sleep(10) # 10s cooling to prevent high CPU loop
                 self.scrape(country="ES" if prefer_es else None, stop_signal=stop_signal)
                 if not self.proxies: break 
-                proxy = self.get_random_proxy()
+                continue # Volver arriba para que el primer if self.proxies lo pesque
             
             if self.verify_proxy(proxy, check_country=check_country):
                 return proxy

@@ -1,15 +1,15 @@
 # ♈ WANNA CALL? - CHANGELOG
 
-## [v2.2.76] - Titan Apex Amnesty (Amnistía UHQ) (2026-02-06)
+## [v2.2.77] - Titan Apex Reality (Flujo Absoluto) (2026-02-07)
 ### 🇪🇸 ESPAÑOL
-- **🐢 AMNISTÍA DE LATENCIA**: Subido el límite de latencia de 2.0s a 5.0s. Los proxies residenciales españoles ya no son descartados por ser "un poco lentos". Calidad UHQ sin elitismo técnico.
-- **🧘 ELIMINACIÓN DE PÁNICO ZENITH**: Eliminado el error `ERROR ZENITH` y las rotaciones forzadas. El sistema ahora espera pacientemente a que el proxy se estabilice en lugar de abortar la búsqueda.
-- **📢 LOGGING TRANSPARENTE**: El Scraper ahora informa detalladamente de por qué se descarta cada proxy (Latencia vs Bloqueo Google).
+- **🏎️ BYPASS DE VERIFICACIÓN**: El Scraper ya no re-verifica los proxies que él mismo acaba de validar. Entrega inmediata FIFO para evitar falsos negativos post-scrape.
+- **⏳ ESPERAS GRATUITAS**: La espera por sincronización de proxy en el OSINT ya no penaliza el contador de rotaciones. El sistema puede esperar indefinidamente a que el proxy enganche sin abortar la búsqueda.
+- **�️ CONFIANZA UNIFICADA**: Sincronización total entre los módulos de red para asegurar que el primer proxy funcional sea usado al instante.
 
 ### 🇺🇸 ENGLISH
-- **🐢 LATENCY AMNESTY**: Latency limit increased from 2.0s to 5.0s. Spanish residential proxies are no longer discarded for being "a bit slow". UHQ quality without technical elitism.
-- **🧘 ZENITH PANIC REMOVAL**: Removed `ERROR ZENITH` and forced rotations. The system now waits for the proxy to stabilize instead of aborting the search.
-- **📢 TRANSPARENT LOGGING**: Scraper now provides detailed information on why each proxy is discarded (Latency vs Google Block).
+- **🏎️ VERIFICATION BYPASS**: Scraper no longer re-verifies proxies it just validated. Immediate FIFO delivery to avoid post-scrape false negatives.
+- **⏳ FREE WAITING**: Waiting for proxy synchronization in OSINT no longer penalizes the rotation counter. The system can wait indefinitely for the proxy to hook without aborting the search.
+- **�️ UNIFIED TRUST**: Total synchronization between network modules to ensure the first functional proxy is used instantly.
 
 
 ## [v2.2.74] - Titan Apex Ultimate (Amnistía Golden) (2026-02-06)
