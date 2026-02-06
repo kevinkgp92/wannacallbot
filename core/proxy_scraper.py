@@ -143,6 +143,11 @@ class ProxyScraper:
                 # print(f"  🌍 Geo-Caché cargado: {len(self.geo_cache)} registros.")
             except: self.geo_cache = {}
 
+    def is_ip_golden(self, ip):
+        """v2.2.62: Zenith Trust - Allows external modules to check if an IP is already verified as GOLDEN."""
+        res = self.geo_cache.get(ip)
+        return res == "GOLDEN"
+
     def _save_cache(self):
         """Saves current verified proxies and geo results to local cache."""
         try:
@@ -227,20 +232,24 @@ class ProxyScraper:
                             else:
                                 # v2.2.59: Absolute Zero - Reject everything else
                                 self.session_blacklist.add(chunk[idx])
-                        else:
-                            self.geo_cache[ip_key] = "FAIL"
-                            self.session_blacklist.add(chunk[idx])
-                    return matches
                 elif r.status_code == 429:
-                    # v2.2.61: TRIDENTE DE ROTACIÓN GEO-IP
-                    print(f"  ⚠️ Geo-Check Rate Limited (429). Rotando API y activando Jitter...")
-                    time.sleep(random.uniform(3.0, 7.0))
-                    
-                    # Rotar a ipwho.is (Batch no disponible, usamos individual en el pool)
-                    return [] 
-            except Exception as e: 
-                # print(f"  ⚠️ Geo-Check Error: {e}")
-                pass
+                    # v2.2.62: Zenith Rotation - Falling back to Strategy B immediately 
+                    print(f"  ⚠️ ip-api Locked (429). Activando Tridente de Supervivencia...")
+                    time.sleep(random.uniform(1.0, 2.0))
+                    # We don't return [], we let it fall through to Strategy B below
+                else:
+                    return matches
+            except: pass
+
+            # v2.2.62: ZENITH STRATEGY B (Individual Deep Check for remaining)
+            # If batch failed or was locked, we check them one by one with backup APIs
+            for p in chunk:
+                if stop_signal and stop_signal(): break
+                candidate = check_single_candidate(p)
+                if candidate:
+                    matches.append(candidate)
+            
+            return matches
 
             # STRATEGY B: Turbo Resilient Fallback (v2.2.53 - Deep Detect)
             sub_chunk = chunk[:40] 

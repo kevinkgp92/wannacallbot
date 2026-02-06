@@ -241,19 +241,32 @@ class OSINTManager:
                     # v2.2.52: TITAN QUANTUM CHECK (Multi-API Resilience)
                     print(f"    🛡️  Iniciando Titan Quantum Check (Fallo inicial: {err_msg[:50]}...)")
                     
-                    # Fallback Chain with specific parsers for each structure
+                    # v2.2.62: ZENITH TRUST - Check Shared Geo-Cache First
+                    try:
+                        from core.browser import BrowserManager
+                        shared_scraper = BrowserManager._SHARED_SCRAPER
+                    except: shared_scraper = None
+
                     check_apis = [
                         {"url": "http://ip-api.com/json/?fields=status,countryCode,as,query", "cc": "countryCode", "as": "as"},
                         {"url": "https://ipwho.is/", "cc": "country_code", "as": "connection.asn"},
                         {"url": "https://freeipapi.com/api/json/", "cc": "countryCode", "as": "as"},
-                        {"url": "https://ipapi.co/json/", "cc": "country_code", "as": "org"},
-                        {"url": "https://ifconfig.co/json", "cc": "country_iso", "as": "asn_org"},
-                        {"url": "https://api.iplocation.net/?ip=", "cc": "country_code2", "as": "isp"},
-                        {"url": "https://api.ipify.org?format=json", "cc": "countryCode", "needs_sub": True}
+                        {"url": "https://ipapi.co/json/", "cc": "country_code", "as": "org"}
                     ]
                     
-                    # session = requests.Session() # Could use a persistent session if needed
+                    # Resolve real external IP once to check cache
+                    try:
+                        r_ip = requests.get("https://api.ipify.org?format=json", timeout=3)
+                        current_ip = r_ip.json().get("ip")
+                        if current_ip and shared_scraper:
+                            if shared_scraper.is_ip_golden(current_ip):
+                                print(f"    ⭐ ZENITH TRUST: IP {current_ip} ya verificada como GOLDEN por el Scraper. Saltando pre-check.")
+                                check_ok = True
+                                continue
+                    except: pass
+
                     for api in check_apis:
+                        if check_ok: break
                         try:
                             headers = {'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/121.0.0.0 Safari/537.36'}
                             api_url = api["url"]
