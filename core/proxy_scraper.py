@@ -704,18 +704,18 @@ class ProxyScraper:
 
                 # Second check: Google connectivity (Strict check for OSINT)
                 start_google = time.time()
-                r2 = requests.get("https://www.google.es/gen_204", proxies=proxies, timeout=5)
+                r2 = requests.get("https://www.google.es/gen_204", proxies=proxies, timeout=5) # v2.2.54: Google ES returns 204
                 latency = time.time() - start_google
                 
                 if r2.status_code == 204 or r2.status_code == 200:
-                    if latency < 2.0: # v2.2.54: Extreme Latency Filter (2.0s for Elite)
-                         print(f"  ✅ Proxy Elite UHQ ({latency:.2f}s): {proxy_str}")
+                     if latency < 5.0: # v2.2.76: Amnesty Latency (Increased from 2.0s to 5.0s)
+                         print(f"  ✅ Proxy Operativo ({latency:.2f}s): {proxy_str}")
                          return True
-                    else:
-                         print(f"  ⚠️ Proxy funcional pero lento ({latency:.2f}s). Descartado.")
+                     else:
+                         print(f"  ⚠️ Proxy funcional pero lento ({latency:.2f}s > 5.0s). Descartado.")
                          return False
                 else:
-                    print(f"  ⚠️ Proxy funcional pero bloqueado por Google ES: {proxy_str}")
+                    print(f"  ⚠️ Proxy funcional pero bloqueado por Google ES (Status {r2.status_code}): {proxy_str}")
         except:
             pass
         return False

@@ -1,15 +1,15 @@
 # ♈ WANNA CALL? - CHANGELOG
 
-## [v2.2.75] - Titan Apex Resurrection (Blind Trust) (2026-02-06)
+## [v2.2.76] - Titan Apex Amnesty (Amnistía UHQ) (2026-02-06)
 ### 🇪🇸 ESPAÑOL
-- **🤝 CONFIANZA CIEGA ZENITH**: El OSINT ya no re-valida la IP. Si el Scraper la aprobó, el OSINT la acepta sin preguntas. Eliminado el error `ERROR ZENITH: No se puede confiar en la IP`.
-- **🛡️ SIMPLIFICACIÓN DE GUARDIA**: Eliminado el check redundante de Marca.com en el Scraper. Reducción de falsos negativos por caídas de dominios externos.
-- **⚖️ FLEXIBILIDAD RESURRECCIÓN**: Los proxies `GOLDEN` ahora son tratados con prioridad absoluta y aceptados sin comparaciones rígidas.
+- **🐢 AMNISTÍA DE LATENCIA**: Subido el límite de latencia de 2.0s a 5.0s. Los proxies residenciales españoles ya no son descartados por ser "un poco lentos". Calidad UHQ sin elitismo técnico.
+- **🧘 ELIMINACIÓN DE PÁNICO ZENITH**: Eliminado el error `ERROR ZENITH` y las rotaciones forzadas. El sistema ahora espera pacientemente a que el proxy se estabilice en lugar de abortar la búsqueda.
+- **📢 LOGGING TRANSPARENTE**: El Scraper ahora informa detalladamente de por qué se descarta cada proxy (Latencia vs Bloqueo Google).
 
 ### 🇺🇸 ENGLISH
-- **🤝 ZENITH BLIND TRUST**: OSINT no longer re-validates the IP. If the Scraper approved it, OSINT accepts it without questions. Fixed `ERROR ZENITH` error.
-- **🛡️ GUARD SIMPLIFICATION**: Removed redundant Marca.com check in the Scraper. Reduction of false negatives caused by external domain issues.
-- **⚖️ RESURRECTION FLEXIBILITY**: `GOLDEN` proxies are now handled with absolute priority and accepted without rigid comparisons.
+- **🐢 LATENCY AMNESTY**: Latency limit increased from 2.0s to 5.0s. Spanish residential proxies are no longer discarded for being "a bit slow". UHQ quality without technical elitism.
+- **🧘 ZENITH PANIC REMOVAL**: Removed `ERROR ZENITH` and forced rotations. The system now waits for the proxy to stabilize instead of aborting the search.
+- **📢 TRANSPARENT LOGGING**: Scraper now provides detailed information on why each proxy is discarded (Latency vs Google Block).
 
 
 ## [v2.2.74] - Titan Apex Ultimate (Amnistía Golden) (2026-02-06)
