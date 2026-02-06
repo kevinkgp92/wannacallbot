@@ -1,5 +1,17 @@
 # ♈ WANNA CALL? - CHANGELOG
 
+## [v2.2.46] - Titan Resurrection (2026-02-06)
+### 🇪🇸 ESPAÑOL
+- **🛠️ CRITICAL REPAIR**: Corregido el error de sintaxis en el motor OSINT que impedía el arranque del buscador en la versión anterior.
+- **🚀 LOG FLOW v4 (ULTRA-SMOOTH)**: Eliminado el "Log Governor". Los mensajes ahora fluyen de forma instantánea sin micro-cortes visuales.
+- **💎 VIP SOURCES v3**: Añadidas fuentes de proxies ES premium de `proxifly` y `checkerproxy` para mayor velocidad de búsqueda.
+
+### 🇺🇸 ENGLISH
+- **🛠️ CRITICAL REPAIR**: Fixed the syntax error in the OSINT engine that prevented the searcher from starting in the previous version.
+- **🚀 LOG FLOW v4 (ULTRA-SMOOTH)**: Removed the "Log Governor." Messages now flow instantaneously without visual micro-stutters.
+- **💎 VIP SOURCES v3**: Added premium Spanish proxy sources from `proxifly` and `checkerproxy` for faster search speed.
+
+
 ## [v2.2.45] - Titan Splash (2026-02-06)
 ### 🇪🇸 ESPAÑOL
 - **✨ PREMIUM SPLASH SCREEN**: Activada la pantalla de bienvenida con barra de progreso real. La app ahora informa de su estado mientras carga el núcleo.

@@ -126,7 +126,7 @@ class TextRedirector(object):
         if not self._is_polling:
             self._is_polling = True
             try:
-                self.widget.after(50, self._process_batch) # v2.2.37: 50ms pulse for smooth logs
+                self.widget.after(10, self._process_batch) # v2.2.46: 10ms pulse for ultra-smooth logs
             except: pass
 
     def _process_batch(self):
@@ -166,11 +166,8 @@ class TextRedirector(object):
             # Continue polling if there's more
             # v2.2.40: DYNAMIC LOG GOVERNOR
             if self._is_polling:
-                q_size = self.msg_queue.qsize()
-                pulse = 30
-                if q_size > 500: pulse = 200 # Heavy burst: 200ms
-                elif q_size > 100: pulse = 100 # Med burst: 100ms
-                
+                # v2.2.46: No more dynamic "Gobernador" delays. Constant low pulse.
+                pulse = 15 # Ultra-responsive
                 self.widget.after(pulse, self._process_batch)
             else:
                 self._is_polling = False
@@ -180,7 +177,7 @@ class TextRedirector(object):
 class OsintGUI(ctk.CTk):
     def __init__(self):
         super().__init__()
-        self.version = "2.2.45"
+        self.version = "2.2.46"
         
         # NITRO: Init attributes BEFORE splash to avoid AttributeError
         self.updater_ready = False

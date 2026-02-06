@@ -22,12 +22,13 @@ global_sources = [
 ]
 
 es_sources = [
-    "https://www.proxy-list.download/api/v1/get?type=http&country=ES",
     "https://api.proxyscrape.com/v2/?request=displayproxies&protocol=http&timeout=10000&country=es&ssl=all&anonymity=all",
     "https://www.proxyscan.io/download?type=http&country=es",
     "https://proxylist.geonode.com/api/proxy-list?limit=100&page=1&sort_by=lastChecked&sort_type=desc&country=ES&protocols=http",
-    "https://api.openproxy.space/v1/proxies?country=ES&type=http", # v2.2.44: Hyperion VIP
-    "https://raw.githubusercontent.com/rdavydov/proxy-list/main/proxies/es.txt" # v2.2.44: Hyperion Github ES
+    "https://api.openproxy.space/v1/proxies?country=ES&type=http",
+    "https://raw.githubusercontent.com/rdavydov/proxy-list/main/proxies/es.txt",
+    "https://api.proxifly.dev/get-proxy?country=ES&protocol=http", # v2.2.46: Hyperion Elite
+    "https://checkerproxy.net/api/archive/2026-02-06" # v2.2.46: Archivo diario
 ]
 
 def fetch_sources(urls, label="", stop_signal=None):

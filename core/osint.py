@@ -245,6 +245,10 @@ class OSINTManager:
                     continue # Try next rotation
             
             if check_ok:
+                try:
+                    # Execute the actual OSINT logic
+                    # v2.2.35: Moving the bulk logic into a sub-execution block
+                    return self._do_lookup_logic(browser, phone_str, name_hint, update_progress, stop_check)
                 except InterruptedError:
                     print("🛑 DETENCIÓN INMEDIATA: Abortando hilos OSINT.")
                     break
