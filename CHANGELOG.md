@@ -1,5 +1,19 @@
 # ♈ WANNA CALL? - CHANGELOG
 
+## [v2.2.68] - Titan Nitro (UI Fix & Speed Tuning) (2026-02-06)
+### 🇪🇸 ESPAÑOL
+- **🛠️ FIX DE GUI**: Corregido el error crítico `'TextRedirector' object has no attribute 'flush'` que causaba fallos visuales en el contador de progreso.
+- **🚀 TRUNCAMIENTO NITRO**: Reducción agresiva de candidatos de 5000 a 250 en la Fase 1. El bot ahora encuentra proxies españoles en segundos, priorizando la calidad sobre la cantidad bruta.
+- **📊 FEEDBACK LIMPIO**: Rediseñado el contador de progreso para ser compatible con la consola de la GUI, evitando textos desordenados.
+- **⚡ OPTIMIZACIÓN DE BUCLE**: Ajuste de hilos y chunks para un flujo de validación ultra-suave.
+
+### 🇺🇸 ENGLISH
+- **🛠️ GUI FIX**: Fixed critical error `'TextRedirector' object has no attribute 'flush'` that caused visual glitches in the progress counter.
+- **🚀 NITRO TRUNCATION**: Aggressive candidate reduction from 5000 to 250 in Phase 1. The bot now finds Spanish proxies in seconds, prioritizing quality over raw quantity.
+- **📊 CLEAN FEEDBACK**: Redesigned the progress counter to be compatible with the GUI console, avoiding disorganized text.
+- **⚡ LOOP OPTIMIZATION**: Adjusted threads and chunks for an ultra-smooth validation flow.
+
+
 ## [v2.2.67] - Titan Overlord Velocity (The Fast Check Edition) (2026-02-06)
 ### 🇪🇸 ESPAÑOL
 - **📊 CONTADOR EN TIEMPO REAL**: Implementación de un feedback visual de progreso (`[X/5000]`) durante la verificación de proxies. Se acabó el no saber si el bot está funcionando.

@@ -85,7 +85,7 @@ class BootstrapSplash:
         self.progress.pack(pady=10)
         
         # Version Tag
-        tk.Label(self.root, text="Titan Overlord Velocity v2.2.67", font=("Arial", 8), fg="#333", bg="#16161d").pack(side="bottom", pady=5)
+        tk.Label(self.root, text="Titan Nitro v2.2.68", font=("Arial", 8), fg="#333", bg="#16161d").pack(side="bottom", pady=5)
         
         self.root.update()
 
@@ -166,6 +166,10 @@ class TextRedirector(object):
         self.msg_queue = queue.Queue()
         self._is_polling = False
 
+    def flush(self):
+        """v2.2.68: Required for compatibility with print(flush=True)."""
+        pass
+
     def write(self, str_out):
         if not str_out: return
         
@@ -233,7 +237,7 @@ class TextRedirector(object):
 class OsintGUI(ctk.CTk):
     def __init__(self):
         super().__init__()
-        self.version = "2.2.67"
+        self.version = "2.2.68"
         
         # NITRO: Init attributes BEFORE splash to avoid AttributeError
         self.updater_ready = False

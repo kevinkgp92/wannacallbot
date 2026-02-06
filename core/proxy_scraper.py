@@ -270,18 +270,20 @@ class ProxyScraper:
         
         if not uncached: return valid_proxies
         
-        # v2.2.67: VELOCITY - Smart Truncation if too many and batch is locked
-        if len(uncached) > 500 and self._is_api_locked("ip-api"):
-            print(f"  ⚡ Optimización de Velocidad: Truncando {len(uncached)} candidatos a 500 para evitar esperas largas.")
-            uncached = uncached[:500]
+        # v2.2.68: TITAN NITRO - Hard Truncation for ultimate speed
+        # Reducimos de 5000 a 250 para que la Fase 1 sea instantánea.
+        limit = 250
+        if len(uncached) > limit:
+            print(f"  ⚡ Titan Nitro: Optimizando {len(uncached)} candidatos a los {limit} más prometedores.")
+            uncached = uncached[:limit]
 
         # Progressive Counter
         total_to_process = len(uncached)
         processed_count = [0] # List for shared reference
         print_lock = threading.Lock()
 
-        # Split into chunks of 50 (smaller chunks for better progress feed)
-        chunks = [uncached[i:i + 50] for i in range(0, len(uncached), 50)]
+        # Split into chunks of 25 (smaller chunks for smoother progress)
+        chunks = [uncached[i:i + 25] for i in range(0, len(uncached), 25)]
         
         def process_chunk(chunk):
             if stop_signal and stop_signal(): return []
@@ -324,9 +326,9 @@ class ProxyScraper:
                 
                 with print_lock:
                     processed_count[0] += len(chunk)
-                    # Simple progress feed
                     perc = (processed_count[0] / total_to_process) * 100
-                    print(f"\r  🛡️ Guardia ES: [{processed_count[0]}/{total_to_process}] ({perc:.1f}%) verificados...", end="", flush=True)
+                    # v2.2.68: Removed \r to avoid GUI mess, simpler tracking
+                    print(f"  🛡️ Guardia ES: Verificados {processed_count[0]}/{total_to_process} ({perc:.1f}%)")
             
             return res_matches
 
