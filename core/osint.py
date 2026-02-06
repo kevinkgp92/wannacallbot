@@ -237,6 +237,7 @@ class OSINTManager:
                     check_ok = True
                         
                 except Exception as e:
+                    err_msg = str(e)
                     # v2.2.48: TITAN GEO-HEAL FALLBACK
                     # If browser fails to read JSON, attempt a direct HTTP ping (Request-level)
                     # Fallback Chain: ip-api -> ifconfig -> ipify
@@ -275,13 +276,13 @@ class OSINTManager:
                     
                     if check_ok: continue
 
-                print(f"    ⚠️ Proxy invalido o no es español ({e}). Rotando...")
-                browser_manager.mark_current_proxy_bad()
-                browser_manager.close() # CORRECT TEARDOWN
-                rotation_count += 1
-                time.sleep(0.5) # v2.2.48: Hyper-Rotation (from 2s to 0.5s)
-                if stop_check and stop_check(): break
-                continue # Try next rotation
+                    print(f"    ⚠️ Proxy invalido o no es español ({err_msg}). Rotando...")
+                    browser_manager.mark_current_proxy_bad()
+                    browser_manager.close() # CORRECT TEARDOWN
+                    rotation_count += 1
+                    time.sleep(0.5) # v2.2.48: Hyper-Rotation
+                    if stop_check and stop_check(): break
+                    continue # Try next rotation
             
             if check_ok:
                 try:

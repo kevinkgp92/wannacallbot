@@ -1,5 +1,15 @@
 # ♈ WANNA CALL? - CHANGELOG
 
+## [v2.2.51] - Hotfix Stabilizer (2026-02-06)
+### 🇪🇸 ESPAÑOL
+- **🛠️ CRITICAL STABILITY HOTFIX**: Corregido error `UnboundLocalError` en el motor OSINT que provocaba el cierre de la aplicación al fallar la validación de IP.
+- **🛡️ SCOPE FIX**: Asegurada la disponibilidad de variables de excepción dentro del bloque de rotación de proxies.
+
+### 🇺🇸 ENGLISH
+- **🛠️ CRITICAL STABILITY HOTFIX**: Fixed `UnboundLocalError` in the OSINT engine that caused the application to crash when IP validation failed.
+- **🛡️ SCOPE FIX**: Ensured exception variable availability within the proxy rotation block.
+
+
 ## [v2.2.50] - Titan Perfecta v3 (2026-02-06)
 ### 🇪🇸 ESPAÑOL
 - **🚀 BOOTSTRAP SPLASH**: Adiós al inicio silencioso. Ahora una ventana de carga instantánea aparece en el milisegundo 1 para informar del progreso de carga.
