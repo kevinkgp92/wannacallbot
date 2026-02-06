@@ -1,8 +1,8 @@
 # ⚖️ WANNA CALL? - OSINT Framework [SAUL EDITION]
 
-![Banner](file:///c:/Users/kevin/Downloads/perubianbot/wannacallbot_logo.png)
+![Banner](assets/logo.png)
 
-[![Version](https://img.shields.io/badge/version-2.2.35--SAUL--LAW-green?style=for-the-badge&logo=github)](https://github.com/kevinkgp92/wannacallbot/releases)
+[![Version](https://img.shields.io/badge/version-2.2.36--SAUL--PREMIUM-green?style=for-the-badge&logo=github)](https://github.com/kevinkgp92/wannacallbot/releases)
 [![Status](https://img.shields.io/badge/Performance-Optimized-red?style=for-the-badge)](https://github.com/kevinkgp92/wannacallbot)
 [![License](https://img.shields.io/badge/License-Educational-lightgrey?style=for-the-badge)](LICENSE)
 
@@ -20,13 +20,14 @@
 
 ## 🎨 Galería / Gallery
 
-````carousel
-![Interfaz v2.2.35 - Dashboard](file:///c:/Users/kevin/.gemini/antigravity/brain/c4b1903b-3d85-4a48-b5d3-0179f35124f5/media__1770272238557.png)
-<!-- slide -->
-![Interfaz v2.2.35 - Configuración](file:///c:/Users/kevin/.gemini/antigravity/brain/c4b1903b-3d85-4a48-b5d3-0179f35124f5/media__1770272241068.png)
-<!-- slide -->
-![Módulo OSINT Real](file:///c:/Users/kevin/.gemini/antigravity/brain/c4b1903b-3d85-4a48-b5d3-0179f35124f5/media__1770272674634.png)
-````
+- **Panel de Control Principal / Main Dashboard**
+![Dashboard](assets/dashboard.png)
+
+- **Configuración y Estilo / Settings & Customization**
+![Settings](assets/settings.png)
+
+- **Investigación OSINT Real / Real-World OSINT Research**
+![OSINT Results](assets/osint_results.png)
 
 ---
 
@@ -46,7 +47,7 @@
 
 ### 📁 Usuarios / Users (Portable)
 1. Descarga el ejecutable desde [Releases](https://github.com/kevinkgp92/wannacallbot/releases).
-2. Ejecuta **`WannaCall_v2.2.35_PORTABLE.exe`**.
+2. Ejecuta **`WannaCall_v2.2.36_PORTABLE.exe`**.
 3. *Ready to investigate!*
 
 ### 🛠️ Desarrolladores / Developers
