@@ -1,5 +1,21 @@
 # ♈ WANNA CALL? - CHANGELOG
 
+## [v2.2.36] - Saul's Premium (2026-02-06)
+
+### 🇪🇸 ESPAÑOL
+- **🚀 ENRIQUECIMIENTO OSINT**: Añadidas fuentes de alta fidelidad para España (Infocif, Infoempresa, Einforma, Tellows).
+- **🎨 BRANDING REAL**: Renovado el README con capturas reales del ejecutable y código. Estilo profesional y bilingüe.
+- **⚖️ MARCO LEGAL**: Auditoría de textos para asegurar un enfoque educativo y formal.
+- **🛡️ SPANISH ARMADA 7.0**: Mejora de dorking masivo orientado a dominios geográficos españoles.
+
+### 🇺🇸 ENGLISH
+- **🚀 OSINT ENRICHMENT**: Added high-fidelity Spanish sources (Infocif, Infoempresa, Einforma, Tellows).
+- **🎨 REAL BRANDING**: Overhauled README with real screenshots from the EXE and code. Professional bilingual style.
+- **⚖️ LEGAL FRAMEWORK**: Text audit to ensure a formal and educational focus.
+- **🛡️ SPANISH ARMADA 7.0**: Improved mass dorking targeting Spanish geographical domains.
+
+---
+
 ## [v2.2.35] - Saul's Law (2026-02-06)
 
 ### 🇪🇸 ESPAÑOL

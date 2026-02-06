@@ -455,11 +455,14 @@ class OSINTManager:
 
                 # GOD MODE: Expanded OR queries for maximum coverage
                 if source_name == "Listaspam":
-                    _safe_get(f"https://www.google.com/search?q={query_str}+OR+site:teledigo.com+OR+site:telefono-espia.com+OR+site:quienhallamado.es&gl=es&hl=es")
+                    # v2.2.36: Enriquecimiento con sitios de spam consolidados en España
+                    _safe_get(f"https://www.google.com/search?q={query_str}+OR+site:listaspam.com+OR+site:teledigo.com+OR+site:telefono-espia.com+OR+site:quienhallamado.es+OR+site:tellows.es&gl=es&hl=es")
                 elif source_name == "Official":
-                    _safe_get(f"https://www.google.com/search?q={query_str}+site:boe.es+OR+site:infocif.es+OR+site:infoempresa.com&gl=es&hl=es")
+                    # v2.2.36: Fuentes corporativas reales (Infocif, Infoempresa)
+                    _safe_get(f"https://www.google.com/search?q={query_str}+site:infocif.es+OR+site:infoempresa.com+OR+site:boe.es+OR+site:einforma.com+OR+site:axesor.es&gl=es&hl=es")
                 elif source_name == "Professional":
-                    _safe_get(f"https://www.google.com/search?q={query_str}+site:infojobs.net+OR+site:linkedin.com/in+OR+site:github.com&gl=es&hl=es")
+                    # v2.2.36: Redes profesionales y dominios .es
+                    _safe_get(f"https://www.google.com/search?q={query_str}+site:linkedin.com/in+OR+site:infojobs.net+OR+site:facebook.com+OR+site:twitter.com+OR+site:instagram.com&gl=es&hl=es")
                 
                 results = browser.find_elements(By.CSS_SELECTOR, "div.g, .v7W49e")
                 for res in results[:5]:

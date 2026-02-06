@@ -1,52 +1,70 @@
 # ⚖️ WANNA CALL? - OSINT Framework [SAUL EDITION]
 
-![Premium Banner](file:///c:/Users/kevin/.gemini/antigravity/brain/c4b1903b-3d85-4a48-b5d3-0179f35124f5/wannacall_premium_banner.png)
+![Banner](file:///c:/Users/kevin/Downloads/perubianbot/wannacallbot_logo.png)
 
-![Version](https://img.shields.io/badge/version-2.2.25--SAUL--PREMIUM-blue?style=for-the-badge&logo=github)
-![Python](https://img.shields.io/badge/Python-3.11+-blue?style=for-the-badge&logo=python)
-![Status](https://img.shields.io/badge/Performance-Optimized-red?style=for-the-badge)
-
-**WANNA CALL?** es la suite definitiva de **Inteligencia de Fuentes Abiertas** (OSINT), refinada para la excelencia y el rendimiento extremo. Diseñada para investigadores de élite, esta herramienta combina la automatización sigilosa con una arquitectura de bajo consumo de CPU.
+[![Version](https://img.shields.io/badge/version-2.2.35--SAUL--LAW-green?style=for-the-badge&logo=github)](https://github.com/kevinkgp92/wannacallbot/releases)
+[![Status](https://img.shields.io/badge/Performance-Optimized-red?style=for-the-badge)](https://github.com/kevinkgp92/wannacallbot)
+[![License](https://img.shields.io/badge/License-Educational-lightgrey?style=for-the-badge)](LICENSE)
 
 ---
 
-## 💎 Características Premium (v2.2.25)
+### 🇪🇸 **Castellano**
+**WANNA CALL?** es un framework de Inteligencia de Fuentes Abiertas (OSINT) y automatización, diseñado por investigadores para investigadores. Esta "Saul Edition" se centra en la eficiencia extrema, el sigilo total y la precisión en objetivos españoles. 
 
-| Característica | Descripción | Estado |
+> "Llamarme a mí es mejor que llamar a tu madre." — *Saul Goodman*
+
+### 🇺🇸 **English**
+**WANNA CALL?** is an Open Source Intelligence (OSINT) and automation framework, built by researchers for researchers. The "Saul Edition" emphasizes extreme performance, total stealth, and high-fidelity results for Spanish targets.
+
+---
+
+## 🎨 Galería / Gallery
+
+````carousel
+![Interfaz v2.2.35 - Dashboard](file:///c:/Users/kevin/.gemini/antigravity/brain/c4b1903b-3d85-4a48-b5d3-0179f35124f5/media__1770272238557.png)
+<!-- slide -->
+![Interfaz v2.2.35 - Configuración](file:///c:/Users/kevin/.gemini/antigravity/brain/c4b1903b-3d85-4a48-b5d3-0179f35124f5/media__1770272241068.png)
+<!-- slide -->
+![Módulo OSINT Real](file:///c:/Users/kevin/.gemini/antigravity/brain/c4b1903b-3d85-4a48-b5d3-0179f35124f5/media__1770272674634.png)
+````
+
+---
+
+## 💎 Características / Key Features
+
+| Feature (ES) | Feature (EN) | Status |
 | :--- | :--- | :--- |
-| **🏎️ Turbo Scraper** | Verificación paralela x20 de proxys españoles. | ✅ Activo |
-| **👻 Slim Browsing** | Navegación sin imágenes (Ahorro 60% RAM). | ✅ Activo |
-| **🧊 CPU Cooling** | Limitador de hilos dinámico para evitar picos del 100%. | ✅ Activo |
-| **🏆 Golden Cache** | Reutilización de proxys españoles de alta calidad. | ✅ Activo |
-| **🛡️ Stealth V4** | Bypass avanzado de captchas y huella digital. | ✅ Activo |
+| **🏎️ Turbo Scraper** | **High-Speed Scraper** | ✅ Activo |
+| **🛡️ Escudo Anti-Bucle** | **Storm Shield (Locking)** | ✅ Activo |
+| **🧊 Enfriamiento Ártico** | **Arctic Cooling (Yielding)** | ✅ Activo |
+| **🧠 Memoria Persistente** | **Persistent Targets** | ✅ Activo |
+| **⚖️ Auditoría Legal** | **Legal OSINT Audit** | ✅ Activo |
 
 ---
 
-## 🇪🇸 AVISO LEGAL IMPORTANTE
-> [!WARNING]
-> Este software se proporciona exclusivamente con **FINES EDUCATIVOS Y DE INVESTIGACIÓN**. El uso de esta herramienta para actividades ilegales, acoso o violación de la privacidad está estrictamente prohibido. El desarrollador no se hace responsable del mal uso por parte de terceros.
+## 🚀 Instalación / Installation
 
----
+### 📁 Usuarios / Users (Portable)
+1. Descarga el ejecutable desde [Releases](https://github.com/kevinkgp92/wannacallbot/releases).
+2. Ejecuta **`WannaCall_v2.2.35_PORTABLE.exe`**.
+3. *Ready to investigate!*
 
-## 🚀 Inicio Rápido
-
-### Para Usuarios (Portable)
-1. Ve a la sección [Releases](https://github.com/kevinkgp92/wannacallbot/releases) o descarga directamente:
-2. 📁 **[`WannaCall_v2.2.25_PORTABLE.exe`](file:///c:/Users/kevin/Downloads/perubianbot/WannaCall_v2.2.25_PORTABLE.exe)**
-3. ¡Ejecuta y empieza a investigar!
-
-### Para Desarrolladores
+### 🛠️ Desarrolladores / Developers
 ```bash
 git clone https://github.com/kevinkgp92/wannacallbot.git
-cd wannacallbot
 pip install -r requirements.txt
 python main.py
 ```
 
 ---
 
-## 🎨 Galería de Interfaz
-*(Próximamente capturas de pantalla de la v2.2.25)*
+## ⚖️ Aviso Legal y Ética / Legal & Ethics
+
+### 🇪🇸 **Castellano**
+Este software ha sido creado exclusivamente para **fines educativos, auditoría de ciberseguridad y concienciación sobre la privacidad**. El uso de esta herramienta para acoso, actividades delictivas o violación de la privacidad está estrictamente prohibido. El autor no se responsabiliza de los daños derivados de un uso negligente o ilegal.
+
+### 🇺🇸 **English**
+This software is intended solely for **educational purposes, cybersecurity auditing, and privacy awareness**. Any misuse for harassment, illegal activities, or privacy infringement is strictly prohibited. The author assumes no responsibility for damages resulting from negligent or unlawful use.
 
 ---
-*Developed by kevin for academic research. ⚖️ Saul Goodman Approved.*
+*Developed with professionalism and integrity. ⚖️ Better Call Saul!*
