@@ -302,12 +302,17 @@ class OSINTManager:
                     if b_mgr.proxy or b_mgr.auto_proxy:
                         force_spain_universal(browser)
                     
-                    # 2. Block Detection (Simple Title Check)
+                    # 2. Block Detection (Titan Emergency v2.2.80)
                     title = browser.title.lower()
                     src = browser.page_source.lower()
                     
                     # BLOCK SIGNATURES
                     blocked = False
+                    if any(x in title for x in ["bot detection", "robot", "captcha", "unusual traffic", "bloqueo", "blocked"]):
+                        blocked = True
+                    # Silent Block Detection (No error code, but obvious block message in body)
+                    elif any(x in src for x in ["access denied", "reCAPTCHA", "blocked", "ip has been blocked", "demasiadas peticiones"]):
+                         blocked = True
                     if "403 forbidden" in title or "access denied" in title: blocked = True
                     if "sorry" in title and "google.com" in url: blocked = True # Google Sorry
                     if "unusual traffic" in src: blocked = True
@@ -353,14 +358,15 @@ class OSINTManager:
             return False
 
         def _safe_get_supreme(url, timeout_retries=2):
-            """v2.2.79: Supreme wrapper that handles Google-to-Bing transitions."""
+            """v2.2.80: Supreme wrapper (Recursion Fixed). Handles Google-to-Bing transitions."""
             if circuit_breaker_tripped and "google.com" in url:
                 # Automatic Pivot to Bing
-                bing_query = url.split("q=")[1].split("&")[0]
+                query_parts = url.split("q=")
+                bing_query = query_parts[1].split("&")[0] if len(query_parts) > 1 else ""
                 bing_url = f"https://www.bing.com/search?q={bing_query}&setlang=es"
                 print(f"🌍 MODO SUPREMO: Google bloqueado. Redirigiendo búsqueda a Bing...")
-                return _safe_get_supreme(bing_url, timeout_retries)
-            return _safe_get_supreme(url, timeout_retries)
+                return _safe_get(bing_url, timeout_retries)
+            return _safe_get(url, timeout_retries)
 
         # TOTAL STEPS ESTIMATION: 18 phases
         total_steps = 18

@@ -659,6 +659,38 @@ class ProxyScraper:
             return random.choice(self.proxies)
         return None
 
+    def get_valid_proxy(self, max_attempts=15, check_country="ES", stop_signal=None):
+        """v2.2.80: Emergency Priority - Enforces GOLDEN Spanish proxies for OSINT."""
+        if stop_signal and stop_signal(): return None
+        
+        # v2.2.80: Clear session blacklist to avoid state pollution
+        self.session_blacklist.clear()
+        
+        # 1. Check for GOLDEN proxies in cache first
+        golden = [p for p in self.proxies if self.get_geo_status(p.split(':')[0]) == "GOLDEN"]
+        if golden:
+            print(f"  🌟 PROXY SUPREMO: Usando IP Española Residencial de alta confianza.")
+            return random.choice(golden)
+            
+        # 2. If no GOLDEN, try to scrape specific ES sources
+        print(f"  🔍 Búsqueda UHQ: No hay proxies GOLDEN en caché. Cazando IPs españolas reales...")
+        self.scrape(country="ES", stop_signal=stop_signal)
+        
+        # Re-check GOLDEN after scrape
+        golden = [p for p in self.proxies if self.get_geo_status(p.split(':')[0]) == "GOLDEN"]
+        if golden:
+            return random.choice(golden)
+            
+        # 3. Last resort: Any verifiable ES proxy from the current session
+        es_proxies = [p for p in self.proxies if self.get_geo_status(p.split(':')[0]) == "ES"]
+        if es_proxies:
+            return random.choice(es_proxies)
+            
+        print("  ⚠️ ALERTA: No se encontraron proxies españoles UHQ. Intentando scraping de emergencia...")
+        self.scrape(country="ES", allow_fallback=True, stop_signal=stop_signal)
+        
+        return random.choice(self.proxies) if self.proxies else None
+
     def verify_proxy(self, proxy_str, check_country=None):
         """Verifies if a proxy is working and not blocked by Google. Optional: Checks country."""
         proxies = {
@@ -719,38 +751,6 @@ class ProxyScraper:
         except:
             pass
         return False
-
-    def get_valid_proxy(self, max_attempts=10, prefer_es=True, check_country=None, stop_signal=None):
-        """Gets a proxy that actually works. Prioritizes ES if requested. Optional strict country check."""
-        if not self.proxies:
-            self.scrape(country="ES" if prefer_es else None, stop_signal=stop_signal)
-            
-        attempts = 0
-        while attempts < max_attempts:
-            if stop_signal and stop_signal(): return None
-            
-            # v2.2.77: REALITY BYPASS - Si ya tenemos proxies validados en la lista activa, usarlos DIRECTO.
-            # No preguntamos dos veces lo mismo. Si está en self.proxies, es porque el scrape() lo aprobó.
-            if self.proxies:
-                return self.proxies.pop(0) # Entrega inmediata (FIFO)
-            
-            proxy = self.get_random_proxy()
-            if not proxy: 
-                # v2.2.40: ABSOLUTE COOLDOWN
-                print("  ⏳ Pool de proxies agotado. Esperando enfriamiento (10s) para evitar bucle...")
-                time.sleep(10) # 10s cooling to prevent high CPU loop
-                self.scrape(country="ES" if prefer_es else None, stop_signal=stop_signal)
-                if not self.proxies: break 
-                continue # Volver arriba para que el primer if self.proxies lo pesque
-            
-            if self.verify_proxy(proxy, check_country=check_country):
-                return proxy
-            
-            # Remove bad proxy
-            self.blacklist_proxy(proxy)
-            attempts += 1
-            
-        return None
 
 def scrape_proxies():
     """Helper function to scrape and save proxies to a file."""

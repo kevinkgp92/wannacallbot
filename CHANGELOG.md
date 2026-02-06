@@ -1,15 +1,15 @@
 # ♈ WANNA CALL? - CHANGELOG
 
-## [v2.2.79] - Titan Apex Saul Supreme (2026-02-07)
+## [v2.2.80] - Titan Apex Saul Emergency (Patch Crítico) (2026-02-07)
 ### 🇪🇸 ESPAÑOL
-- **🌍 MOTOR SUPREMO (BING FALLBACK)**: Si Google bloquea agresivamente, el bot conmuta automáticamente a Bing para no detener la búsqueda. Supervivencia garantizada.
-- **🛡️ BLINDAJE DE ALCANCE (SCOPE HARDENING)**: Corregido el error técnico que impedía la rotación infinita en ciertos entornos. Estabilidad total de variables.
-- **⏳ AMNISTÍA 15**: Aumentado el límite de rotaciones a 15 para dar más oportunidades a proxies gratuitos en búsquedas profundas.
+- **🔧 FIX DE RECURSIÓN**: Corregido el fallo `maximum recursion depth exceeded` que bloqueaba el bot tras el fallback de Bing. Estabilidad de flujo garantizada.
+- **🇪🇸 LOCKDOWN ESPAÑA UHQ**: Endurecido el filtro de proxies. El sistema ahora prioriza y fuerza únicamente IPs residenciales españolas (GOLDEN) para el OSINT, cumpliendo la petición de proximidad y utilidad.
+- **🛡️ DETECCIÓN SILENT BLOCK**: Mejora en la detección de bloqueos. El bot ahora identifica si un proxy está bloqueado por texto en la página ("Access Denied") incluso si no devuelve un error HTTP estándar.
 
 ### 🇺🇸 ENGLISH
-- **🌍 SUPREME ENGINE (BING FALLBACK)**: If Google blocks aggressively, the bot automatically switches to Bing to keep the search going. Guaranteed survival.
-- **🛡️ SCOPE HARDENING**: Fixed the technical error that prevented infinite rotation in certain environments. Total variable stability.
-- **⏳ AMNESTY 15**: Increased rotation limit to 15 to give free proxies more chances during deep searches.
+- **🔧 RECURSION FIX**: Fixed the `maximum recursion depth exceeded` error that crashed the bot after Bing fallback. Guaranteed flow stability.
+- **🇪🇸 SPAIN UHQ LOCKDOWN**: Hardened proxy filtering. The system now prioritizes and forces only Spanish residential IPs (GOLDEN) for OSINT.
+- **🛡️ SILENT BLOCK DETECTION**: Improved block detection logic using page text signatures.
 
 
 ## [v2.2.77] - Titan Apex Reality (Flujo Absoluto) (2026-02-07)
