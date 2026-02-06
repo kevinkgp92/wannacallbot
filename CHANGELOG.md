@@ -1,5 +1,17 @@
 # ♈ WANNA CALL? - CHANGELOG
 
+## [v2.2.45] - Titan Splash (2026-02-06)
+### 🇪🇸 ESPAÑOL
+- **✨ PREMIUM SPLASH SCREEN**: Activada la pantalla de bienvenida con barra de progreso real. La app ahora informa de su estado mientras carga el núcleo.
+- **🛡️ NO-KILLS POLICY**: Se ha eliminado la limpieza agresiva de procesos. El bot ya no cerrará tus ventanas de Chrome o Firefox personales (YouTube, Correo, etc).
+- **⌛ SYNC STARTUP**: Optimizado el flag de inicialización para que la transición entre el Splash y la GUI principal sea instantánea.
+
+### 🇺🇸 ENGLISH
+- **✨ PREMIUM SPLASH SCREEN**: Activated the welcome screen with a real progress bar. The app now reports its status while loading the core.
+- **🛡️ NO-KILLS POLICY**: Aggressive process cleanup has been removed. The bot will no longer close your personal Chrome or Firefox windows (YouTube, Email, etc).
+- **⌛ SYNC STARTUP**: Optimized initialization flag for instant transition between Splash and main GUI.
+
+
 ## [v2.2.44] - Titan Hyperion (2026-02-06)
 ### 🇪🇸 ESPAÑOL
 - **🛑 NUCLEAR STOP SIGNAL**: Inyección completa del stop signal en `fetch_sources`. El bot ahora aborta todas las descargas remotas de forma atómica.

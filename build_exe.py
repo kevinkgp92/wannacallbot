@@ -5,7 +5,7 @@ import shutil
 import glob
 
 def build():
-    version = "2.2.44"
+    version = "2.2.45"
     print("===================================================")
     print(f"    WANNA CALL? - EXE BUILDER (v{version})")
     print("===================================================")
@@ -16,6 +16,8 @@ def build():
     # Kill processes
     subprocess.run("taskkill /F /IM geckodriver.exe /T", shell=True, capture_output=True)
     subprocess.run("taskkill /F /IM chromedriver.exe /T", shell=True, capture_output=True)
+    # v2.2.45: NO LONGER KILLING BROWSER PROCESSES (Chrome/Firefox)
+    # Only kill previous versions of the bot if needed
     subprocess.run("taskkill /F /IM WannaCall_v*.exe /T", shell=True, capture_output=True)
     time.sleep(1)
 

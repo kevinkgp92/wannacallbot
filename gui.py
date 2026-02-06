@@ -180,7 +180,7 @@ class TextRedirector(object):
 class OsintGUI(ctk.CTk):
     def __init__(self):
         super().__init__()
-        self.version = "2.2.44"
+        self.version = "2.2.45"
         
         # NITRO: Init attributes BEFORE splash to avoid AttributeError
         self.updater_ready = False
@@ -193,9 +193,9 @@ class OsintGUI(ctk.CTk):
         self.update_queue = queue.Queue()
         
         _boot_log("OsintGUI.__init__ start")
-        # TEST: Disable splash temporarily to see if main window renders alone
-        # self.show_splash() 
-        _boot_log("Splash skipped (test mode)")
+        # NITRO: Splash Screen Activation (v2.2.45)
+        self.show_splash() 
+        _boot_log("Splash showing...")
         _boot_log(f"Version: {self.version}")
 
         # Setup Auto-Updater (Silent)
@@ -251,6 +251,7 @@ class OsintGUI(ctk.CTk):
         # --- GUI LAYOUT ---
         try:
             self._build_main_ui()
+            self.initialization_complete = True # v2.2.45: Signal splash to finish
             _boot_log("UI build finished successfully")
         except Exception as e:
             _boot_log(f"FATAL ERROR IN UI BUILD: {e}")
