@@ -28,23 +28,29 @@ def build():
     
     timestamp = int(time.time())
     dist_path = f"dist_{timestamp}"
-    build_path = f"build_{timestamp}"
+    # [NUCLEAR CLEANUP] v2.2.34: Kill legacy processes and purge ALL old EXEs
+    print("\n[NUCLEAR CLEANUP] Iniciando limpieza de espacio de trabajo...")
     
     print("\n[0/3] Matando procesos activos...")
-    os.system("taskkill /F /IM WannaCall_v*.exe /T")
-    time.sleep(1) # Wait for filesystem to release handles
-    
+    subprocess.run("taskkill /F /IM geckodriver.exe /T", shell=True, capture_output=True)
+    subprocess.run("taskkill /F /IM chromedriver.exe /T", shell=True, capture_output=True)
+    subprocess.run("taskkill /F /IM WannaCall_v*.exe /T", shell=True, capture_output=True)
+
     print("\n[PURGA NUCLEAR] Eliminando versiones anteriores del directorio...")
     for old_exe in glob.glob("WannaCall_v*.exe"):
         try:
-            # Force deletion even if it's read-only
-            if os.path.exists(old_exe):
-                os.chmod(old_exe, 0o777)
-                os.remove(old_exe)
-                print(f"  [PURGA] Borrado: {old_exe}")
+            # Don't delete our own target name if it exists somehow, or just kill all
+            os.remove(old_exe)
+            print(f"  ✅ Borrado: {old_exe}")
         except Exception as e:
             print(f"  [ERROR] No se pudo borrar {old_exe}: {e}")
-    
+
+    # Remove specs and logs
+    for f in glob.glob("*.spec"): os.remove(f)
+    for f in glob.glob("*.log"): 
+        try: os.remove(f)
+        except: pass
+
     print("\n[1/3] Preparando carpetas...")
     if not os.path.exists(dist_path): os.makedirs(dist_path)
     
