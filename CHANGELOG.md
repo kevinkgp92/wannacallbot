@@ -1,5 +1,15 @@
 # ♈ WANNA CALL? - CHANGELOG
 
+## [v2.2.72] - Titan Apex Hotfix (Binary Integrity) (2026-02-06)
+### 🇪🇸 ESPAÑOL
+- **🚀 HOTFIX DE COMPILACIÓN**: Corregido un error de indentación crítico en `core/osint.py` que impedía que el binario se ejecutara correctamente (`ModuleNotFoundError`).
+- **🛡️ ESTABILIDAD ZENITH**: Asegurada la integridad del protocolo Zenith Apex tras la limpieza de código.
+
+### 🇺🇸 ENGLISH
+- **🚀 BUILD HOTFIX**: Fixed a critical indentation error in `core/osint.py` that prevented the binary from running correctly (`ModuleNotFoundError`).
+- **🛡️ ZENITH STABILITY**: Ensured the integrity of the Zenith Apex protocol after code cleanup.
+
+
 ## [v2.2.71] - Titan Apex (Nuclear Sanitization) (2026-02-06)
 ### 🇪🇸 ESPAÑOL
 - **🧼 SANEAMIENTO NUCLEAR DE CACHÉ**: El bot ahora limpia automáticamente la caché al arrancar, eliminando proxies "zombis" de M247 o Datacenters de sesiones antiguas. Pool 100% puro desde el inicio.

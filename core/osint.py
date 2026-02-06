@@ -230,7 +230,6 @@ class OSINTManager:
                      browser_manager.close()
                      rotation_count += 1
                      continue
-                pass # redundant block removed in v2.2.71
             
             if check_ok:
                 try:
