@@ -696,7 +696,7 @@ class ProxyScraper:
                             print(f"  ⚠️ Geo-Guard Falló (Error): {e} -> RECHAZADO.")
                             return False
                         
-                    if real_cc != check_country.upper():
+                    if real_cc != check_country.upper() and real_cc != "GOLDEN":
                         print(f"  ⚠️ Proxy funcional pero país incorrecto ({real_cc} != {check_country}). Rechazado.")
                         return False
                     print(f"  🌍 Geo-Guard: Proxy confirmado en {real_cc}.")

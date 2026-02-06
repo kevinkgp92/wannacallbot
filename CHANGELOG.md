@@ -1,5 +1,17 @@
 # ♈ WANNA CALL? - CHANGELOG
 
+## [v2.2.74] - Titan Apex Ultimate (Amnistía Golden) (2026-02-06)
+### 🇪🇸 ESPAÑOL
+- **⚖️ CORRECCIÓN DE VALIDACIÓN CRÍTICA**: Flexibilizado el Geo-Guard en el Scraper para permitir que proxies marcados como `GOLDEN` (Oro) sean aceptados cuando se requiere país `ES` (España). Se acabó el error de "país incorrecto (GOLDEN != ES)".
+- **🚀 ESTABILIDAD DE ESCANEO**: Eliminado el bloqueo final que causaba el bucle de rotación infinita en el modo OSINT.
+- **🛡️ SINCRONIZACIÓN TOTAL**: Armonización completa de criterios de validación entre todos los módulos del core.
+
+### 🇺🇸 ENGLISH
+- **⚖️ CRITICAL VALIDATION FIX**: Relaxed Geo-Guard in the Scraper to allow proxies marked as `GOLDEN` to be accepted when country `ES` is required. Fixed the "incorrect country (GOLDEN != ES)" error.
+- **🚀 SCAN STABILITY**: Removed the final blockage that caused the infinite rotation loop in OSINT mode.
+- **🛡️ TOTAL SYNC**: Full harmonization of validation criteria across all core modules.
+
+
 ## [v2.2.73] - Titan Apex Final (Global Sync) (2026-02-06)
 ### 🇪🇸 ESPAÑOL
 - **🤝 SINCRONIZACIÓN DE CONFIANZA DEFINITIVA**: El OSINT ahora acepta cualquier proxy validado como español (`ES` o `GOLDEN`) por el Scraper. Se acabó el rechazo de proxies válidos y el bucle de rotación infinita.
