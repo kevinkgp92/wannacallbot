@@ -190,6 +190,83 @@ class ProxyScraper:
         
         if not uncached: return valid_proxies
 
+        def check_single_candidate(p):
+            if stop_signal and stop_signal(): return None
+            ip = p.split(':')[0]
+            if ip in self.geo_cache:
+                cc = self.geo_cache[ip]
+                # v2.2.60: FIX CRITICO - Golden es ES
+                return p if (cc == country_code or cc == "GOLDEN") else None
+
+            try:
+                # v2.2.53: Using a more detailed fallback API
+                # Use ip-api direct with fields
+                r = requests.get(f"http://ip-api.com/json/{ip}?fields=status,countryCode,as", timeout=4)
+                if r.status_code == 200:
+                    res = r.json()
+                    if res.get("status") == "success":
+                        cc = res.get('countryCode', 'XX')
+                        as_org = str(res.get('as', '')).lower()
+                        
+                        # v2.2.57: Atomic ASN Check
+                        is_golden_asn = any(asn in as_org for asn in self.residential_asns)
+                        is_residential_name = any(x in as_org for x in self.residential_isps)
+                        
+                        dc_keywords = [
+                            "m247", "romania", "datacenter", "hosting", "cloud", "digitalocean", "vultr", 
+                            "ovh", "hetzner", "linode", "aws", "amazon", "google", "azure", "microsoft",
+                            "stablepoint", "as9009", "as41853", "as200676", "as202422", "as212238", "as16276"
+                        ]
+                        
+                        if any(x in as_org for x in dc_keywords):
+                            cc = "RO_FAKE"
+                            self.session_blacklist.add(p)
+                        elif (is_golden_asn or is_residential_name) and (cc == country_code or cc == "ES"):
+                            cc = "GOLDEN"
+
+                        self.geo_cache[ip] = cc
+                        # v2.2.60: TOLERANCIA CERO - Solo GOLDEN pasa el filtro
+                        return p if cc == "GOLDEN" else None
+                    
+                # v2.2.57: ZENITH TRIDENTE (Strategy B: ipapi.co)
+                r2 = requests.get(f"https://ipapi.co/{ip}/json/", timeout=4)
+                if r2.status_code == 200:
+                    res = r2.json()
+                    cc = res.get("country_code", "XX")
+                    asn = str(res.get("asn", "")).lower()
+                    org = str(res.get("org", "")).lower()
+                    
+                    is_golden = any(asn_id in asn or asn_id in org for asn_id in self.residential_asns)
+                    
+                    if any(x in org for x in ["m247", "romania", "datacenter", "hosting", "as9009"]):
+                        cc = "RO_FAKE"
+                    elif is_golden and (cc == country_code or cc == "ES"):
+                        cc = "GOLDEN"
+                        
+                    self.geo_cache[ip] = cc
+                    return p if cc == "GOLDEN" else None
+                
+                # v2.2.57: ZENITH TRIDENTE (Strategy C: findip.net)
+                # Use findip.net as ultimate fallback
+                r3 = requests.get(f"https://api.findip.net/{ip}/?token=free", timeout=4)
+                if r3.status_code == 200:
+                     res = r3.json()
+                     cc = res.get("country", {}).get("iso_code", "XX")
+                     org = str(res.get("traits", {}).get("autonomous_system_organization", "")).lower()
+                     asn = str(res.get("traits", {}).get("autonomous_system_number", "")).lower()
+                     
+                     is_golden = any(asn_id in f"as{asn}" or asn_id in org for asn_id in self.residential_asns)
+                     is_dc = any(x in org for x in ["m247", "romania", "datacenter", "hosting", "as9009"])
+                     
+                     if is_golden and not is_dc and (cc == country_code or cc == "ES"):
+                         self.geo_cache[ip] = "GOLDEN"
+                         return p
+                     else:
+                         self.geo_cache[ip] = "BAD_DC"
+                         self.session_blacklist.add(p)
+            except: pass
+            return None
+
         # 2. Process uncached in chunks (Batch API)
         chunks = [uncached[i:i + 100] for i in range(0, len(uncached), 100)]
         
@@ -251,91 +328,6 @@ class ProxyScraper:
             
             return matches
 
-            # STRATEGY B: Turbo Resilient Fallback (v2.2.53 - Deep Detect)
-            sub_chunk = chunk[:40] 
-            
-            def check_single_candidate(p):
-                if stop_signal and stop_signal(): return None
-                ip = p.split(':')[0]
-                if ip in self.geo_cache:
-                    cc = self.geo_cache[ip]
-                    # v2.2.60: FIX CRITICO - Golden es ES
-                    return p if (cc == country_code or cc == "GOLDEN") else None
-
-                try:
-                    # v2.2.53: Using a more detailed fallback API
-                    # Use ip-api direct with fields
-                    r = requests.get(f"http://ip-api.com/json/{ip}?fields=status,countryCode,as", timeout=4)
-                    if r.status_code == 200:
-                        res = r.json()
-                        if res.get("status") == "success":
-                            cc = res.get('countryCode', 'XX')
-                            as_org = str(res.get('as', '')).lower()
-                            
-                            # v2.2.57: Atomic ASN Check
-                            is_golden_asn = any(asn in as_org for asn in self.residential_asns)
-                            is_residential_name = any(x in as_org for x in self.residential_isps)
-                            
-                            dc_keywords = [
-                                "m247", "romania", "datacenter", "hosting", "cloud", "digitalocean", "vultr", 
-                                "ovh", "hetzner", "linode", "aws", "amazon", "google", "azure", "microsoft",
-                                "stablepoint", "as9009", "as41853", "as200676", "as202422", "as212238", "as16276"
-                            ]
-                            
-                            if any(x in as_org for x in dc_keywords):
-                                cc = "RO_FAKE"
-                                self.session_blacklist.add(p)
-                            elif (is_golden_asn or is_residential_name) and (cc == country_code or cc == "ES"):
-                                cc = "GOLDEN"
-
-                            self.geo_cache[ip] = cc
-                            # v2.2.60: TOLERANCIA CERO - Solo GOLDEN pasa el filtro
-                            return p if cc == "GOLDEN" else None
-                        
-                    # v2.2.57: ZENITH TRIDENTE (Strategy B: ipapi.co)
-                    r2 = requests.get(f"https://ipapi.co/{ip}/json/", timeout=4)
-                    if r2.status_code == 200:
-                        res = r2.json()
-                        cc = res.get("country_code", "XX")
-                        asn = str(res.get("asn", "")).lower()
-                        org = str(res.get("org", "")).lower()
-                        
-                        is_golden = any(asn_id in asn or asn_id in org for asn_id in self.residential_asns)
-                        
-                        if any(x in org for x in ["m247", "romania", "datacenter", "hosting", "as9009"]):
-                            cc = "RO_FAKE"
-                        elif is_golden and (cc == country_code or cc == "ES"):
-                            cc = "GOLDEN"
-                            
-                        self.geo_cache[ip] = cc
-                        return p if cc == "GOLDEN" else None
-                    
-                    # v2.2.57: ZENITH TRIDENTE (Strategy C: findip.net)
-                    # Use findip.net as ultimate fallback
-                    r3 = requests.get(f"https://api.findip.net/{ip}/?token=free", timeout=4)
-                    if r3.status_code == 200:
-                         res = r3.json()
-                         cc = res.get("country", {}).get("iso_code", "XX")
-                         org = str(res.get("traits", {}).get("autonomous_system_organization", "")).lower()
-                         asn = str(res.get("traits", {}).get("autonomous_system_number", "")).lower()
-                         
-                         is_golden = any(asn_id in f"as{asn}" or asn_id in org for asn_id in self.residential_asns)
-                         is_dc = any(x in org for x in ["m247", "romania", "datacenter", "hosting", "as9009"])
-                         
-                         if is_golden and not is_dc and (cc == country_code or cc == "ES"):
-                             self.geo_cache[ip] = "GOLDEN"
-                             return p
-                         else:
-                             self.geo_cache[ip] = "BAD_DC"
-                             self.session_blacklist.add(p)
-                except: pass
-                return None
-
-            with concurrent.futures.ThreadPoolExecutor(max_workers=8) as executor:
-                results = list(executor.map(check_single_candidate, sub_chunk))
-                matches.extend([r for r in results if r])
-            
-            return matches
 
         # TURBO GEO-FILTER: Reduced to 5 workers for v2.2.28 (STABILITY FIRST)
         with concurrent.futures.ThreadPoolExecutor(max_workers=5) as executor:

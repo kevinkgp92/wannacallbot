@@ -1,5 +1,15 @@
 # ♈ WANNA CALL? - CHANGELOG
 
+## [v2.2.63] - Zenith Protocol (Stability Patch) (2026-02-06)
+### 🇪🇸 ESPAÑOL
+- **🛠️ FIX CRÍTICO DE ESTABILIDAD**: Corregido un error de arquitectura (`UnboundLocalError`) que causaba el cierre del bot al activar el Tridente de Supervivencia.
+- **⚡ OPTIMIZACIÓN DE ALCANCE**: Reorganización de funciones internas en el Scraper para garantizar que la verificación individual de IPs sea siempre accesible.
+
+### 🇺🇸 ENGLISH
+- **🛠️ CRITICAL STABILITY FIX**: Fixed an architectural error (`UnboundLocalError`) that caused the bot to crash when activating the Survival Trident.
+- **⚡ SCOPE OPTIMIZATION**: Reorganization of internal functions in the Scraper to ensure individual IP verification is always accessible.
+
+
 ## [v2.2.62] - Zenith Protocol (The God Mode Sync) (2026-02-06)
 ### 🇪🇸 ESPAÑOL
 - **⭐ ZENITH TRUST (Sincronización Total)**: El motor OSINT ahora comparte la Geo-Caché con el Scraper. Se acabó el re-verificar IPs: si el scraper dice que es GOLDEN, el OSINT confía y arranca al instante.
