@@ -25,7 +25,9 @@ es_sources = [
     "https://www.proxy-list.download/api/v1/get?type=http&country=ES",
     "https://api.proxyscrape.com/v2/?request=displayproxies&protocol=http&timeout=10000&country=es&ssl=all&anonymity=all",
     "https://www.proxyscan.io/download?type=http&country=es",
-    "https://proxylist.geonode.com/api/proxy-list?limit=100&page=1&sort_by=lastChecked&sort_type=desc&country=ES&protocols=http" # v2.2.42: Titan ES source
+    "https://proxylist.geonode.com/api/proxy-list?limit=100&page=1&sort_by=lastChecked&sort_type=desc&country=ES&protocols=http",
+    "https://api.openproxy.space/v1/proxies?country=ES&type=http", # v2.2.44: Hyperion VIP
+    "https://raw.githubusercontent.com/rdavydov/proxy-list/main/proxies/es.txt" # v2.2.44: Hyperion Github ES
 ]
 
 def fetch_sources(urls, label="", stop_signal=None):
@@ -72,6 +74,7 @@ class ProxyScraper:
         self.last_scrape_time = 0
         self.last_full_scrape_time = 0 # v2.2.35: Cooldown for source download
         self.scrape_lock = threading.Lock() # v2.2.35: Prevent parallel storm
+        self.session_blacklist = set() # v2.2.44: Global session blacklist for RO_FAKE/M247
         self.golden_cache_file = "core/golden_proxies.json"
         self._load_cache()
 
@@ -107,10 +110,16 @@ class ProxyScraper:
         # 1. Check Cache first
         uncached = []
         for p in clean_proxies:
+            if p in self.session_blacklist:
+                continue
+            
             ip = p.split(':')[0]
             if ip in self.geo_cache:
-                if self.geo_cache[ip] == country_code:
+                cc = self.geo_cache[ip]
+                if cc == country_code:
                     valid_proxies.append(p)
+                elif cc == "RO_FAKE" or cc == "FAIL":
+                    self.session_blacklist.add(p) # Persistent hide
             else:
                 uncached.append(p)
         
@@ -142,12 +151,14 @@ class ProxyScraper:
                             
                             if "m247" in as_org or "romania" in as_org:
                                 cc = "RO_FAKE" 
+                                self.session_blacklist.add(chunk[idx]) # Add to session ignore
 
                             self.geo_cache[ip_key] = cc
                             if cc == country_code:
                                 matches.append(chunk[idx])
                         else:
                             self.geo_cache[ip_key] = "FAIL"
+                            self.session_blacklist.add(chunk[idx])
                     return matches
                 elif r.status_code == 429:
                     # v2.2.43: FAIL-SAFE GEO - Don't blacklist on rate limit
@@ -276,7 +287,7 @@ class ProxyScraper:
         # =========================================================================
         if country == "ES":
             print(f"🚀 FASE 1: Buscando en fuentes ES específicas (Prioridad Alta)...")
-            tier1_candidates = list(fetch_sources(es_sources, "(ES/Targeted)"))
+            tier1_candidates = list(fetch_sources(es_sources, "(ES/Targeted)", stop_signal=stop_signal))
             
             # v2.2.37: QUANTUM YIELD - Candidate Capping increased from 500 to 1500
             if len(tier1_candidates) > 1500:
@@ -326,7 +337,7 @@ class ProxyScraper:
         target_list = global_sources
         
         print(f"🚀 FASE 2: Minería Masiva Global (Esto puede tardar)...")
-        tier2_candidates = list(fetch_sources(target_list, "(Global)"))
+        tier2_candidates = list(fetch_sources(target_list, "(Global)", stop_signal=stop_signal))
         random.shuffle(tier2_candidates)
         
         # v2.2.37: QUANTUM YIELD - Candidate Capping Tier 2

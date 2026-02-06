@@ -245,10 +245,9 @@ class OSINTManager:
                     continue # Try next rotation
             
             if check_ok:
-                try:
-                    # Execute the actual OSINT logic
-                    # v2.2.35: Moving the bulk logic into a sub-execution block
-                    return self._do_lookup_logic(browser, phone_str, name_hint, update_progress, stop_check)
+                except InterruptedError:
+                    print("🛑 DETENCIÓN INMEDIATA: Abortando hilos OSINT.")
+                    break
                 except Exception as lookup_e:
                     print(f"    🔥 Error durante el OSINT: {lookup_e}. Rotando...")
                     browser_manager.mark_current_proxy_bad()
@@ -1854,6 +1853,9 @@ class OSINTManager:
 
 
     def format_report(self, report):
+        if not report:
+             return "⚠️ No se pudo generar el reporte: La búsqueda fue abortada o no se encontraron datos."
+             
         if not report['valid']:
              return "❌ FORMATO NO VÁLIDO: Usa 9 dígitos (Ej: 666111222)"
         

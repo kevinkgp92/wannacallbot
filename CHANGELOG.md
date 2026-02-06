@@ -1,5 +1,19 @@
 # ♈ WANNA CALL? - CHANGELOG
 
+## [v2.2.44] - Titan Hyperion (2026-02-06)
+### 🇪🇸 ESPAÑOL
+- **🛑 NUCLEAR STOP SIGNAL**: Inyección completa del stop signal en `fetch_sources`. El bot ahora aborta todas las descargas remotas de forma atómica.
+- **🛡️ SESSION BLACKLIST**: Implementada una lista negra persistente durante la ejecución. Si un proxy es detectado como hosting rumano (RO_FAKE), será ignorado permanentemente en esa sesión.
+- **🧩 OSINT CRASH REPAIR**: Corregido el error `TypeError` en el formateador de reportes. Ahora maneja búsquedas nulas o abortadas sin cerrar la aplicación.
+- **💎 PURE ES GOLD**: Añadidas 2 nuevas fuentes de proxies españoles VIP y optimizado el yield para maximizar IPs residenciales reales.
+
+### 🇺🇸 ENGLISH
+- **🛑 NUCLEAR STOP SIGNAL**: Complete injection of stop signal into `fetch_sources`. The bot now aborts all remote downloads atomically.
+- **🛡️ SESSION BLACKLIST**: Implemented a persistent session blacklist. If a proxy is detected as Romanian hosting (RO_FAKE), it will be permanently ignored in that session.
+- **🧩 OSINT CRASH REPAIR**: Fixed the `TypeError` in the report formatter. It now handles null or aborted lookups without closing the application.
+- **💎 PURE ES GOLD**: Added 2 new VIP Spanish proxy sources and optimized yield to maximize real residential IPs.
+
+
 ## [v2.2.43] - Titan Ultra Stability (2026-02-06)
 ### 🇪🇸 ESPAÑOL
 - **🛑 FULMINANT STOP SIGNAL**: Reducido el tamaño de lote de escaneo a 100. El bot ahora comprueba la señal de parada cada 2 segundos, eliminando hilos "zombie".
