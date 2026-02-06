@@ -269,9 +269,19 @@ class ProxyScraper:
                 uncached.append(p)
         
         if not uncached: return valid_proxies
+        
+        # v2.2.67: VELOCITY - Smart Truncation if too many and batch is locked
+        if len(uncached) > 500 and self._is_api_locked("ip-api"):
+            print(f"  ⚡ Optimización de Velocidad: Truncando {len(uncached)} candidatos a 500 para evitar esperas largas.")
+            uncached = uncached[:500]
 
-        # Split into chunks of 100
-        chunks = [uncached[i:i + 100] for i in range(0, len(uncached), 100)]
+        # Progressive Counter
+        total_to_process = len(uncached)
+        processed_count = [0] # List for shared reference
+        print_lock = threading.Lock()
+
+        # Split into chunks of 50 (smaller chunks for better progress feed)
+        chunks = [uncached[i:i + 50] for i in range(0, len(uncached), 50)]
         
         def process_chunk(chunk):
             if stop_signal and stop_signal(): return []
@@ -305,23 +315,29 @@ class ProxyScraper:
                         self._lock_api("ip-api", 45)
                 except: pass
 
-            # 2. INDIVIDUAL FALLBACK FOR THE REMAINING (ZENITH TRIDENTE)
-            # Find what's still unknown in this chunk
-            processed_ips = [ip for ip in ips if ip in self.geo_cache]
-            for p in chunk:
-                ip = p.split(':')[0]
-                if ip not in processed_ips:
-                    if self._check_ip_residence(ip, country_code, stop_signal) == "GOLDEN":
-                        res_matches.append(p)
+                processed_ips = [ip for ip in ips if ip in self.geo_cache]
+                for p in chunk:
+                    ip = p.split(':')[0]
+                    if ip not in processed_ips:
+                        if self._check_ip_residence(ip, country_code, stop_signal) == "GOLDEN":
+                            res_matches.append(p)
+                
+                with print_lock:
+                    processed_count[0] += len(chunk)
+                    # Simple progress feed
+                    perc = (processed_count[0] / total_to_process) * 100
+                    print(f"\r  🛡️ Guardia ES: [{processed_count[0]}/{total_to_process}] ({perc:.1f}%) verificados...", end="", flush=True)
             
             return res_matches
 
-        with concurrent.futures.ThreadPoolExecutor(max_workers=5) as executor:
+        # v2.2.67: VELOCITY - Aumentando a 15 hilos para el fallback individual
+        with concurrent.futures.ThreadPoolExecutor(max_workers=15) as executor:
             futures = [executor.submit(process_chunk, c) for c in chunks]
             for f in concurrent.futures.as_completed(futures):
                 found = f.result()
                 if found: valid_proxies.extend(found)
-
+        
+        print(f"\n  ✅ Verificación completada. {len(valid_proxies)} proxies residenciales listos.")
         return valid_proxies
 
     def _scrape_html_tables(self, stop_signal=None):

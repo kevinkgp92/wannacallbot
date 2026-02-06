@@ -1,5 +1,17 @@
 # ♈ WANNA CALL? - CHANGELOG
 
+## [v2.2.67] - Titan Overlord Velocity (The Fast Check Edition) (2026-02-06)
+### 🇪🇸 ESPAÑOL
+- **📊 CONTADOR EN TIEMPO REAL**: Implementación de un feedback visual de progreso (`[X/5000]`) durante la verificación de proxies. Se acabó el no saber si el bot está funcionando.
+- **⚡ ACELERACIÓN TURBO**: Aumento de 5 a 15 hilos concurrentes para el procesado individual de IPs. Triplicada la velocidad de validación en situaciones de bloqueo.
+- **🎯 TRUNCAMIENTO INTELIGENTE**: Si las APIs están saturadas, el bot ahora prioriza los primeros 500 mejores candidatos en lugar de intentar procesar 5000 lentamente, garantizando resultados inmediatos.
+
+### 🇺🇸 ENGLISH
+- **📊 REAL-TIME COUNTER**: Implementation of visual progress feedback (`[X/5000]`) during proxy verification. No more wondering if the bot is working.
+- **⚡ TURBO ACCELERATION**: Increased concurrent threads from 5 to 15 for individual IP processing. Verification speed tripled in blocking situations.
+- **🎯 SMART TRUNCATION**: If APIs are saturated, the bot now prioritizes the top 500 candidates instead of slowly attempting 5000, ensuring immediate results.
+
+
 ## [v2.2.66] - Titan Overlord (Absolute Stability) (2026-02-06)
 ### 🇪🇸 ESPAÑOL
 - **🤫 SILENCIO ADMINISTRATIVO**: Eliminados los logs ruidosos de bloqueo de API en consola. El bot ahora gestiona las rotaciones de forma silenciosa y eficiente.
