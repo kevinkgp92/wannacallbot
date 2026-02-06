@@ -1,18 +1,36 @@
 # ♈ WANNA CALL? - CHANGELOG
 
 ## [v2.2.35] - Saul's Law (2026-02-06)
-### 🐞 LOOP & STORM SHIELD
-- **Iterative Lookup**: Refactorizada la búsqueda de OSINT a un bucle iterativo (`while rotation_count < max_rotations`). Adiós a la recursividad infinita que causaba bucles de escaneo.
-- **Scraper Storm Shield**: Implementado `threading.Lock` en el `ProxyScraper`. Si varios dorks piden proxies a la vez, el sistema ahora hace cola en lugar de descargar fuentes masivamente en paralelo.
-- **Hardened Cooldown**: Añadido `last_full_scrape_time`. No se repetirán descargas de fuentes de proxies si se completó una hace menos de 60 segundos.
-- **Log Order Fix**: Movido el mensaje "ℹ️ Escaneando..." tras el chequeo de caché para evitar logs engañosos en Phase 0.
+
+### 🇪🇸 ESPAÑOL
+- **🐞 BUCLE ITERATIVO**: Refactorizada la búsqueda de OSINT a un bucle iterativo para eliminar la recursividad infinita.
+- **🛡️ ESCUDO DE TORMENTA**: Implementado bloqueo de hilos (`Lock`) en el scraper para evitar descargas paralelas masivas.
+- **🧊 COOLDOWN REFORZADO**: Añadido enfriamiento de 60s tras escaneos masivos para proteger las fuentes.
+- **🧹 LIMPIEZA DE LOGS**: El mensaje "Escaneando" ahora solo aparece cuando hay una petición real a red.
+
+### 🇺🇸 ENGLISH
+- **🐞 ITERATIVE LOOP**: Refactored OSINT search to an iterative loop to eliminate infinite recursion.
+- **🛡️ STORM SHIELD**: Implemented thread-locking (`Lock`) in the scraper to prevent massive parallel downloads.
+- **🧊 HARDENED COOLDOWN**: Added 60s cooldown after massive scans to protect proxy sources.
+- **🧹 LOG SANITATION**: The "Scanning" message now only appears when a real network request is triggered.
+
+---
 
 ## [v2.2.34] - Arctic Freeze (2026-02-06)
-### ❄️ TOTAL STUTTER ELIMINATION
-- **GIL Guard**: Reducidos workers de verificación de 10 a 5 e implementados micro-pulsos de `time.sleep(0.02)` para garantizar suavidad total del ratón.
-- **Scraper Persistence**: Implementado singleton compartido para el `ProxyScraper`. No se re-escanean fuentes si la lista es fresca (< 2 min).
-- **IP Verification Cache**: `OSINTManager` ahora cachea la verificación de IP por 60s para evitar peticiones de red redundantes y micro-congelaciones.
-- **Zero-Lag Architecture**: Eliminada la tormenta de hilos en el arranque de servicios paralelos.
+
+### 🇪🇸 ESPAÑOL
+- **❄️ GIL GUARD**: Reducidos workers a 5 e implementados micro-pulsos de sueño (0.02s) para fluidez total del ratón.
+- **🧠 SCRAPER SINGLETON**: Los componentes comparten memoria de proxys; se acabaron los re-escaneos redundantes.
+- **🛡️ IP CACHE**: Verificación de IP recordada por 60s para evitar micro-congelaciones por red.
+- **🧹 NUCLEAR CLEANUP**: El constructor ahora mata procesos zombis y borra EXEs antiguos automáticamente.
+
+### 🇺🇸 ENGLISH
+- **❄️ GIL GUARD**: Workers reduced to 5 with 0.02s sleep pulses for absolute mouse smoothness.
+- **🧠 SCRAPER SINGLETON**: Components share proxy memory; eliminated redundant re-scans.
+- **🛡️ IP CACHE**: IP verification cached for 60s to prevent network-induced micro-stutters.
+- **🧹 NUCLEAR CLEANUP**: Builder now automatically kills zombie processes and purges old EXEs.
+
+---
 
 ## [v2.2.33] - Arctic Silence (2026-02-06)
 
