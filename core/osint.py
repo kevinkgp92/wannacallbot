@@ -174,7 +174,7 @@ class OSINTManager:
 
     def lookup(self, browser_manager, phone_str, name_hint=None, progress_callback=None, stop_check=None):
         rotation_count = 0
-        max_rotations = 15 # v2.2.79: Aumentado de 5 a 15 para máxima supervivencia
+        max_rotations = 25 # v2.2.81: Overclocked to 25 for absolute persistence
         
         # Helper for progress reporting
         def update_progress(current_step, total_steps, msg):
@@ -327,7 +327,15 @@ class OSINTManager:
                 except (Exception, InterruptedError) as e:
                     if isinstance(e, InterruptedError) or (stop_check and stop_check()): raise e
                     
-                    print(f"⚠️ Error de conexión ({e}). Rotando proxy ({attempt+1}/{timeout_retries})...")
+                    err_msg = str(e).upper()
+                    is_net_error = any(x in err_msg for x in ["DNS_PROBE", "CONNECTION_REFUSED", "NAME_NOT_RESOLVED", "CONNECTION_RESET"])
+                    
+                    if is_net_error:
+                        print(f"🌐 ERROR DE RED (DNS/Net): {e}. Rotando sin gastar intento...")
+                        # We don't increment 'attempt' here so the source isn't skipped for a bad proxy
+                        attempt -= 1 
+                    else:
+                        print(f"⚠️ Error de conexión ({e}). Rotando proxy ({attempt+1}/{timeout_retries})...")
                 
                     # 3. TUNNEL ERROR DETECTION (v2.2.78)
                     err_msg = str(e).upper()
@@ -349,7 +357,8 @@ class OSINTManager:
                         print("🚫 LÍMITE DE ROTACIÓN ALCANZADO: Demasiados bloqueos. Saltando fuente.")
                         return False
                     browser = browser_manager.get_driver()
-                    browser.set_page_load_timeout(35) # Re-apply 35s
+                    # v2.2.81: Overclocked Timeout (60s) to allow slow but valid residential proxies
+                    browser.set_page_load_timeout(60) 
             
             print(f"❌ Error persistente en {url}. Saltando fuente.")
             if "google.com" in url:

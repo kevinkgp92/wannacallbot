@@ -1,15 +1,17 @@
 # ♈ WANNA CALL? - CHANGELOG
 
-## [v2.2.80] - Titan Apex Saul Emergency (Patch Crítico) (2026-02-07)
+## [v2.2.81] - Titan Apex Saul Overclock (The Final Stand) (2026-02-07)
 ### 🇪🇸 ESPAÑOL
-- **🔧 FIX DE RECURSIÓN**: Corregido el fallo `maximum recursion depth exceeded` que bloqueaba el bot tras el fallback de Bing. Estabilidad de flujo garantizada.
-- **🇪🇸 LOCKDOWN ESPAÑA UHQ**: Endurecido el filtro de proxies. El sistema ahora prioriza y fuerza únicamente IPs residenciales españolas (GOLDEN) para el OSINT, cumpliendo la petición de proximidad y utilidad.
-- **🛡️ DETECCIÓN SILENT BLOCK**: Mejora en la detección de bloqueos. El bot ahora identifica si un proxy está bloqueado por texto en la página ("Access Denied") incluso si no devuelve un error HTTP estándar.
+- **⏳ OVERCLOCKED TIMEOUTS**: Aumentado el tiempo de carga por página a 60 segundos. Esto permite que los proxies residenciales españoles (lentos pero efectivos) tengan tiempo de cargar los datos sin ser descartados.
+- **🛡️ AMNISTÍA 25 (PERSISTENCIA EXTREMA)**: Elevado el límite de rotación a 25. El bot no se detendrá hasta agotar todas las posibilidades del pool UHQ.
+- **🧠 REINTENTO INTELIGENTE (DNS SHIELD)**: El sistema ahora diferencia entre un bloqueo de servidor y un error de red (DNS/Conexión). Los fallos de red ya no penalizan los intentos de la fuente, permitiendo reintentar con un proxy nuevo sin saltar la web.
+- **🇪🇸 UHQ SOURCE EXPANSION**: Inyectadas nuevas fuentes de proxies premium específicas para España.
 
 ### 🇺🇸 ENGLISH
-- **🔧 RECURSION FIX**: Fixed the `maximum recursion depth exceeded` error that crashed the bot after Bing fallback. Guaranteed flow stability.
-- **🇪🇸 SPAIN UHQ LOCKDOWN**: Hardened proxy filtering. The system now prioritizes and forces only Spanish residential IPs (GOLDEN) for OSINT.
-- **🛡️ SILENT BLOCK DETECTION**: Improved block detection logic using page text signatures.
+- **⏳ OVERCLOCKED TIMEOUTS**: Increased page load time to 60 seconds to support slow but effective residential proxies.
+- **🛡️ AMNESTY 25 (EXTREME PERSISTENCE)**: Raised rotation limit to 25. The bot will exhaust the entire UHQ pool before giving up.
+- **🧠 SMART RETRY (DNS SHIELD)**: Network errors (DNS/Connection) no longer count against source attempts, allowing fresh proxy retries without skipping sources.
+- **🇪🇸 UHQ SOURCE EXPANSION**: Added new premium Spanish proxy sources.
 
 
 ## [v2.2.77] - Titan Apex Reality (Flujo Absoluto) (2026-02-07)

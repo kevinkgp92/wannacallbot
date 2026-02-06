@@ -41,6 +41,10 @@ def get_es_sources():
         "https://raw.githubusercontent.com/Zaeem20/Free-Proxy-List/master/socks5.txt", # Deep ES
         "https://raw.githubusercontent.com/officialputuid/free-proxy-list/master/proxies/http.txt",
         "https://raw.githubusercontent.com/clketlow/proxy-list/master/http.txt",
+        # v2.2.81: UHQ OVERCLOCK SOURCES
+        "https://spys.me/proxy.txt",
+        "https://raw.githubusercontent.com/Andoni-B/proxy-scraper/main/proxies_es.txt",
+        "https://raw.githubusercontent.com/ErcinDedeoglu/proxies/main/proxies/http.txt",
         f"https://checkerproxy.net/api/archive/{today}"
     ]
 
