@@ -19,6 +19,7 @@ except:
 class BrowserManager:
     _CACHED_GECKO = None
     _CACHED_CHROME = None
+    _SHARED_SCRAPER = None # v2.2.34: Singleton-ish Scraper
 
     def __init__(self, headless=False, proxy=None, auto_proxy=False, user_agent=None, stop_check=None):
         self.headless = headless
@@ -26,7 +27,12 @@ class BrowserManager:
         self.auto_proxy = auto_proxy
         self.user_agent = user_agent
         self.stop_check = stop_check
-        self.scraper = ProxyScraper()
+        
+        # v2.2.34: Use shared scraper to avoid parallel scraping storms
+        if BrowserManager._SHARED_SCRAPER is None:
+            BrowserManager._SHARED_SCRAPER = ProxyScraper()
+        self.scraper = BrowserManager._SHARED_SCRAPER
+        
         self.driver = None
         self._kill_zombies() # Clean start
 

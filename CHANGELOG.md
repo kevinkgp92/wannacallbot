@@ -1,10 +1,13 @@
 # ♈ WANNA CALL? - CHANGELOG
 
+## [v2.2.34] - Arctic Freeze (2026-02-06)
+### ❄️ TOTAL STUTTER ELIMINATION
+- **GIL Guard**: Reducidos workers de verificación de 10 a 5 e implementados micro-pulsos de `time.sleep(0.02)` para garantizar suavidad total del ratón.
+- **Scraper Persistence**: Implementado singleton compartido para el `ProxyScraper`. No se re-escanean fuentes si la lista es fresca (< 2 min).
+- **IP Verification Cache**: `OSINTManager` ahora cachea la verificación de IP por 60s para evitar peticiones de red redundantes y micro-congelaciones.
+- **Zero-Lag Architecture**: Eliminada la tormenta de hilos en el arranque de servicios paralelos.
 
-
----
-
-## ❄️ [2.2.33] - 2026-02-06 (ARCTIC SILENCE - ZERO LAG)
+## [v2.2.33] - Arctic Silence (2026-02-06)
 
 ### 🇪🇸 ESPAÑOL
 - **🚀 SILENCIO TOTAL CPU**: Implementado capado inteligente de 500 candidatos para evitar el colapso del ratón.

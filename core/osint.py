@@ -13,7 +13,9 @@ from concurrent.futures import ThreadPoolExecutor
 
 class OSINTManager:
     def __init__(self):
-        # We will use the browser provided by the manager
+        # v2.2.34: Arctic Freeze - IP Cache to avoid redundant checks
+        self.last_ip_check_time = 0
+        self.last_verified_ip = None
         pass
 
     def _wait_for_captcha(self, browser, source_name, timeout=40):
@@ -180,45 +182,54 @@ class OSINTManager:
                 progress_callback(current_step, total_steps, msg)
 
         # 0. CONNECTIVITY & PROXY CHECK (CRITICAL DEBUG)
-        print("[OSINT] 🛡️ Verificando IP y Localización antes de iniciar...")
-        try:
-            browser.get("https://ipv4.icanhazip.com")
-            my_ip = browser.find_element(By.TAG_NAME, "body").text.strip()
-            
-            # Fallback API strategy
-            geo_data = {}
+        # v2.2.34: Arctic Freeze - Avoid redundant checks if last check was < 60s ago
+        current_time = time.time()
+        if self.last_verified_ip and (current_time - self.last_ip_check_time) < 60:
+            print(f"[OSINT] 🛡️ IP verificada recientemente ({self.last_verified_ip}). Saltando check redundante.")
+        else:
+            print("[OSINT] 🛡️ Verificando IP y Localización antes de iniciar...")
             try:
-                browser.get("http://ip-api.com/json")
-                import json
-                geo_data = json.loads(browser.find_element(By.TAG_NAME, "body").text)
-            except:
-                # API Limit/Fail -> Try Backup
-                try:
-                    browser.get("https://ipapi.co/json/")
-                    geo_data = json.loads(browser.find_element(By.TAG_NAME, "body").text)
-                except: pass
-
-            cc = geo_data.get("countryCode", "Unknown")
-            if "country_code" in geo_data: cc = geo_data["country_code"] # ipapi.co format
-            country = geo_data.get("country", "Unknown")
-            if "country_name" in geo_data: country = geo_data["country_name"] # ipapi.co format
-            
-            print(f"    🌍 IP ACTUAL: {my_ip} | PAÍS DETECTADO: {country} ({cc})")
-            
-            # STRICT GEO-GUARD: KILL SWITCH
-            if cc != "ES" and country.lower() != "spain" and country.lower() != "españa":
-                print(f"    ⛔ GEO-BLOCK: IP rechazada ({cc}). Solo se permite ESPAÑA.")
-                raise ConnectionError(f"Proxy Non-ES: {cc}")
+                browser.get("https://ipv4.icanhazip.com")
+                my_ip = browser.find_element(By.TAG_NAME, "body").text.strip()
                 
-        except Exception as e:
-            print(f"    ⚠️ Proxy invalido o no es español ({e}). Rotando...")
-            browser_manager.mark_current_proxy_bad()
-            browser_manager.close() # CORRECT TEARDOWN
-            rotation_count += 1
-            if rotation_count > max_rotations:
-                print("🚫 LÍMITE DE ROTACIÓN ALCANZADO: El sistema no encuentra proxys ES estables. Abortando búsqueda.")
-                return None
-            return self.lookup(browser_manager, phone_str, name_hint, progress_callback, stop_check)
+                # Fallback API strategy
+                geo_data = {}
+                try:
+                    browser.get("http://ip-api.com/json")
+                    import json
+                    geo_data = json.loads(browser.find_element(By.TAG_NAME, "body").text)
+                except:
+                    # API Limit/Fail -> Try Backup
+                    try:
+                        browser.get("https://ipapi.co/json/")
+                        geo_data = json.loads(browser.find_element(By.TAG_NAME, "body").text)
+                    except: pass
+
+                cc = geo_data.get("countryCode", "Unknown")
+                if "country_code" in geo_data: cc = geo_data["country_code"] # ipapi.co format
+                country = geo_data.get("country", "Unknown")
+                if "country_name" in geo_data: country = geo_data["country_name"] # ipapi.co format
+                
+                print(f"    🌍 IP ACTUAL: {my_ip} | PAÍS DETECTADO: {country} ({cc})")
+                
+                # STRICT GEO-GUARD: KILL SWITCH
+                if cc != "ES" and country.lower() != "spain" and country.lower() != "españa":
+                    print(f"    ⛔ GEO-BLOCK: IP rechazada ({cc}). Solo se permite ESPAÑA.")
+                    raise ConnectionError(f"Proxy Non-ES: {cc}")
+                
+                # Cache the success
+                self.last_verified_ip = my_ip
+                self.last_ip_check_time = current_time
+                    
+            except Exception as e:
+                print(f"    ⚠️ Proxy invalido o no es español ({e}). Rotando...")
+                browser_manager.mark_current_proxy_bad()
+                browser_manager.close() # CORRECT TEARDOWN
+                rotation_count += 1
+                if rotation_count > max_rotations:
+                    print("🚫 LÍMITE DE ROTACIÓN ALCANZADO: El sistema no encuentra proxys ES estables. Abortando búsqueda.")
+                    return None
+                return self.lookup(browser_manager, phone_str, name_hint, progress_callback, stop_check)
 
         # GLOBAL TIMEOUT & CIRCUIT BREAKER
         circuit_breaker_tripped = False

@@ -241,10 +241,10 @@ class ProxyScraper:
         # =========================================================================
         current_time = time.time()
         
-        # PERSISTENCE: If we scraped less than 5 minutes ago and we still have proxies, use them.
-        # This prevents infinite loops if a single proxy rotation is requested quickly.
-        if self.proxies and (current_time - self.last_scrape_time) < 300:
-             print(f"🚀 FASE 0: Usando cola persistente ({len(self.proxies)} proxies restantes).")
+        # PERSISTENCE (v2.2.34): If we have enough valid proxies and rescrape is too soon, EXIT.
+        # This prevents redundant scrapes when rotating quickly.
+        if self.proxies and (current_time - self.last_scrape_time) < 120:
+             print(f"🚀 FASE 0: Usando proxies activos (Cooldown: {int(120 - (current_time - self.last_scrape_time))}s).")
              return self.proxies
 
         if self.proxies:
@@ -253,11 +253,9 @@ class ProxyScraper:
             if cached_live:
                 self.proxies = cached_live
                 print(f"  ✅ FASE 0 ÉXITO: {len(self.proxies)} proxies de caché operativos.")
-                if len(self.proxies) >= 3: # Goal: 3
+                if len(self.proxies) >= 3: 
                     self.last_scrape_time = current_time
                     return self.proxies
-            else:
-                self.proxies = [] # Clear stale cache
         
         self.proxies = [] # Reset for fresh scrape
 
@@ -424,9 +422,13 @@ class ProxyScraper:
             return None
 
         import concurrent.futures
-        with concurrent.futures.ThreadPoolExecutor(max_workers=10) as executor:
+        # v2.2.34: ARCTIC FREEZE - Bajar de 10 a 5 workers para evitar micro-stuttering del GIL
+        with concurrent.futures.ThreadPoolExecutor(max_workers=5) as executor:
             futures = [executor.submit(is_alive, p) for p in proxies]
             for future in concurrent.futures.as_completed(futures):
+                # v2.2.34: Micro-pulso de sueño para dar paso a la GUI
+                time.sleep(0.02)
+                
                 if stop_signal and stop_signal(): 
                     executor.shutdown(wait=False, cancel_futures=True)
                     return []
