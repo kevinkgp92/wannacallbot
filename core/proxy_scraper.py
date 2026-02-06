@@ -169,8 +169,8 @@ class ProxyScraper:
         return time.time() < lock_time
 
     def _lock_api(self, name, seconds=60):
-        """v2.2.64: Locks an API after receiving a 429."""
-        print(f"  🛑 API {name} bloqueada por 429. Tiempo de espera: {seconds}s")
+        """v2.2.64: Locks an API after receiving a 429 - v2.2.66: Silenced log."""
+        # print(f"  🛑 API {name} bloqueada por 429. Tiempo de espera: {seconds}s")
         self.api_locks[name] = time.time() + seconds
 
     def _check_ip_residence(self, ip, country_code="ES", stop_signal=None):
@@ -182,7 +182,7 @@ class ProxyScraper:
             cc = self.geo_cache[ip]
             return "GOLDEN" if (cc == country_code or cc == "GOLDEN") else None
 
-        # 2. Rotation Chain (v2.2.65 Expanded to 6 Providers)
+        # 2. Rotation Chain (v2.2.65 Expanded to 6 Providers - v2.2.66: Hardened Timeouts)
         strategies = [
             ("ip-api", f"http://ip-api.com/json/{ip}?fields=status,countryCode,as"),
             ("ipapi-is", f"https://api.ipapi.is/?ip={ip}"),
@@ -197,8 +197,9 @@ class ProxyScraper:
             if stop_signal and stop_signal(): break
             
             try:
+                # v2.2.66: Timeouts aumentados a 15s para mayor resiliencia de red
                 headers = {'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/121.0.0.0 Safari/537.36'}
-                r = requests.get(url, timeout=5, headers=headers)
+                r = requests.get(url, timeout=12, headers=headers)
                 
                 if r.status_code == 429:
                     self._lock_api(name, 60)
@@ -280,8 +281,10 @@ class ProxyScraper:
             # 1. BATCH STRATEGY (ip-api)
             if not self._is_api_locked("ip-api"):
                 try:
+                    # v2.2.66: Jitter aleatorio para evitar detección
+                    time.sleep(random.uniform(0.1, 0.4))
                     p_data = [{"query": ip, "fields": "status,countryCode,as"} for ip in ips]
-                    r = requests.post("http://ip-api.com/batch", json=p_data, timeout=10)
+                    r = requests.post("http://ip-api.com/batch", json=p_data, timeout=12)
                     if r.status_code == 200:
                         results = r.json()
                         for idx, res in enumerate(results):

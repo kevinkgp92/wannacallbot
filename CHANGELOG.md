@@ -1,5 +1,19 @@
 # ♈ WANNA CALL? - CHANGELOG
 
+## [v2.2.66] - Titan Overlord (Absolute Stability) (2026-02-06)
+### 🇪🇸 ESPAÑOL
+- **🤫 SILENCIO ADMINISTRATIVO**: Eliminados los logs ruidosos de bloqueo de API en consola. El bot ahora gestiona las rotaciones de forma silenciosa y eficiente.
+- **⏳ RESILIENCIA DE RED v2**: Tiempos de espera (timeouts) triplicados para absorber lags de red y evitar la pérdida de proxies.
+- **🛡️ ESCUDO STEALTH**: Implementación de retrasos aleatorios (jitter) entre peticiones para evitar la detección por parte de los proveedores Geo-IP.
+- **💠 PERSISTENCIA REFORZADA**: Los proxies "Golden" ahora tienen prioridad absoluta en el arranque, asegurando disponibilidad inmediata.
+
+### 🇺🇸 ENGLISH
+- **🤫 ADMINISTRATIVE SILENCE**: Removed noisy API block logs from console. The bot now manages rotations silently and efficiently.
+- **⏳ NETWORK RESILIENCE v2**: Tripled timeouts to absorb network lags and prevent proxy loss.
+- **🛡️ STEALTH SHIELD**: Implementation of random delays (jitter) between requests to avoid detection by Geo-IP providers.
+- **💠 REINFORCED PERSISTENCE**: "Golden" proxies now have absolute priority during startup, ensuring immediate availability.
+
+
 ## [v2.2.65] - Titan Prime (The Bot that Never Forgets) (2026-02-06)
 ### 🇪🇸 ESPAÑOL
 - **💠 PERSISTENCIA DE ORO**: Eliminado el borrado automático de caché. El bot ahora guarda los proxies residenciales entre sesiones. Si las APIs Geo-IP fallan, el bot usará proxies "Golden" veteranos.
