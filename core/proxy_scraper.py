@@ -30,7 +30,14 @@ def get_es_sources():
         "https://proxylist.geonode.com/api/proxy-list?limit=100&page=1&sort_by=lastChecked&sort_type=desc&country=ES&protocols=http",
         "https://api.openproxy.space/v1/proxies?country=ES&type=http",
         "https://raw.githubusercontent.com/rdavydov/proxy-list/main/proxies/es.txt",
-        "https://api.proxyscrape.com/v2/?request=displayproxies&protocol=socks5&timeout=10000&country=es&ssl=all&anonymity=all", # v2.2.48 SOCKS5
+        "https://raw.githubusercontent.com/yemixzy/proxy-list/main/proxies/http.txt", # v2.2.50 Rick Grimes Elite
+        "https://raw.githubusercontent.com/clarketm/proxy-list/master/proxy-list-raw.txt", # v2.2.50 Rick Grimes Elite
+        "https://raw.githubusercontent.com/monosans/proxy-list/main/proxies/http.txt", # v2.2.50 Elite
+        "https://raw.githubusercontent.com/vakhov/fresh-proxy-list/master/http.txt", # v2.2.50 Elite
+        "https://raw.githubusercontent.com/prxchk/proxy-list/main/http.txt", # v2.2.50 Elite
+        "https://raw.githubusercontent.com/Zaeem20/FREE_PROXIES_LIST/master/http.txt", # v2.2.50 Elite
+        "https://raw.githubusercontent.com/mmpx12/proxy-list/master/http.txt", # v2.2.50 Elite
+        "https://api.proxyscrape.com/v2/?request=displayproxies&protocol=socks5&timeout=10000&country=es&ssl=all&anonymity=all",
         "https://www.proxyscan.io/download?type=socks5&country=es", # v2.2.48 SOCKS5
         "https://raw.githubusercontent.com/vakhov/fresh-proxy-list/master/proxylist.txt", # v2.2.48 Elite
         "https://raw.githubusercontent.com/TheSpeedX/SOCKS-List/master/socks5.txt", # v2.2.48 Global Elite

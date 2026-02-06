@@ -239,32 +239,49 @@ class OSINTManager:
                 except Exception as e:
                     # v2.2.48: TITAN GEO-HEAL FALLBACK
                     # If browser fails to read JSON, attempt a direct HTTP ping (Request-level)
-                    try:
-                        print(f"    🔄 FALLBACK: Browser Geo-Check failed ({e}). Usando Ping Directo...")
-                        proxy_parts = browser_manager.current_proxy.split(':')
-                        px_ip = proxy_parts[0]
-                        # Use requests directly (bypassing browser) for a split-second check
-                        # NOTE: This assumes proxies are HTTP/SOCKS compatible for requests
-                        r_test = requests.get(f"http://ip-api.com/json/{px_ip}?fields=status,countryCode,as,query", timeout=5)
-                        if r_test.status_code == 200:
-                            g_data = r_test.json()
-                            if g_data.get("status") == "success":
-                                cc = g_data.get("countryCode", "Unknown")
-                                as_org = g_data.get("as", "").lower()
-                                if "m247" in as_org or "romania" in as_org: cc = "RO_FAKE"
-                                if cc == "ES":
-                                    print(f"    ✅ FALLBACK ÉXITO: IP {px_ip} verificada como ES.")
-                                    check_ok = True
-                                    continue # Jump to lookup logic
-                    except: pass
+                    # Fallback Chain: ip-api -> ifconfig -> ipify
+                    check_apis = [
+                        f"http://ip-api.com/json/?fields=status,countryCode,as,query",
+                        f"https://ifconfig.me/all.json", # Proxy-level if possible
+                        f"https://api.ipify.org?format=json"
+                    ]
+                    
+                    for api_url in check_apis:
+                        try:
+                            # v2.2.50: Using current IP as PX_IP was undefined
+                            r_test = requests.get(api_url, timeout=5)
+                            if r_test.status_code == 200:
+                                g_data = r_test.json()
+                                cc = g_data.get("countryCode") or g_data.get("country_code")
+                                if not cc and "country" in g_data: cc = g_data["country"]
+                                
+                                # Special case for ipify/ifconfig which might not return country directly
+                                if not cc:
+                                    # Use the IP from this API to do a split second lookup if we only got the IP
+                                    detected_ip = g_data.get("ip") or g_data.get("query")
+                                    if detected_ip:
+                                        # Quick secondary lookup for the detected IP
+                                        r_sub = requests.get(f"http://ip-api.com/json/{detected_ip}?fields=countryCode", timeout=3)
+                                        cc = r_sub.json().get("countryCode")
 
-                    print(f"    ⚠️ Proxy invalido o no es español ({e}). Rotando...")
-                    browser_manager.mark_current_proxy_bad()
-                    browser_manager.close() # CORRECT TEARDOWN
-                    rotation_count += 1
-                    time.sleep(0.5) # v2.2.48: Hyper-Rotation (from 2s to 0.5s)
-                    if stop_check and stop_check(): break
-                    continue # Try next rotation
+                                as_org = str(g_data.get("as", "")).lower()
+                                if "m247" in as_org or "romania" in as_org: cc = "RO_FAKE"
+                                
+                                if cc == "ES":
+                                    print(f"    ✅ FALLBACK ÉXITO ({api_url.split('/')[2]}): IP verificado como ES.")
+                                    check_ok = True
+                                    break
+                        except: continue
+                    
+                    if check_ok: continue
+
+                print(f"    ⚠️ Proxy invalido o no es español ({e}). Rotando...")
+                browser_manager.mark_current_proxy_bad()
+                browser_manager.close() # CORRECT TEARDOWN
+                rotation_count += 1
+                time.sleep(0.5) # v2.2.48: Hyper-Rotation (from 2s to 0.5s)
+                if stop_check and stop_check(): break
+                continue # Try next rotation
             
             if check_ok:
                 try:

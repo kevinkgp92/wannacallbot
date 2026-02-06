@@ -56,8 +56,54 @@ try:
 except Exception as e:
     _boot_log(f"Base path error: {e}")
 
+# --- STAGE 1: LIGHTWEIGHT BOOTSTRAP ---
+_boot_log("Starting Stage 1 Bootstrap...")
+
+import tkinter as tk
+from tkinter import ttk
+
+class BootstrapSplash:
+    def __init__(self):
+        self.root = tk.Tk()
+        self.root.overrideredirect(True)
+        self.root.configure(bg="#16161d")
+        
+        w, h = 400, 320
+        sw = self.root.winfo_screenwidth()
+        sh = self.root.winfo_screenheight()
+        x = (sw - w) // 2
+        y = (sh - h) // 2
+        self.root.geometry(f"{w}x{h}+{x}+{y}")
+        
+        # UI Elements
+        tk.Label(self.root, text="⚖️", font=("Arial", 60), fg="#ff4500", bg="#16161d").pack(pady=(40, 10))
+        tk.Label(self.root, text="WANNA CALL?", font=("Arial", 20, "bold"), fg="white", bg="#16161d").pack()
+        self.status = tk.Label(self.root, text="Iniciando Motores...", font=("Arial", 10), fg="gray", bg="#16161d")
+        self.status.pack(pady=10)
+        
+        self.progress = ttk.Progressbar(self.root, length=300, mode='determinate')
+        self.progress.pack(pady=10)
+        
+        # Version Tag
+        tk.Label(self.root, text="Titan Perfecta v2.2.50", font=("Arial", 8), fg="#333", bg="#16161d").pack(side="bottom", pady=5)
+        
+        self.root.update()
+
+    def update_status(self, text, progress):
+        self.status.config(text=text)
+        self.progress['value'] = progress
+        self.root.update()
+
+    def close(self):
+        self.root.destroy()
+
+# Show Bootstrap Splash immediately
+splash = BootstrapSplash()
+splash.update_status("Cargando entorno visual...", 20)
+
 _boot_log("Importing customtkinter...")
 import customtkinter as ctk
+splash.update_status("Cargando componentes de UI...", 40)
 _boot_log("customtkinter imported")
 
 _boot_log("Importing standard libs...")
@@ -67,19 +113,25 @@ import re
 import json
 from PIL import Image
 from tkinter import messagebox
+splash.update_status("Cargando librerías principales...", 60)
 _boot_log("Standard libs imported")
 
 _boot_log("Importing core modules...")
 try:
     from core.updater import AutoUpdater
+    splash.update_status("Sincronizando actualizador...", 70)
     _boot_log("AutoUpdater imported")
+    
     from core.proxy_scraper import scrape_proxies
+    splash.update_status("Cargando motor de proxies...", 80)
     _boot_log("proxy_scraper imported")
+    
     import core.utils
     _boot_log("core.utils imported")
 except Exception as e:
     _boot_log(f"Core import crash: {e}")
 
+splash.update_status("Iniciando Interfaz...", 95)
 _boot_log("Configuring CTK...")
 try:
     ctk.set_appearance_mode("Dark")
@@ -87,6 +139,10 @@ try:
     _boot_log("CTK configured")
 except Exception as e:
      _boot_log(f"CTK config crash: {e}")
+
+# DESTROY BOOTSTRAP BEFORE CTK START
+_boot_log("Bootstrap complete. Closing temporary splash.")
+splash.close()
 
 class TextRedirector(object):
     def __init__(self, widget, tag="stdout"):
@@ -177,7 +233,7 @@ class TextRedirector(object):
 class OsintGUI(ctk.CTk):
     def __init__(self):
         super().__init__()
-        self.version = "2.2.49"
+        self.version = "2.2.50"
         
         # NITRO: Init attributes BEFORE splash to avoid AttributeError
         self.updater_ready = False
@@ -190,9 +246,7 @@ class OsintGUI(ctk.CTk):
         self.update_queue = queue.Queue()
         
         _boot_log("OsintGUI.__init__ start")
-        # NITRO: Splash Screen Activation (v2.2.45)
-        self.show_splash() 
-        _boot_log("Splash showing...")
+        # self.show_splash() # REMOVED: Using BootstrapSplash now
         _boot_log(f"Version: {self.version}")
 
         # Setup Auto-Updater (Silent)

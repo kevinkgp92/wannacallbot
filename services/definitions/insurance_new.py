@@ -218,3 +218,27 @@ class AuraSegurosService(BaseService):
             self.log('Solicitud enviada', status='OK')
         except Exception as e:
             self.log(f'Error: {e}', status='ERROR')
+
+class PelayoService(BaseService):
+    def __init__(self, browser, user_data):
+        super().__init__(browser, user_data)
+        self.name = "Pelayo"
+        self.types = [ServiceType.CALL, ServiceType.NIGHT]
+        self.url = 'https://www.pelayo.com/'
+
+    def run(self):
+        try:
+            self.browser.set_page_load_timeout(30)
+            if not self.navigate(): return
+        except: return
+        
+        self.accept_cookies("//button[contains(text(), 'Aceptar') or contains(@id, 'onetrust-accept')]")
+        try:
+            # Pelayo usually has a 'Te llamamos' button or form in the header
+            self.click("//*[contains(text(), 'Te llamamos') or contains(@class, 'phone')]")
+            time.sleep(1)
+            self.fill("//input[contains(@name, 'phone') or @type='tel']", self.data['phone'])
+            self.click("//button[contains(text(), 'Llamadme') or contains(text(), 'Enviar')]")
+            self.log('Solicitud enviada', status='OK')
+        except Exception as e:
+            self.log(f'Error: {e}', status='ERROR')

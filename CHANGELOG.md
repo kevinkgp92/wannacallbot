@@ -1,5 +1,25 @@
 # ♈ WANNA CALL? - CHANGELOG
 
+## [v2.2.50] - Titan Perfecta v3 (2026-02-06)
+### 🇪🇸 ESPAÑOL
+- **🚀 BOOTSTRAP SPLASH**: Adiós al inicio silencioso. Ahora una ventana de carga instantánea aparece en el milisegundo 1 para informar del progreso de carga.
+- **💎 ELITE SOURCE INJECTION**: Integración de nuevas fuentes de proxies de alta fidelidad basadas en el repositorio de Rick Grimes.
+- **🛡️ GEO-RESILIENCE**: Implementado sistema de respaldo triple (ip-api + ifconfig + ipify) para evitar descartar proxies válidos por saturación de APIs.
+- **🔋 NEW SERVICES**: Añadidos servicios de callback para Verti Seguros, Sicor Alarmas, AutoSolar y RACE.
+- **🛠️ OSINT HOTFIX**: Corregido error de indentación y variable `px_ip` no definida en `core/osint.py` que causaba cierres inesperados.
+- **🧹 CODE CLEANUP**: Eliminado `megapack.py` tras consolidar y mejorar sus servicios en módulos especializados.
+- **⚡ ZERO-STUTTER v2**: Optimizada la gestión de hilos de la interfaz para una fluidez absoluta bajo carga máxima.
+
+### 🇺🇸 ENGLISH
+- **🚀 BOOTSTRAP SPLASH**: No more silent startup. An instant loading window now appears at millisecond 1 to provide visual feedback.
+- **💎 ELITE SOURCE INJECTION**: Integrated new high-fidelity proxy sources inspired by the Rick Grimes repository.
+- **🛡️ GEO-RESILIENCE**: Implemented triple fallback system (ip-api + ifconfig + ipify) to prevent discarding valid proxies due to API saturation.
+- **🔋 NEW SERVICES**: Added callback services for Verti Seguros, Sicor Alarmas, AutoSolar, and RACE.
+- **🛠️ OSINT HOTFIX**: Fixed IndentationError and undefined `px_ip` in `core/osint.py` that caused unexpected crashes.
+- **🧹 CODE CLEANUP**: Removed `megapack.py` after consolidating and improving its services into specialized modules.
+- **⚡ ZERO-STUTTER v2**: GUI thread management optimized for absolute smoothness under heavy load.
+
+
 ## [v2.2.49] - Titan Fix (2026-02-06)
 ### 🇪🇸 ESPAÑOL
 - **🛠️ CRITICAL SYNTAX REPAIR**: Eliminado el código huérfano en `core/browser.py` que provocaba el error `ModuleNotFoundError` en compilaciones anteriores.
