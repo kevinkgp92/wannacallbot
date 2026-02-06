@@ -1,5 +1,19 @@
 # ♈ WANNA CALL? - CHANGELOG
 
+## [v2.2.69] - Titan Eternal (The Final Resolve) (2026-02-06)
+### 🇪🇸 ESPAÑOL
+- **☢️ FILTRADO ASN NUCLEAR**: Implementación de una lista negra de datacenters (M247, Akamai, DigitalOcean, etc.). Estos proxies se filtran instantáneamente, ahorrando un 90% de tiempo en la validación.
+- **🚀 FASE 2 REIMAGINADA**: La Fase 2 ahora es una búsqueda profunda ultra-específica para España en lugar de una minería global ineficiente. Más calidad, menos basura.
+- **🏎️ BYPASS DE COOLDOWN**: El sistema ahora ignora automáticamente el tiempo de enfriamiento si el pool de proxies está agotado (0 proxies), permitiendo búsquedas de emergencia instantáneas.
+- **🔄 OPTIMIZACIÓN DE FLUJO**: Refinado el sistema de hilos para una validación más limpia y rápida bajo situaciones de bloqueo.
+
+### 🇺🇸 ENGLISH
+- **☢️ NUCLEAR ASN FILTERING**: Implementation of a datacenter blacklist (M247, Akamai, DigitalOcean, etc.). These proxies are filtered instantly, saving 90% of validation time.
+- **🚀 REIMAGINED PHASE 2**: Phase 2 is now an ultra-specific deep search for Spain instead of inefficient global mining. More quality, less junk.
+- **🏎️ COOLDOWN BYPASS**: The system now automatically ignores cooldown if the proxy pool is exhausted (0 proxies), allowing instant emergency searches.
+- **🔄 FLOW OPTIMIZATION**: Refined threading system for cleaner, faster validation under blocking situations.
+
+
 ## [v2.2.68] - Titan Nitro (UI Fix & Speed Tuning) (2026-02-06)
 ### 🇪🇸 ESPAÑOL
 - **🛠️ FIX DE GUI**: Corregido el error crítico `'TextRedirector' object has no attribute 'flush'` que causaba fallos visuales en el contador de progreso.

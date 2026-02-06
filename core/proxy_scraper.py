@@ -110,6 +110,20 @@ class ProxyScraper:
             "as213327"  # Digi Spain v3
         ]
         
+        # v2.2.69: TITAN ETERNAL - Nuclear Blacklist (Proxies de Datacenter/VPN)
+        # Estos ASNs se filtran instantáneamente para ahorrar tiempo y recursos.
+        self.nuclear_blacklist_asns = [
+            "as9009",   # M247 (Prohibido - Muy inestable)
+            "as16276",  # OVH
+            "as14061",  # DigitalOcean
+            "as16509",  # Amazon
+            "as15169",  # Google Cloud
+            "as20473",  # Akamai / The Constant Company
+            "as13335",  # Cloudflare
+            "as6441",   # M247 Ltd v2
+            "as54203"   # Datacenter genérico
+        ]
+
         self.residential_isps = [
             "movistar", "telefonica", "orange", "vodafone", "digi", 
             "masmovil", "yoigo", "jazztel", "euskaltel", "pepephone", 
@@ -260,10 +274,12 @@ class ProxyScraper:
         for p in clean_proxies:
             if p in self.session_blacklist: continue
             ip = p.split(':')[0]
+            
+            # v2.2.69: Pre-filtro redundante (Buscamos fallos conocidos en caché)
             cc = self.geo_cache.get(ip)
             if cc == country_code or cc == "GOLDEN":
                 valid_proxies.append(p)
-            elif cc in ["RO_FAKE", "FAIL", "BAD_DC"]:
+            elif cc in ["RO_FAKE", "FAIL", "BAD_DC", "NUCLEAR_BL"]:
                 self.session_blacklist.add(p)
             else:
                 uncached.append(p)
@@ -305,6 +321,14 @@ class ProxyScraper:
                             if res.get("status") == "success":
                                 as_org = res.get('as', '').lower()
                                 cc = res.get('countryCode')
+                                
+                                # v2.2.69: Filtrado Nuclear ASN
+                                is_nuclear = any(asn in as_org for asn in self.nuclear_blacklist_asns)
+                                if is_nuclear:
+                                    self.geo_cache[ip_key] = "NUCLEAR_BL"
+                                    self.session_blacklist.add(chunk[idx])
+                                    continue
+
                                 if any(asn in as_org for asn in self.residential_asns) and cc == country_code:
                                     self.geo_cache[ip_key] = "GOLDEN"
                                     res_matches.append(chunk[idx])
@@ -406,8 +430,9 @@ class ProxyScraper:
             if self.proxies and (time.time() - self.last_scrape_time) < 30:
                 return self.proxies
             
-            # v2.2.35: SOURCE COOLDOWN - Don't hammer remote sources if we did it recently
-            if (time.time() - self.last_full_scrape_time) < 60:
+            # v2.2.69: SMART COOLDOWN BYPASS - Si el pool está seco, forzamos escaneo
+            pool_dry = len(self.proxies) == 0
+            if (time.time() - self.last_full_scrape_time) < 60 and not pool_dry:
                 print(f"⚠️ FASE 1/2 OMITIDA: Escaneo masivo recientemente completado (Cooldown < 60s).")
                 return self.proxies
 
@@ -465,19 +490,14 @@ class ProxyScraper:
         # PHASE 2: TIER 2 (MASSIVE) - The Haynes Stack
         # =========================================================================
         
-        # If ES, use global sources. If Global, use global sources.
-        target_list = global_sources
-        
-        print(f"🚀 FASE 2: Minería Masiva Global (Esto puede tardar)...")
-        tier2_candidates = list(fetch_sources(target_list, "(Global)", stop_signal=stop_signal))
+        # v2.2.69: TITAN ETERNAL - Fase 2 Solo-España (Eliminada minería masiva global)
+        print(f"🚀 FASE 2: Búsqueda Profunda Intensiva (ES Only)...")
+        # Reuse targeted list but with different logic or more obscure sources?
+        # For now, let's just use the ES targeted list again as it has better quality
+        tier2_candidates = list(fetch_sources(es_sources, "(ES/Deep)", stop_signal=stop_signal))
         random.shuffle(tier2_candidates)
         
-        # v2.2.54: Massive Yield Scaling
-        if country == "ES" and len(tier2_candidates) > 10000:
-            print(f"  🌌 Quantum Yield: Truncando {len(tier2_candidates)} a 10000 candidatos masivos.")
-            tier2_candidates = tier2_candidates[:10000]
-        
-        print(f"  📥 Candidatos listos para caza God Mode.")
+        print(f"  📥 Candidatos listos para inspección final.")
         
         # If we are in "Global Mode", just verify and return a chunk
         if country != "ES": 
