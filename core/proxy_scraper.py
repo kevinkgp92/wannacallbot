@@ -96,7 +96,24 @@ class ProxyScraper:
         self.last_full_scrape_time = 0 # v2.2.35: Cooldown for source download
         self.scrape_lock = threading.Lock() # v2.2.35: Prevent parallel storm
         self.session_blacklist = set() # v2.2.44: Global session blacklist for RO_FAKE/M247
-        self.golden_cache_file = "core/golden_proxies.json"
+        # v2.2.57: Titan Zenith - Atomic ASN Whitelist (Unforgeable)
+        self.residential_asns = [
+            "as3352",   # Telefonica / Movistar
+            "as12430",  # Vodafone Spain
+            "as11831",  # Orange / MasMovil
+            "as6739",   # Orange Spain
+            "as15704",  # Digi Spain
+            "as13134",  # Jazztel
+            "as204229", # Avatel
+            "as30722"   # Vodafone Enabler
+        ]
+        
+        self.residential_isps = [
+            "movistar", "telefonica", "orange", "vodafone", "digi", 
+            "masmovil", "yoigo", "jazztel", "euskaltel", "pepephone", 
+            "adamo", "lowi", "simyo"
+        ]
+        
         self._load_cache()
 
     def _load_cache(self):
@@ -194,10 +211,11 @@ class ProxyScraper:
                             self.session_blacklist.add(chunk[idx])
                     return matches
                 elif r.status_code == 429:
-                    # v2.2.43: FAIL-SAFE GEO - Don't blacklist on rate limit
-                    print("  ⚠️ Geo-Check Rate Limited (429). Saltando lote para reintento.")
-                    time.sleep(2)
-                    return [] # Return empty match without fail status for cache
+                    # v2.2.56: ANTI-429 Omega Jitter
+                    wait_time = random.uniform(2.0, 5.0)
+                    print(f"  ⚠️ Geo-Check Rate Limited (429). Jitter activado: {wait_time:.1f}s...")
+                    time.sleep(wait_time)
+                    return [] 
             except Exception as e: 
                 print(f"  ⚠️ Geo-Check Error: {e}")
                 pass
@@ -222,7 +240,10 @@ class ProxyScraper:
                             cc = res.get('countryCode', 'XX')
                             as_org = str(res.get('as', '')).lower()
                             
-                            # v2.2.54: Heavy Anti-Datacenter Blacklist (ASNs & Names)
+                            # v2.2.57: Atomic ASN Check
+                            is_golden_asn = any(asn in as_org for asn in self.residential_asns)
+                            is_residential_name = any(x in as_org for x in self.residential_isps)
+                            
                             dc_keywords = [
                                 "m247", "romania", "datacenter", "hosting", "cloud", "digitalocean", "vultr", 
                                 "ovh", "hetzner", "linode", "aws", "amazon", "google", "azure", "microsoft",
@@ -232,20 +253,40 @@ class ProxyScraper:
                             if any(x in as_org for x in dc_keywords):
                                 cc = "RO_FAKE"
                                 self.session_blacklist.add(p)
-                            
+                            elif (is_golden_asn or is_residential_name) and cc == country_code:
+                                cc = "GOLDEN"
+
                             self.geo_cache[ip] = cc
-                            return p if cc == country_code else None
+                            return p if (cc == country_code or cc == "GOLDEN") else None
                         
-                    # Fallback to ipapi.co if ip-api is down but it's less reliable for ISP
-                    r2 = requests.get(f"https://ipapi.co/{ip}/json/", timeout=3)
+                    # v2.2.57: ZENITH TRIDENTE (Strategy B: ipapi.co)
+                    r2 = requests.get(f"https://ipapi.co/{ip}/json/", timeout=4)
                     if r2.status_code == 200:
                         res = r2.json()
                         cc = res.get("country_code", "XX")
+                        asn = str(res.get("asn", "")).lower()
                         org = str(res.get("org", "")).lower()
+                        
+                        is_golden = any(asn_id in asn or asn_id in org for asn_id in self.residential_asns)
+                        
                         if any(x in org for x in ["m247", "romania", "datacenter", "hosting"]):
                             cc = "RO_FAKE"
+                        elif is_golden and cc == country_code:
+                            cc = "GOLDEN"
+                            
                         self.geo_cache[ip] = cc
-                        return p if cc == country_code else None
+                        return p if (cc == country_code or cc == "GOLDEN") else None
+                    
+                    # v2.2.57: ZENITH TRIDENTE (Strategy C: findip.net)
+                    # Use findip.net as ultimate fallback
+                    r3 = requests.get(f"https://api.findip.net/{ip}/?token=free", timeout=4)
+                    if r3.status_code == 200:
+                         res = r3.json()
+                         cc = res.get("country", {}).get("iso_code", "XX")
+                         org = str(res.get("traits", {}).get("autonomous_system_organization", "")).lower()
+                         if cc == country_code:
+                             self.geo_cache[ip] = cc
+                             return p
                 except: pass
                 return None
 

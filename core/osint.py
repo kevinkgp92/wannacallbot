@@ -347,6 +347,7 @@ class OSINTManager:
         
         # UNIVERSAL JS INJECTOR: "Nuclear Spain Mode" (Optimized v2.2.29)
         def force_spain_universal(driver):
+            # v2.2.56: Titan Omega - Conditional Injection handled at call-site
             try:
                 # v2.2.29: Run only if we haven't injected recently or if needed
                 js_nuclear = """
@@ -398,7 +399,8 @@ class OSINTManager:
                     
                     if attempt > 0: print(f"🔄 Reintentando ({attempt+1}/{timeout_retries})...")
                     browser.get(url)
-                    force_spain_universal(browser)
+                    if browser_manager.proxy or browser_manager.auto_proxy:
+                        force_spain_universal(browser)
                     
                     # 2. Block Detection (Simple Title Check)
                     title = browser.title.lower()

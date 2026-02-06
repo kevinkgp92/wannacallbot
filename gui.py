@@ -85,7 +85,7 @@ class BootstrapSplash:
         self.progress.pack(pady=10)
         
         # Version Tag
-        tk.Label(self.root, text="Titan Perfecta v2.2.55", font=("Arial", 8), fg="#333", bg="#16161d").pack(side="bottom", pady=5)
+        tk.Label(self.root, text="Titan Zenith v2.2.57", font=("Arial", 8), fg="#333", bg="#16161d").pack(side="bottom", pady=5)
         
         self.root.update()
 
@@ -233,7 +233,7 @@ class TextRedirector(object):
 class OsintGUI(ctk.CTk):
     def __init__(self):
         super().__init__()
-        self.version = "2.2.55"
+        self.version = "2.2.57"
         
         # NITRO: Init attributes BEFORE splash to avoid AttributeError
         self.updater_ready = False
@@ -630,8 +630,8 @@ class OsintGUI(ctk.CTk):
         self.log_label.pack(side="left")
         
         self.btn_copy_logs = ctk.CTkButton(self.log_header, text="📋 COPIAR LOGS", width=120, height=24, 
-                                           fg_color="#34495e", hover_color="#2c3e50", font=ctk.CTkFont(size=10, weight="bold"),
-                                           command=self.copy_logs_to_clipboard)
+                                           fg_color="#2ecc71", hover_color="#27ae60", font=ctk.CTkFont(size=10, weight="bold"),
+                                           text_color="white", command=self.copy_logs_to_clipboard)
         self.btn_copy_logs.pack(side="right")
 
         self.log_box = ctk.CTkTextbox(self.log_frame, width=400, height=450, state="disabled", font=("Consolas", 12),

@@ -1,5 +1,33 @@
 # ♈ WANNA CALL? - CHANGELOG
 
+## [v2.2.57] - Titan Zenith (Zero-Fail Edition) (2026-02-06)
+### 🇪🇸 ESPAÑOL
+- **💎 FILTRADO ATÓMICO POR ASN**: Sistema de verificación por red (DNI de Internet) infalible. Solo se permiten ISPs españoles residenciales (Movistar, Vodafone, Orange, etc.).
+- **🔱 TRIDENTE GEO-IP**: Rotación automática entre 3 APIs de geolocalización (ip-api + ipapi.co + findip) para anular errores 429 y bloqueos.
+- **🚀 UHQ PROXY ENGINE v4**: Nuevas fuentes de proxies de ultra-nicho actualizadas a febrero de 2026.
+- **🛡️ ZERO-HOSTING POLICY**: Bloqueo absoluto de M247 y otros proveedores de centros de datos mediante ASN duro.
+
+### 🇺🇸 ENGLISH
+- **💎 ATOMIC ASN FILTERING**: Infallible network-based verification system. Only Spanish residential ISPs allowed (Movistar, Vodafone, Orange, etc.).
+- **🔱 GEO-IP TRIDENT**: Automatic rotation between 3 geolocation APIs (ip-api + ipapi.co + findip) to nullify 429 errors and blocks.
+- **🚀 UHQ PROXY ENGINE v4**: New ultra-niche proxy sources updated to February 2026.
+- **🛡️ ZERO-HOSTING POLICY**: Absolute blocking of M247 and other data center providers via hard ASN check.
+
+
+## [v2.2.56] - Titan Omega (The Unstoppable) (2026-02-06)
+### 🇪🇸 ESPAÑOL
+- **🏆 RESIDENTIAL WHITE-LIST**: Implementación de una lista blanca de ISPs españoles (Movistar, Orange, Vodafone, Digi, etc.). Los proxies residenciales ahora se marcan como "GOLDEN" y tienen prioridad.
+- **⚡ ANTI-429 OMEGA MOTOR**: Sistema de Jitter y reintentos inteligentes para evitar el bloqueo de las APIs de Geo-Check.
+- **🛡️ GEOLOCALIZACIÓN 100% CONDICIONAL**: Se ha eliminado toda inyección de localización española cuando el proxy está desactivado. Ahora es 100% transparente.
+- **🎨 UX PREMIMUM**: El botón "Copiar Logs" ahora es verde vibrante para una mejor visibilidad inmediata.
+
+### 🇺🇸 ENGLISH
+- **🏆 RESIDENTIAL WHITE-LIST**: Implementation of a Spanish ISP whitelist (Movistar, Orange, Vodafone, Digi, etc.). Residential proxies are now marked as "GOLDEN" and have priority.
+- **⚡ ANTI-429 OMEGA ENGINE**: Jitter system and smart retries to prevent Geo-Check API blocking.
+- **🛡️ 100% CONDITIONAL GEOLOCATION**: Removed all Spanish location injection when the proxy is disabled. It is now 100% transparent.
+- **🎨 PREMIUM UX**: The "Copy Logs" button is now vibrant green for better immediate visibility.
+
+
 ## [v2.2.55] - Titan Supreme (Final Boss Edition) (2026-02-06)
 ### 🇪🇸 ESPAÑOL
 - **📋 BOTÓN COPIAR LOGS**: Nueva utilidad en la interfaz para copiar el registro de operaciones al portapapeles con un clic.
