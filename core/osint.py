@@ -174,7 +174,7 @@ class OSINTManager:
 
     def lookup(self, browser_manager, phone_str, name_hint=None, progress_callback=None, stop_check=None):
         rotation_count = 0
-        max_rotations = 5
+        max_rotations = 15 # v2.2.79: Aumentado de 5 a 15 para máxima supervivencia
         
         # Helper for progress reporting
         def update_progress(current_step, total_steps, msg):
@@ -273,7 +273,10 @@ class OSINTManager:
 
         def _safe_get(url, timeout_retries=2):
             """Wraps browser.get to detect timeouts and rotate proxy if needed."""
+            # v2.2.79: Hardened nonlocal list to ensure absolute scope visibility
             nonlocal browser, circuit_breaker_tripped, rotation_count, max_rotations
+            # v2.2.79: Explicitly refer to the argument from parent scope
+            b_mgr = browser_manager 
             
             # STOP CHECK
             if stop_check and stop_check():
@@ -284,8 +287,8 @@ class OSINTManager:
             if circuit_breaker_tripped and "google.com" in url:
                 # v2.2.30: Instead of full abort, force a rotation and long sleep once
                 print(f"⚠️ PENALIZACIÓN ACTIVA: Rotando para saltar bloqueo en Google...")
-                browser_manager.rotate()
-                browser = browser_manager.get_driver()
+                    b_mgr.rotate()
+                    browser = b_mgr.get_driver()
                 time.sleep(5) # Penalty sleep
                 circuit_breaker_tripped = False # Reset for this specific attempt
 
@@ -296,7 +299,7 @@ class OSINTManager:
                     
                     if attempt > 0: print(f"🔄 Reintentando ({attempt+1}/{timeout_retries})...")
                     browser.get(url)
-                    if browser_manager.proxy or browser_manager.auto_proxy:
+                    if b_mgr.proxy or b_mgr.auto_proxy:
                         force_spain_universal(browser)
                     
                     # 2. Block Detection (Simple Title Check)
@@ -312,7 +315,7 @@ class OSINTManager:
                     if blocked:
                         print(f"⛔ BLOQUEO DETECTADO en {url[:30]}...")
                         # Mark BAD and Rotate
-                        browser_manager.mark_current_proxy_bad()
+                        b_mgr.mark_current_proxy_bad()
                         raise ConnectionError("Bloqueo Detectado")
                         
                     return True
@@ -327,10 +330,10 @@ class OSINTManager:
                     
                     # ROTATION LOGIC
                     try:
-                        browser_manager.close() # CORRECT TEARDOWN
+                        b_mgr.close() # CORRECT TEARDOWN
                     except: pass
                     
-                    browser_manager.mark_current_proxy_bad() # Burn bad proxy
+                    b_mgr.mark_current_proxy_bad() # Burn bad proxy
                     
                     if is_tunnel_fail:
                         print("🚨 ERROR DE TÚNEL DETECTADO: El proxy no permite conexiones SSL. Blacklisteado.")
@@ -345,9 +348,19 @@ class OSINTManager:
             
             print(f"❌ Error persistente en {url}. Saltando fuente.")
             if "google.com" in url:
-                print("🔥 CIRCUIT BREAKER ACTIVADO: Google está bloqueando agresivamente. Cancelando resto de Dorks.")
+                print("🔥 CIRCUIT BREAKER ACTIVADO: Google está bloqueando agresivamente. Intentando BING Fallback...")
                 circuit_breaker_tripped = True
             return False
+
+        def _safe_get_supreme(url, timeout_retries=2):
+            """v2.2.79: Supreme wrapper that handles Google-to-Bing transitions."""
+            if circuit_breaker_tripped and "google.com" in url:
+                # Automatic Pivot to Bing
+                bing_query = url.split("q=")[1].split("&")[0]
+                bing_url = f"https://www.bing.com/search?q={bing_query}&setlang=es"
+                print(f"🌍 MODO SUPREMO: Google bloqueado. Redirigiendo búsqueda a Bing...")
+                return _safe_get_supreme(bing_url, timeout_retries)
+            return _safe_get_supreme(url, timeout_retries)
 
         # TOTAL STEPS ESTIMATION: 18 phases
         total_steps = 18
@@ -438,7 +451,7 @@ class OSINTManager:
             return True
 
         def mine_snippets(source_name, query_str):
-            if not _safe_get(f"https://www.google.com/search?q={query_str}&gl=es&hl=es"): return
+            if not _safe_get_supreme(f"https://www.google.com/search?q={query_str}&gl=es&hl=es"): return
             try:
                 # DYNAMIC WAIT: Wait for 'search' ID or result class
                 try: 
@@ -448,13 +461,13 @@ class OSINTManager:
                 # GOD MODE: Expanded OR queries for maximum coverage
                 if source_name == "Listaspam":
                     # v2.2.36: Enriquecimiento con sitios de spam consolidados en España
-                    _safe_get(f"https://www.google.com/search?q={query_str}+OR+site:listaspam.com+OR+site:teledigo.com+OR+site:telefono-espia.com+OR+site:quienhallamado.es+OR+site:tellows.es&gl=es&hl=es")
+                    _safe_get_supreme(f"https://www.google.com/search?q={query_str}+OR+site:listaspam.com+OR+site:teledigo.com+OR+site:telefono-espia.com+OR+site:quienhallamado.es+OR+site:tellows.es&gl=es&hl=es")
                 elif source_name == "Official":
                     # v2.2.36: Fuentes corporativas reales (Infocif, Infoempresa)
-                    _safe_get(f"https://www.google.com/search?q={query_str}+site:infocif.es+OR+site:infoempresa.com+OR+site:boe.es+OR+site:einforma.com+OR+site:axesor.es&gl=es&hl=es")
+                    _safe_get_supreme(f"https://www.google.com/search?q={query_str}+site:infocif.es+OR+site:infoempresa.com+OR+site:boe.es+OR+site:einforma.com+OR+site:axesor.es&gl=es&hl=es")
                 elif source_name == "Professional":
                     # v2.2.36: Redes profesionales y dominios .es
-                    _safe_get(f"https://www.google.com/search?q={query_str}+site:linkedin.com/in+OR+site:infojobs.net+OR+site:facebook.com+OR+site:twitter.com+OR+site:instagram.com&gl=es&hl=es")
+                    _safe_get_supreme(f"https://www.google.com/search?q={query_str}+site:linkedin.com/in+OR+site:infojobs.net+OR+site:facebook.com+OR+site:twitter.com+OR+site:instagram.com&gl=es&hl=es")
                 
                 results = browser.find_elements(By.CSS_SELECTOR, "div.g, .v7W49e")
                 for res in results[:5]:
@@ -519,7 +532,7 @@ class OSINTManager:
             except: pass
 
         def mine_snippets_deep(source_name, query_str):
-            if not _safe_get(f"https://www.google.com/search?q={query_str}&gl=es&hl=es"): return
+            if not _safe_get_supreme(f"https://www.google.com/search?q={query_str}&gl=es&hl=es"): return
             try:
                 # DYNAMIC WAIT: Wait for 'search' ID or result class
                 try: 
@@ -562,7 +575,7 @@ class OSINTManager:
              print(f"[OSINT] MODO GUIADO: Verificando sospecha '{name_hint}'...")
              try:
                  # Check if Name + Phone appear together
-                 _safe_get(f"https://www.google.com/search?q=%22{name_hint}%22+%22{clean_phone}%22&gl=es&hl=es")
+                 _safe_get_supreme(f"https://www.google.com/search?q=%22{name_hint}%22+%22{clean_phone}%22&gl=es&hl=es")
                  time.sleep(2)
                  if "no se han encontrado" not in browser.page_source.lower():
                       # High confidence match
@@ -626,7 +639,7 @@ class OSINTManager:
                     # Use DuckDuckGo HTML version for speed/simplicity in browser
                     # JS version is cleaner: https://duckduckgo.com/?q=...
                     search_url = f"https://duckduckgo.com/?q={d}&kl=es-es"
-                    _safe_get(search_url)
+                    _safe_get_supreme(search_url)
                     
                     # DuckDuckGo Selectors (React/JS)
                     # Often: article h2 a, or [data-testid="result-title-a"]
@@ -689,7 +702,7 @@ class OSINTManager:
         # 4. Infocif (Commercial Lookup)
         try:
             print(f"[OSINT] Consultando Infocif...")
-            _safe_get(f"https://www.infocif.es/telefono/{clean_phone}")
+            _safe_get_supreme(f"https://www.infocif.es/telefono/{clean_phone}")
             # DYNAMIC WAIT: Wait for H1 title (Success) or Captcha or Error
             try: WebDriverWait(browser, 3).until(EC.presence_of_element_located((By.TAG_NAME, "h1")))
             except: time.sleep(1) # Fallback
@@ -730,7 +743,7 @@ class OSINTManager:
             for wurl in wa_urls:
                 try:
                     # Quick check for WA existence (Quantum resilient detection)
-                    _safe_get(wurl, timeout_retries=0) 
+                    _safe_get_supreme(wurl, timeout_retries=0) 
                     time.sleep(3)
                     
                     page_text = browser.page_source.lower()
@@ -764,7 +777,7 @@ class OSINTManager:
         # 7b. Google Maps Business Check (Freelancers/Companies) - REMASTERED
         try:
             print(f"[OSINT] Rastreando Google Maps (Negocios)...")
-            _safe_get(f"https://www.google.com/maps/search/{clean_phone}")
+            _safe_get_supreme(f"https://www.google.com/maps/search/{clean_phone}")
             time.sleep(3)
             
             # CONSENT HANDLING: Click "Aceptar todo" / "Accept all" if present
@@ -853,7 +866,7 @@ class OSINTManager:
         # 10b. Direct Caller ID Sites (UnknownPhone / SpamCalls)
         try:
             print(f"[OSINT] Consultando Bases de Spam (UnknownPhone)...")
-            _safe_get(f"https://www.unknownphone.com/phone/{clean_phone}")
+            _safe_get_supreme(f"https://www.unknownphone.com/phone/{clean_phone}")
             time.sleep(3)
             # Look for h1 or specific result box
             try:
@@ -940,7 +953,7 @@ class OSINTManager:
                     if any(p['name'] in acc for acc in report.get('accounts', [])): continue
                         
                     is_hit = False
-                    _safe_get(p['url'])
+                    _safe_get_supreme(p['url'])
                     
                     
                     # TIMEOUT ENFORCER: Max 12s per platform
@@ -1107,7 +1120,7 @@ class OSINTManager:
         try:
             print(f"[OSINT] Consultando Páginas Blancas (Infobel)...")
             # Infobel reverse search
-            _safe_get(f"https://www.infobel.com/es/spain/Inverse?q={clean_phone}")
+            _safe_get_supreme(f"https://www.infobel.com/es/spain/Inverse?q={clean_phone}")
             time.sleep(3)
             self._wait_for_captcha(browser, "Páginas Blancas")
             try:
@@ -1134,7 +1147,7 @@ class OSINTManager:
             
             # Step 9 logic (Restored and Improved)
             search_query = f"\"{f1}\" OR \"{f2}\" OR \"{f3}\" OR \"{f4}\""
-            _safe_get(f"https://www.google.com/search?q={search_query}")
+            _safe_get_supreme(f"https://www.google.com/search?q={search_query}")
             time.sleep(2.5)
             
             snippets = browser.find_elements(By.CSS_SELECTOR, "div.g, .VwiC3b")
@@ -1298,12 +1311,12 @@ class OSINTManager:
                     print(f"  🔍 Comprobando {p['name']}...")
                     
                     if "check_type" in p and p['check_type'] == 'meta_dork':
-                        _safe_get(f"https://www.google.com/search?q={p['dork'].format(phone=clean_phone)}")
+                        _safe_get_supreme(f"https://www.google.com/search?q={p['dork'].format(phone=clean_phone)}")
                         time.sleep(2)
                         if clean_phone in browser.page_source:
                             is_hit = True
                     else:
-                        if not _safe_get(p['url']):
+                        if not _safe_get_supreme(p['url']):
                             print(f"  ❌ {p['name']}: Saltado por error de conexión.")
                             continue
                         time.sleep(1) # Optimized from 3s to 1s
@@ -1474,7 +1487,7 @@ class OSINTManager:
             print(f"[OSINT] Consultando PeepLookup...")
             from core.utils import set_low_priority
             set_low_priority() # Ensure we are cool
-            _safe_get(f"https://peeplookup.com/reverse-phone-lookup?phone={clean_phone}")
+            _safe_get_supreme(f"https://peeplookup.com/reverse-phone-lookup?phone={clean_phone}")
             time.sleep(6) # Increased for v2.2.26
             try:
                 # Name is usually in a h2 or specific class
@@ -1488,9 +1501,9 @@ class OSINTManager:
         # 14b. SKYPE SCRAPER (Reveals Name / Bio / Email Hint) - NEW
         try:
             print(f"[OSINT] Consultando Skype (Directorio Público)...")
-            _safe_get(f"https://www.skyplogin.com/search/{clean_phone}") # Using a public directory mirror or dork
+            _safe_get_supreme(f"https://www.skyplogin.com/search/{clean_phone}") # Using a public directory mirror or dork
             # Since direct Skype search is behind auth, we use a dork strategy for Skype bios
-            _safe_get(f"https://www.google.com/search?q=site:skype.com+%22{clean_phone}%22")
+            _safe_get_supreme(f"https://www.google.com/search?q=site:skype.com+%22{clean_phone}%22")
             time.sleep(2)
             results = browser.find_elements(By.CSS_SELECTOR, "h3")
             for res in results[:2]:
@@ -1514,7 +1527,7 @@ class OSINTManager:
                     f"site:open.spotify.com/playlist \"{clean_phone}\""
                 ]
                 for q in queries:
-                    _safe_get(f"https://www.google.com/search?q={q}")
+                    _safe_get_supreme(f"https://www.google.com/search?q={q}")
                     time.sleep(2)
                     results = browser.find_elements(By.CSS_SELECTOR, "h3")
                     for res in results[:2]:
@@ -1535,7 +1548,7 @@ class OSINTManager:
             if plat in report.get("accounts", []) or plat == "LinkedIn": # LinkedIn is high value, scan anyway
                 try:
                     print(f"[OSINT] Buscando perfil público en {plat}...")
-                    _safe_get(f"https://www.google.com/search?q={site} \"{clean_phone}\"")
+                    _safe_get_supreme(f"https://www.google.com/search?q={site} \"{clean_phone}\"")
                     time.sleep(2.5)
                     results = browser.find_elements(By.CSS_SELECTOR, "h3")
                     for res in results[:2]:
@@ -1569,7 +1582,7 @@ class OSINTManager:
                     }
                     dork = f"{site_map[plat]} \"{clean_phone}\" OR \"{clean_phone[0:3]} {clean_phone[3:6]} {clean_phone[6:9]}\""
                     
-                    if not _safe_get(f"https://www.google.com/search?q={dork}"):
+                    if not _safe_get_supreme(f"https://www.google.com/search?q={dork}"):
                         google_fail_count += 1
                         continue
                     google_fail_count = 0 
@@ -1606,7 +1619,7 @@ class OSINTManager:
             print(f"[OSINT] checkeando resolución de Telegram (t.me)...")
             # Telegram 'add contact' link: t.me/+34666111222
             tgt_url = f"https://t.me/+34{clean_phone}"
-            _safe_get(tgt_url)
+            _safe_get_supreme(tgt_url)
             time.sleep(3)
             
             # Check for redirection or specific button text
@@ -1669,7 +1682,7 @@ class OSINTManager:
                     
                     target_url = url_temp.format(nick)
                     try:
-                        _safe_get(target_url)
+                        _safe_get_supreme(target_url)
                         time.sleep(2)
                         # Check validity
                         # Revolut: "Send money to..."
@@ -1732,7 +1745,7 @@ class OSINTManager:
                      print("  ⚠️ Demasiados bloqueos en Google (Circuit Breaker). Saltando Leak Sniper.")
                      break
                 try:
-                    if not _safe_get(f"https://www.google.com/search?q={ld}"):
+                    if not _safe_get_supreme(f"https://www.google.com/search?q={ld}"):
                         google_fail_count += 1
                         continue
                     google_fail_count = 0 
@@ -1782,7 +1795,7 @@ class OSINTManager:
                 for site in sherlock_sites:
                     try:
                         target = site['url'].format(nick)
-                        _safe_get(target)
+                        _safe_get_supreme(target)
                         time.sleep(1.5)
                         
                         title = browser.title.lower()
@@ -1806,7 +1819,7 @@ class OSINTManager:
             
             # Google Recovery Probe
             try:
-                _safe_get("https://accounts.google.com/signin/v2/usernamerecovery")
+                _safe_get_supreme("https://accounts.google.com/signin/v2/usernamerecovery")
                 time.sleep(2)
                 # This flow is hard to automate blindly due to dynamic flows, but we check if the phone is registered
                 # For safety, we skip the actual interaction in this PoC to avoid CAPTCHA blocks on the user's IP,
@@ -1821,7 +1834,7 @@ class OSINTManager:
         try:
             print(f"[OSINT] 🗺️ STALKER: Buscando reseñas y movimientos físicos (Maps)...")
             maps_dork = f"site:google.com/maps/contrib/ \"{name_hint if name_hint else clean_phone}\""
-            _safe_get(f"https://www.google.com/search?q={maps_dork}")
+            _safe_get_supreme(f"https://www.google.com/search?q={maps_dork}")
             time.sleep(2.5)
             
             results = browser.find_elements(By.CSS_SELECTOR, "h3")

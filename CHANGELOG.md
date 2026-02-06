@@ -1,15 +1,15 @@
 # ♈ WANNA CALL? - CHANGELOG
 
-## [v2.2.78] - Titan Apex Finality (Hotfix Crítico) (2026-02-07)
+## [v2.2.79] - Titan Apex Saul Supreme (2026-02-07)
 ### 🇪🇸 ESPAÑOL
-- **🔧 HOTFIX DE CÓDIGO**: Corregido el `NameError` que causaba el cierre inesperado del bot al rotar proxies. Estabilidad de lógica restaurada al 100%.
-- **🛡️ ESCUDO DE TÚNEL SSL**: Detección inteligente de fallos de túnel (`ERR_TUNNEL_CONNECTION_FAILED`). El bot ahora identifica y blackliste those proxies al instante sin perder tiempo en reintentos inútiles.
-- **🚀 FLUJO DE ROTACIÓN OPTIMIZADO**: Sincronización mejorada entre el gestor del navegador y el motor OSINT.
+- **🌍 MOTOR SUPREMO (BING FALLBACK)**: Si Google bloquea agresivamente, el bot conmuta automáticamente a Bing para no detener la búsqueda. Supervivencia garantizada.
+- **🛡️ BLINDAJE DE ALCANCE (SCOPE HARDENING)**: Corregido el error técnico que impedía la rotación infinita en ciertos entornos. Estabilidad total de variables.
+- **⏳ AMNISTÍA 15**: Aumentado el límite de rotaciones a 15 para dar más oportunidades a proxies gratuitos en búsquedas profundas.
 
 ### 🇺🇸 ENGLISH
-- **🔧 CODE HOTFIX**: Fixed `NameError` that caused unexpected bot crashes during proxy rotation. 100% logic stability restored.
-- **🛡️ SSL TUNNEL SHIELD**: Intelligent detection of tunnel failures (`ERR_TUNNEL_CONNECTION_FAILED`). The bot now identifies and blacklists those proxies instantly without wasting time on useless retries.
-- **🚀 OPTIMIZED ROTATION FLOW**: Improved synchronization between browser manager and OSINT engine.
+- **🌍 SUPREME ENGINE (BING FALLBACK)**: If Google blocks aggressively, the bot automatically switches to Bing to keep the search going. Guaranteed survival.
+- **🛡️ SCOPE HARDENING**: Fixed the technical error that prevented infinite rotation in certain environments. Total variable stability.
+- **⏳ AMNESTY 15**: Increased rotation limit to 15 to give free proxies more chances during deep searches.
 
 
 ## [v2.2.77] - Titan Apex Reality (Flujo Absoluto) (2026-02-07)
