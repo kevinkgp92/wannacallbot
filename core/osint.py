@@ -197,33 +197,29 @@ class OSINTManager:
             else:
                 print("[OSINT] 🛡️ Verificando IP y Localización antes de iniciar...")
                 try:
-                    browser.get("https://ipv4.icanhazip.com")
-                    my_ip = browser.find_element(By.TAG_NAME, "body").text.strip()
+                    # v2.2.40: Unified Hardened Check (Sync with Scraper)
+                    browser.get("http://ip-api.com/json/?fields=status,countryCode,as,query")
+                    import json
+                    text_data = browser.find_element(By.TAG_NAME, "body").text
+                    geo_data = json.loads(text_data)
                     
-                    # Fallback API strategy
-                    geo_data = {}
-                    try:
-                        browser.get("http://ip-api.com/json")
-                        import json
-                        geo_data = json.loads(browser.find_element(By.TAG_NAME, "body").text)
-                    except:
-                        # API Limit/Fail -> Try Backup
-                        try:
-                            browser.get("https://ipapi.co/json/")
-                            geo_data = json.loads(browser.find_element(By.TAG_NAME, "body").text)
-                        except: pass
+                    if geo_data.get("status") == "success":
+                        cc = geo_data.get("countryCode", "Unknown")
+                        as_org = geo_data.get("as", "").lower()
+                        my_ip = geo_data.get("query", "Unknown")
+                        
+                        # Hosting Guard (M247/Romania segments)
+                        if "m247" in as_org or "romania" in as_org:
+                             cc = "RO_FAKE"
+                    else:
+                        raise ConnectionError("Geo-Check Locked/Failed")
 
-                    cc = geo_data.get("countryCode", "Unknown")
-                    if "country_code" in geo_data: cc = geo_data["country_code"] 
-                    country_name = geo_data.get("country", "Unknown")
-                    if "country_name" in geo_data: country_name = geo_data["country_name"]
-                    
-                    print(f"    🌍 IP ACTUAL: {my_ip} | PAÍS DETECTADO: {country_name} ({cc})")
+                    print(f"    🌍 IP ACTUAL: {my_ip} | PAÍS DETECTADO: {cc}")
                     
                     # STRICT GEO-GUARD: KILL SWITCH
-                    if cc != "ES" and country_name.lower() not in ["spain", "españa"]:
-                        print(f"    ⛔ GEO-BLOCK: IP rechazada ({cc}). Solo se permite ESPAÑA.")
-                        raise ConnectionError(f"Proxy Non-ES: {cc}")
+                    if cc != "ES":
+                        print(f"    ⛔ GEO-BLOCK: IP rechazada ({cc}). Solo se permite ESPAÑA Real.")
+                        raise ConnectionError(f"Proxy Non-ES/Hosting: {cc}")
                     
                     # Cache the success
                     self.last_verified_ip = my_ip
@@ -235,6 +231,7 @@ class OSINTManager:
                     browser_manager.mark_current_proxy_bad()
                     browser_manager.close() # CORRECT TEARDOWN
                     rotation_count += 1
+                    time.sleep(2) # v2.2.40: Rotation Pulse to stabilize GUI
                     continue # Try next rotation
             
             if check_ok:

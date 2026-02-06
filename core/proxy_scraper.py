@@ -463,19 +463,34 @@ class ProxyScraper:
                 
                 # OPTIONAL: Strict Country Check (Geo-Guard)
                 if check_country:
-                    try:
-                        # query ip-api for country code
-                        geo = requests.get(f"http://ip-api.com/json/{r.text.strip()}?fields=countryCode", timeout=5).json()
-                        real_cc = geo.get("countryCode", "XX").upper()
-                        
-                        if real_cc != check_country.upper():
-                            print(f"  ⚠️ Proxy funcional pero país incorrecto ({real_cc} != {check_country}). Rechazado.")
+                    ip = r.text.strip()
+                    # v2.2.40: Unified Cache Lookup with Hardened Fields
+                    if ip in self.geo_cache:
+                        real_cc = self.geo_cache[ip]
+                        print(f"  🌍 Geo-Guard (Cache): IP confirmada en {real_cc}.")
+                    else:
+                        try:
+                            # query ip-api for country code - v2.2.40: Hardened Detection
+                            geo = requests.get(f"http://ip-api.com/json/{ip}?fields=status,countryCode,as", timeout=5).json()
+                            if geo.get("status") == "success":
+                                real_cc = geo.get("countryCode", "XX").upper()
+                                as_org = geo.get("as", "").lower()
+                                
+                                # Reject M247 / ROMANIA hosting even if marked as ES
+                                if "m247" in as_org or "romania" in as_org:
+                                    real_cc = "RO_FAKE"
+
+                                self.geo_cache[ip] = real_cc 
+                            else:
+                                raise ConnectionError("API Fail Status")
+                        except Exception as e: 
+                            print(f"  ⚠️ Geo-Guard Falló (Error): {e} -> RECHAZADO.")
                             return False
-                        print(f"  🌍 Geo-Guard: Proxy confirmado en {real_cc}.")
-                    except Exception as e: 
-                        # STRICT MODE: If we can't verify country, we assume it's NOT Spain.
-                        print(f"  ⚠️ Geo-Guard Falló (Timeout/Error): {e} -> RECHAZADO por seguridad.")
+                        
+                    if real_cc != check_country.upper():
+                        print(f"  ⚠️ Proxy funcional pero país incorrecto ({real_cc} != {check_country}). Rechazado.")
                         return False
+                    print(f"  🌍 Geo-Guard: Proxy confirmado en {real_cc}.")
 
                 # Second check: Google connectivity (Strict check for OSINT)
                 start_google = time.time()
@@ -505,14 +520,19 @@ class ProxyScraper:
             if stop_signal and stop_signal(): return None
             
             proxy = self.get_random_proxy()
-            if not proxy: break
+            if not proxy: 
+                # v2.2.40: ABSOLUTE COOLDOWN
+                print("  ⏳ Pool de proxies agotado. Esperando enfriamiento (10s) para evitar bucle...")
+                time.sleep(10) # 10s cooling to prevent high CPU loop
+                self.scrape(country="ES" if prefer_es else None, stop_signal=stop_signal)
+                if not self.proxies: break 
+                proxy = self.get_random_proxy()
             
             if self.verify_proxy(proxy, check_country=check_country):
                 return proxy
             
             # Remove bad proxy
-            if proxy in self.proxies:
-                self.proxies.remove(proxy)
+            self.blacklist_proxy(proxy)
             attempts += 1
             
         return None

@@ -164,8 +164,14 @@ class TextRedirector(object):
             self.widget.configure(state="disabled")
             
             # Continue polling if there's more
-            if not self.msg_queue.empty():
-                self.widget.after(30, self._process_batch)
+            # v2.2.40: DYNAMIC LOG GOVERNOR
+            if self._is_polling:
+                q_size = self.msg_queue.qsize()
+                pulse = 30
+                if q_size > 500: pulse = 200 # Heavy burst: 200ms
+                elif q_size > 100: pulse = 100 # Med burst: 100ms
+                
+                self.widget.after(pulse, self._process_batch)
             else:
                 self._is_polling = False
         except:
@@ -174,6 +180,7 @@ class TextRedirector(object):
 class OsintGUI(ctk.CTk):
     def __init__(self):
         super().__init__()
+        self.version = "2.2.40"
         
         # NITRO: Init attributes BEFORE splash to avoid AttributeError
         self.updater_ready = False
