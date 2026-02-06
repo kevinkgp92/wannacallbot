@@ -1,5 +1,19 @@
 # ♈ WANNA CALL? - CHANGELOG
 
+## [v2.2.61] - Titan Finality (The Last Stand Edition) (2026-02-06)
+### 🇪🇸 ESPAÑOL
+- **🛰️ RADAR DE SUPERVIVENCIA**: Inclusión de fuentes ultra-nicho de España para combatir la escasez crítica de proxies residenciales.
+- **🔄 TRIDENTE GEO-IP ROTATIVO**: Nuevo sistema de rotación automática entre APIs de Geo-IP (ip-api, ipwhois) para evitar bloqueos por error 429.
+- **🛡️ BLOQUEO NUCLEAR ASN v2**: Refuerzo total contra hostings detectados (AS9009, M247) sincronizado en el scraper y el motor OSINT.
+- **⚠️ POLÍTICA DE RESILENCIA**: Ajuste del Jitter y tiempos de espera para garantizar el filtrado incluso bajo presión de las APIs.
+
+### 🇺🇸 ENGLISH
+- **🛰️ SURVIVAL RADAR**: Inclusion of ultra-niche Spanish sources to combat the critical shortage of residential proxies.
+- **🔄 ROTATING GEO-IP TRIDENT**: New automatic rotation system between Geo-IP APIs (ip-api, ipwhois) to avoid error 429 blocks.
+- **🛡️ NUCLEAR ASN BLOCK v2**: Total reinforcement against detected hostings (AS9009, M247) synchronized in the scraper and OSINT engine.
+- **⚠️ RESILIENCE POLICY**: Jitter and timeout adjustments to ensure filtering even under API pressure.
+
+
 ## [v2.2.60] - Titan Ultimatum (Absolute Zero Edition) (2026-02-06)
 ### 🇪🇸 ESPAÑOL
 - **🔥 CORRECCIÓN CRÍTICA DE CACHÉ**: Reparado el bug que ignoraba proxies residenciales guardados. Ahora el bot "recuerda" y prioriza las IPs GOLDEN correctamente.

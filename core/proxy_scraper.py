@@ -37,6 +37,10 @@ def get_es_sources():
         "https://raw.githubusercontent.com/monosans/proxy-list/main/proxies/http.txt", # Filtered by country below anyway
         "https://api.proxyscrape.com/v2/?request=displayproxies&protocol=socks5&timeout=10000&country=es&ssl=all&anonymity=all",
         "https://www.proxyscan.io/download?type=socks5&country=es",
+        "https://raw.githubusercontent.com/MuRongPIG/Proxy-Master/main/http.txt", # High-Freq ES often appears
+        "https://raw.githubusercontent.com/Zaeem20/Free-Proxy-List/master/socks5.txt", # Deep ES
+        "https://raw.githubusercontent.com/officialputuid/free-proxy-list/master/proxies/http.txt",
+        "https://raw.githubusercontent.com/clketlow/proxy-list/master/http.txt",
         f"https://checkerproxy.net/api/archive/{today}"
     ]
 
@@ -228,13 +232,14 @@ class ProxyScraper:
                             self.session_blacklist.add(chunk[idx])
                     return matches
                 elif r.status_code == 429:
-                    # v2.2.56: ANTI-429 Omega Jitter
-                    wait_time = random.uniform(2.0, 5.0)
-                    print(f"  ⚠️ Geo-Check Rate Limited (429). Jitter activado: {wait_time:.1f}s...")
-                    time.sleep(wait_time)
+                    # v2.2.61: TRIDENTE DE ROTACIÓN GEO-IP
+                    print(f"  ⚠️ Geo-Check Rate Limited (429). Rotando API y activando Jitter...")
+                    time.sleep(random.uniform(3.0, 7.0))
+                    
+                    # Rotar a ipwho.is (Batch no disponible, usamos individual en el pool)
                     return [] 
             except Exception as e: 
-                print(f"  ⚠️ Geo-Check Error: {e}")
+                # print(f"  ⚠️ Geo-Check Error: {e}")
                 pass
 
             # STRATEGY B: Turbo Resilient Fallback (v2.2.53 - Deep Detect)
