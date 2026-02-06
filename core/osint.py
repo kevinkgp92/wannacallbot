@@ -220,8 +220,8 @@ class OSINTManager:
             if check_ok:
                 try:
                     # Execute the actual OSINT logic
-                    # v2.2.35: Moving the bulk logic into a sub-execution block
-                    return self._do_lookup_logic(browser, phone_str, name_hint, update_progress, stop_check)
+                    # v2.2.78: Pass browser_manager to sub-logic to avoid NameError
+                    return self._do_lookup_logic(browser, browser_manager, phone_str, name_hint, update_progress, stop_check, rotation_count, max_rotations)
                 except InterruptedError:
                     print("🛑 DETENCIÓN INMEDIATA: Abortando hilos OSINT.")
                     break
@@ -236,7 +236,7 @@ class OSINTManager:
             print("🚫 LÍMITE DE ROTACIÓN ALCANZADO: El sistema no encuentra proxys ES estables. Abortando búsqueda.")
         return None
 
-    def _do_lookup_logic(self, browser, phone_str, name_hint, update_progress, stop_check):
+    def _do_lookup_logic(self, browser, browser_manager, phone_str, name_hint, update_progress, stop_check, rotation_count, max_rotations):
         # GLOBAL TIMEOUT & CIRCUIT BREAKER
         circuit_breaker_tripped = False
         browser.set_page_load_timeout(35) # v2.2.37: Boosted from 20s to 35s for Quantum OSINT
@@ -273,7 +273,7 @@ class OSINTManager:
 
         def _safe_get(url, timeout_retries=2):
             """Wraps browser.get to detect timeouts and rotate proxy if needed."""
-            nonlocal browser, circuit_breaker_tripped
+            nonlocal browser, circuit_breaker_tripped, rotation_count, max_rotations
             
             # STOP CHECK
             if stop_check and stop_check():
@@ -320,6 +320,10 @@ class OSINTManager:
                     if isinstance(e, InterruptedError) or (stop_check and stop_check()): raise e
                     
                     print(f"⚠️ Error de conexión ({e}). Rotando proxy ({attempt+1}/{timeout_retries})...")
+                
+                    # 3. TUNNEL ERROR DETECTION (v2.2.78)
+                    err_msg = str(e).upper()
+                    is_tunnel_fail = "ERR_TUNNEL_CONNECTION_FAILED" in err_msg or "ERR_PROXY_CONNECTION_FAILED" in err_msg
                     
                     # ROTATION LOGIC
                     try:
@@ -327,6 +331,9 @@ class OSINTManager:
                     except: pass
                     
                     browser_manager.mark_current_proxy_bad() # Burn bad proxy
+                    
+                    if is_tunnel_fail:
+                        print("🚨 ERROR DE TÚNEL DETECTADO: El proxy no permite conexiones SSL. Blacklisteado.")
                     
                     print("🔄 SISTEMA: Rotando proxy por bloqueo/bajo rendimiento...")
                     rotation_count += 1

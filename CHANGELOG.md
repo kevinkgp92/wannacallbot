@@ -1,15 +1,27 @@
 # ♈ WANNA CALL? - CHANGELOG
 
+## [v2.2.78] - Titan Apex Finality (Hotfix Crítico) (2026-02-07)
+### 🇪🇸 ESPAÑOL
+- **🔧 HOTFIX DE CÓDIGO**: Corregido el `NameError` que causaba el cierre inesperado del bot al rotar proxies. Estabilidad de lógica restaurada al 100%.
+- **🛡️ ESCUDO DE TÚNEL SSL**: Detección inteligente de fallos de túnel (`ERR_TUNNEL_CONNECTION_FAILED`). El bot ahora identifica y blackliste those proxies al instante sin perder tiempo en reintentos inútiles.
+- **🚀 FLUJO DE ROTACIÓN OPTIMIZADO**: Sincronización mejorada entre el gestor del navegador y el motor OSINT.
+
+### 🇺🇸 ENGLISH
+- **🔧 CODE HOTFIX**: Fixed `NameError` that caused unexpected bot crashes during proxy rotation. 100% logic stability restored.
+- **🛡️ SSL TUNNEL SHIELD**: Intelligent detection of tunnel failures (`ERR_TUNNEL_CONNECTION_FAILED`). The bot now identifies and blacklists those proxies instantly without wasting time on useless retries.
+- **🚀 OPTIMIZED ROTATION FLOW**: Improved synchronization between browser manager and OSINT engine.
+
+
 ## [v2.2.77] - Titan Apex Reality (Flujo Absoluto) (2026-02-07)
 ### 🇪🇸 ESPAÑOL
 - **🏎️ BYPASS DE VERIFICACIÓN**: El Scraper ya no re-verifica los proxies que él mismo acaba de validar. Entrega inmediata FIFO para evitar falsos negativos post-scrape.
 - **⏳ ESPERAS GRATUITAS**: La espera por sincronización de proxy en el OSINT ya no penaliza el contador de rotaciones. El sistema puede esperar indefinidamente a que el proxy enganche sin abortar la búsqueda.
-- **�️ CONFIANZA UNIFICADA**: Sincronización total entre los módulos de red para asegurar que el primer proxy funcional sea usado al instante.
+- **️ CONFIANZA UNIFICADA**: Sincronización total entre los módulos de red para asegurar que el primer proxy funcional sea usado al instante.
 
 ### 🇺🇸 ENGLISH
 - **🏎️ VERIFICATION BYPASS**: Scraper no longer re-verifies proxies it just validated. Immediate FIFO delivery to avoid post-scrape false negatives.
 - **⏳ FREE WAITING**: Waiting for proxy synchronization in OSINT no longer penalizes the rotation counter. The system can wait indefinitely for the proxy to hook without aborting the search.
-- **�️ UNIFIED TRUST**: Total synchronization between network modules to ensure the first functional proxy is used instantly.
+- **️ UNIFIED TRUST**: Total synchronization between network modules to ensure the first functional proxy is used instantly.
 
 
 ## [v2.2.74] - Titan Apex Ultimate (Amnistía Golden) (2026-02-06)
