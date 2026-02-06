@@ -1,5 +1,19 @@
 # ♈ WANNA CALL? - CHANGELOG
 
+## [v2.2.54] - Titan God Mode (2026-02-06)
+### 🇪🇸 ESPAÑOL
+- **🚀 TITAN GOD MODE PROXYING**: Sistema de adquisición de proxies de grado militar con validación de dominio residencial `.es` (Marca.com/Google.es).
+- **🛡️ ZERO-FAIL VALIDATION**: Motor de verificación blindado contra el bloqueo sistémico de Datacenters.
+- **🔄 SMART ROTATION**: El sistema ahora detecta anomalías de red y purga la caché automáticamente para garantizar aire fresco residencial.
+- **⚡ ULTRA-LOW LATENCY**: Nuevo filtro de latencia extrema (< 2.0s) para asegurar una experiencia OSINT instantánea.
+
+### 🇺🇸 ENGLISH
+- **🚀 TITAN GOD MODE PROXYING**: Military-grade proxy acquisition system with residential `.es` domain validation (Marca.com/Google.es).
+- **🛡️ ZERO-FAIL VALIDATION**: Verification engine hardened against systemic Datacenter blocking.
+- **🔄 SMART ROTATION**: The system now detects network anomalies and automatically purges the cache to ensure fresh residential IPs.
+- **⚡ ULTRA-LOW LATENCY**: New extreme latency filter (< 2.0s) to ensure an instant OSINT experience.
+
+
 ## [v2.2.53] - Titan Supreme UHQ (2026-02-06)
 ### 🇪🇸 ESPAÑOL
 - **🚀 SUPREME PROXY ENGINE**: Rediseñado el motor de búsqueda de proxies para priorizar IPs residenciales españolas de alta calidad (UHQ).

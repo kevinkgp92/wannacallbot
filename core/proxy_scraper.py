@@ -22,27 +22,29 @@ global_sources = [
     "https://www.proxyscan.io/download?type=http"
 ]
 
-# v2.2.47: Titan Gold Harvest - Dynamic Source Generation
+# v2.2.54: Titan God Mode - Ultimate Residential Sources
 def get_es_sources():
     today = time.strftime("%Y-%m-%d")
     return [
         "https://api.proxyscrape.com/v2/?request=displayproxies&protocol=http&timeout=10000&country=es&ssl=all&anonymity=all",
         "https://www.proxyscan.io/download?type=http&country=es",
-        "https://proxylist.geonode.com/api/proxy-list?limit=100&page=1&sort_by=lastChecked&sort_type=desc&country=ES&protocols=http",
+        "https://proxylist.geonode.com/api/proxy-list?limit=200&page=1&sort_by=lastChecked&sort_type=desc&country=ES&protocols=http",
         "https://api.openproxy.space/v1/proxies?country=ES&type=http",
         "https://raw.githubusercontent.com/rdavydov/proxy-list/main/proxies/es.txt",
-        "https://raw.githubusercontent.com/yemixzy/proxy-list/main/proxies/http.txt", # v2.2.50 Rick Grimes Elite
-        "https://raw.githubusercontent.com/clarketm/proxy-list/master/proxy-list-raw.txt", # v2.2.50 Rick Grimes Elite
-        "https://raw.githubusercontent.com/monosans/proxy-list/main/proxies/http.txt", # v2.2.50 Elite
-        "https://raw.githubusercontent.com/vakhov/fresh-proxy-list/master/http.txt", # v2.2.50 Elite
-        "https://raw.githubusercontent.com/prxchk/proxy-list/main/http.txt", # v2.2.50 Elite
-        "https://raw.githubusercontent.com/Zaeem20/FREE_PROXIES_LIST/master/http.txt", # v2.2.50 Elite
-        "https://raw.githubusercontent.com/mmpx12/proxy-list/master/http.txt", # v2.2.50 Elite
+        "https://raw.githubusercontent.com/yemixzy/proxy-list/main/proxies/http.txt", 
+        "https://raw.githubusercontent.com/clarketm/proxy-list/master/proxy-list-raw.txt",
+        "https://raw.githubusercontent.com/monosans/proxy-list/main/proxies/http.txt",
+        "https://raw.githubusercontent.com/vakhov/fresh-proxy-list/master/http.txt",
+        "https://raw.githubusercontent.com/prxchk/proxy-list/main/http.txt",
+        "https://raw.githubusercontent.com/Zaeem20/FREE_PROXIES_LIST/master/http.txt",
+        "https://raw.githubusercontent.com/mmpx12/proxy-list/master/http.txt",
+        "https://raw.githubusercontent.com/Seven0sh/Free_Proxy_List/main/proxies.txt", # v2.2.54 VIP
+        "https://raw.githubusercontent.com/andrei6842/proxylists/master/proxies.txt", # v2.2.54 VIP
         "https://api.proxyscrape.com/v2/?request=displayproxies&protocol=socks5&timeout=10000&country=es&ssl=all&anonymity=all",
-        "https://www.proxyscan.io/download?type=socks5&country=es", # v2.2.48 SOCKS5
-        "https://raw.githubusercontent.com/vakhov/fresh-proxy-list/master/proxylist.txt", # v2.2.48 Elite
-        "https://raw.githubusercontent.com/TheSpeedX/SOCKS-List/master/socks5.txt", # v2.2.48 Global Elite
-        f"https://checkerproxy.net/api/archive/{today}" # v2.2.47: Real-time Date Injection
+        "https://www.proxyscan.io/download?type=socks5&country=es",
+        "https://raw.githubusercontent.com/vakhov/fresh-proxy-list/master/proxylist.txt",
+        "https://raw.githubusercontent.com/TheSpeedX/SOCKS-List/master/socks5.txt",
+        f"https://checkerproxy.net/api/archive/{today}"
     ]
 
 es_sources = get_es_sources()
@@ -218,7 +220,14 @@ class ProxyScraper:
                             cc = res.get('countryCode', 'XX')
                             as_org = str(res.get('as', '')).lower()
                             
-                            if any(x in as_org for x in ["m247", "romania", "datacenter", "hosting", "cloud", "digitalocean", "vultr", "ovh", "hetzner"]):
+                            # v2.2.54: Heavy Anti-Datacenter Blacklist (ASNs & Names)
+                            dc_keywords = [
+                                "m247", "romania", "datacenter", "hosting", "cloud", "digitalocean", "vultr", 
+                                "ovh", "hetzner", "linode", "aws", "amazon", "google", "azure", "microsoft",
+                                "stablepoint", "as9009", "as41853", "as200676", "as202422", "as212238"
+                            ]
+                            
+                            if any(x in as_org for x in dc_keywords):
                                 cc = "RO_FAKE"
                                 self.session_blacklist.add(p)
                             
@@ -333,13 +342,13 @@ class ProxyScraper:
             print(f"🚀 FASE 1: Buscando en fuentes ES específicas (Prioridad Alta)...")
             tier1_candidates = list(fetch_sources(es_sources, "(ES/Targeted)", stop_signal=stop_signal))
             
-            # v2.2.37: QUANTUM YIELD - Candidate Capping increased from 500 to 1500
-            if len(tier1_candidates) > 1500:
-                print(f"  🌌 Quantum Yield: Truncando {len(tier1_candidates)} a 1500 candidatos premium.")
+            # v2.2.54: Titan God Mode - Quantum Yield scaled for mass discovery
+            if len(tier1_candidates) > 5000:
+                print(f"  🌌 Quantum Yield: Truncando {len(tier1_candidates)} a 5000 candidatos premium.")
                 random.shuffle(tier1_candidates)
-                tier1_candidates = tier1_candidates[:1500]
+                tier1_candidates = tier1_candidates[:5000]
             
-            print(f"  📥 Candidatos listos para validación.")
+            print(f"  📥 Candidatos listos para validación (Meta UHQ).")
             
             if tier1_candidates:
                 # v2.2.20: MANDATORY Geo-Check re-enabled. No more trust loops.
@@ -384,12 +393,12 @@ class ProxyScraper:
         tier2_candidates = list(fetch_sources(target_list, "(Global)", stop_signal=stop_signal))
         random.shuffle(tier2_candidates)
         
-        # v2.2.37: QUANTUM YIELD - Candidate Capping Tier 2
-        if country == "ES" and len(tier2_candidates) > 1500:
-            print(f"  🌌 Quantum Yield: Truncando {len(tier2_candidates)} a 1500 candidatos masivos.")
-            tier2_candidates = tier2_candidates[:1500]
+        # v2.2.54: Massive Yield Scaling
+        if country == "ES" and len(tier2_candidates) > 10000:
+            print(f"  🌌 Quantum Yield: Truncando {len(tier2_candidates)} a 10000 candidatos masivos.")
+            tier2_candidates = tier2_candidates[:10000]
         
-        print(f"  📥 Candidatos listos para caza.")
+        print(f"  📥 Candidatos listos para caza God Mode.")
         
         # If we are in "Global Mode", just verify and return a chunk
         if country != "ES": 
@@ -563,20 +572,29 @@ class ProxyScraper:
                         return False
                     print(f"  🌍 Geo-Guard: Proxy confirmado en {real_cc}.")
 
+                # v2.2.54: Titan God Mode - FINAL BOSS CHECK (Real Spanish Domain)
+                try:
+                    # Test against a purely Spanish resident-facing domain
+                    requests.get("https://www.marca.com", proxies=proxies, timeout=4)
+                    print(f"  🇪🇸 Genuino ES (Detección Residencial Exitosa).")
+                except:
+                    print(f"  ⚠️ Proxy funcional pero rechazado por Dominio Local (Marca.com Fail).")
+                    return False
+
                 # Second check: Google connectivity (Strict check for OSINT)
                 start_google = time.time()
-                r2 = requests.get("https://www.google.com/gen_204", proxies=proxies, timeout=5)
+                r2 = requests.get("https://www.google.es/gen_204", proxies=proxies, timeout=5)
                 latency = time.time() - start_google
                 
                 if r2.status_code == 204 or r2.status_code == 200:
-                    if latency < 2.5: # v2.2.37: Extreme Latency Filter
-                         print(f"  ✅ Proxy Elite ({latency:.2f}s): {proxy_str}")
+                    if latency < 2.0: # v2.2.54: Extreme Latency Filter (2.0s for Elite)
+                         print(f"  ✅ Proxy Elite UHQ ({latency:.2f}s): {proxy_str}")
                          return True
                     else:
                          print(f"  ⚠️ Proxy funcional pero lento ({latency:.2f}s). Descartado.")
                          return False
                 else:
-                    print(f"  ⚠️ Proxy funcional pero bloqueado por Google: {proxy_str}")
+                    print(f"  ⚠️ Proxy funcional pero bloqueado por Google ES: {proxy_str}")
         except:
             pass
         return False

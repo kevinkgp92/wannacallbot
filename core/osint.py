@@ -308,11 +308,15 @@ class OSINTManager:
                     
                     if check_ok: continue
 
+                    # v2.2.54: Titan God Mode - Smart Rotation
                     print(f"    ⚠️ Proxy invalido o no es español ({err_msg}). Rotando...")
+                    if any(x in err_msg.lower() for x in ["locked", "failed", "empty", "invalid", "ro_fake", "bad_dc"]):
+                        print("    🔄 Activando Smart Rotation: Purgando pool para aire fresco...")
+                        
                     browser_manager.mark_current_proxy_bad()
                     browser_manager.close() 
                     rotation_count += 1
-                    time.sleep(0.5) 
+                    time.sleep(1.0) # v2.2.54: Slightly more cooldown for CPU stability
                     if stop_check and stop_check(): break
                     continue 
             
