@@ -157,6 +157,21 @@ class BrowserManager:
         options.add_argument("--disable-gpu-compositing")
         options.add_argument("--disable-gpu-rasterization")
         
+        # v2.2.33: Arctic Silence Performance Flags
+        options.add_argument("--disable-background-networking")
+        options.add_argument("--disable-background-timer-throttling")
+        options.add_argument("--disable-backgrounding-occluded-windows")
+        options.add_argument("--disable-breakpad")
+        options.add_argument("--disable-component-update")
+        options.add_argument("--disable-domain-reliability")
+        options.add_argument("--disable-extensions")
+        options.add_argument("--disable-hang-monitor")
+        options.add_argument("--disable-ipc-flooding-protection")
+        options.add_argument("--disable-renderer-backgrounding")
+        options.add_argument("--metrics-recording-only")
+        options.add_argument("--mute-audio")
+        options.add_argument("--no-first-run")
+        
         # Optimize RAM & Speed: SLIM MODE (v2.2.23)
         options.set_preference("browser.sessionhistory.max_entries", 2)
         options.set_preference("browser.cache.disk.enable", False)

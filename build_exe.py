@@ -5,7 +5,7 @@ import shutil
 import glob
 
 def build():
-    version = "2.2.32"
+    version = "2.2.33"
     print("===================================================")
     print(f"    WANNA CALL? - EXE BUILDER (v{version})")
     print("===================================================")
@@ -55,7 +55,7 @@ def build():
         "--onefile",
         "--windowed",
         "--icon", "logo_v3.ico",
-        "--name", f"WannaCall_v2.2.32",
+        "--name", f"WannaCall_v2.2.33",
         "--distpath", dist_path,
         "--workpath", build_path,
         "--clean",
@@ -74,8 +74,8 @@ def build():
     
     if result.returncode == 0:
         print("\n[3/3] EXITO: CONSTRUCCION COMPLETADA")
-        exe_path = os.path.join(dist_path, f"WannaCall_v2.2.32.exe")
-        final_name = "WannaCall_v2.2.32_PORTABLE.exe"
+        exe_path = os.path.join(dist_path, f"WannaCall_v2.2.33.exe")
+        final_name = "WannaCall_v2.2.33_PORTABLE.exe"
         if os.path.exists(exe_path):
             # Atomic swap
             if os.path.exists(final_name): os.remove(final_name)

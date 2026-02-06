@@ -4,7 +4,19 @@
 
 ---
 
-## 🔥 [2.2.32] - 2026-02-06 (SAUL EDITION - NO GPU & ES ARMADA)
+## ❄️ [2.2.33] - 2026-02-06 (ARCTIC SILENCE - ZERO LAG)
+
+### 🇪🇸 ESPAÑOL
+- **🚀 SILENCIO TOTAL CPU**: Implementado capado inteligente de 500 candidatos para evitar el colapso del ratón.
+- **🤫 YIELDING AGRESIVO**: Introducidas micro-pausas en el motor de proxys para liberar el procesador al sistema continuamente.
+- **🧊 CHROME PERFORMANCE**: Desactivados procesos innecesarios de red y timers de Chrome para maximizar fluidez.
+
+### 🇺🇸 ENGLISH
+- **🚀 ZERO CPU LAG**: Implemented smart 500 candidate cap to eliminate mouse stuttering.
+- **🤫 AGGRESSIVE YIELDING**: Introduced micro-sleeps in the proxy engine to continuously yield CPU to the system.
+- **🧊 CHROME PERFORMANCE**: Disabled unnecessary background networking and timers in Chrome for maximum fluidity.
+
+---
 
 ### 🇪🇸 ESPAÑOL
 - **🚀 ZERO MICRO-LAG**: Desactivada la Aceleración por Hardware y GPU en navegadores para eliminar tirones en el ratón.

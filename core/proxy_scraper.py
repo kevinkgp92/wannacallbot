@@ -216,7 +216,10 @@ class ProxyScraper:
                              print(f"  ⚠️ Fuente demasiado grande, truncando: {url[:30]}...")
                              break
                     if r.status_code == 200:
-                        return re.findall(r'\d+\.\d+\.\d+\.\d+:\d+', content)
+                        matches = re.findall(r'\d+\.\d+\.\d+\.\d+:\d+', content)
+                        # v2.2.33: Yielding during heavy parsing
+                        if len(matches) > 100: time.sleep(0.01) 
+                        return matches
                 except: pass
                 return []
 
@@ -264,7 +267,14 @@ class ProxyScraper:
         if country == "ES":
             print(f"🚀 FASE 1: Buscando en fuentes ES específicas (Prioridad Alta)...")
             tier1_candidates = list(fetch_sources(es_sources, "(ES/Targeted)"))
-            print(f"  📥 Recolectedos {len(tier1_candidates)} candidatos ES.")
+            
+            # v2.2.33: ARCTIC SILENCE - Candidate Capping
+            if len(tier1_candidates) > 500:
+                print(f"  ❄️ Arctic Silence: Truncando {len(tier1_candidates)} a 500 candidatos top.")
+                random.shuffle(tier1_candidates)
+                tier1_candidates = tier1_candidates[:500]
+            
+            print(f"  📥 Candidatos listos para validación.")
             
             if tier1_candidates:
                 # v2.2.20: MANDATORY Geo-Check re-enabled. No more trust loops.
@@ -308,7 +318,13 @@ class ProxyScraper:
         print(f"🚀 FASE 2: Minería Masiva Global (Esto puede tardar)...")
         tier2_candidates = list(fetch_sources(target_list, "(Global)"))
         random.shuffle(tier2_candidates)
-        print(f"  📥 Recolectados {len(tier2_candidates)} candidatos crudos.")
+        
+        # v2.2.33: ARCTIC SILENCE - Candidate Capping Tier 2
+        if country == "ES" and len(tier2_candidates) > 500:
+            print(f"  ❄️ Arctic Silence: Truncando {len(tier2_candidates)} a 500 candidatos masivos.")
+            tier2_candidates = tier2_candidates[:500]
+        
+        print(f"  📥 Candidatos listos para caza.")
         
         # If we are in "Global Mode", just verify and return a chunk
         if country != "ES": 
