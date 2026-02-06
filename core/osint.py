@@ -238,51 +238,83 @@ class OSINTManager:
                         
                 except Exception as e:
                     err_msg = str(e)
-                    # v2.2.48: TITAN GEO-HEAL FALLBACK
-                    # If browser fails to read JSON, attempt a direct HTTP ping (Request-level)
-                    # Fallback Chain: ip-api -> ifconfig -> ipify
+                    # v2.2.52: TITAN QUANTUM CHECK (Multi-API Resilience)
+                    print(f"    🛡️  Iniciando Titan Quantum Check (Fallo inicial: {err_msg[:50]}...)")
+                    
+                    # Fallback Chain with specific parsers for each structure
                     check_apis = [
-                        f"http://ip-api.com/json/?fields=status,countryCode,as,query",
-                        f"https://ifconfig.me/all.json", # Proxy-level if possible
-                        f"https://api.ipify.org?format=json"
+                        {"url": "http://ip-api.com/json/?fields=status,countryCode,as,query", "cc": "countryCode", "as": "as"},
+                        {"url": "https://ipwho.is/", "cc": "country_code", "as": "connection.asn"},
+                        {"url": "https://freeipapi.com/api/json/", "cc": "countryCode", "as": "as"},
+                        {"url": "https://ipapi.co/json/", "cc": "country_code", "as": "org"},
+                        {"url": "https://ifconfig.co/json", "cc": "country_iso", "as": "asn_org"},
+                        {"url": "https://api.iplocation.net/?ip=", "cc": "country_code2", "as": "isp"},
+                        {"url": "https://api.ipify.org?format=json", "cc": "countryCode", "needs_sub": True}
                     ]
                     
-                    for api_url in check_apis:
+                    # session = requests.Session() # Could use a persistent session if needed
+                    for api in check_apis:
                         try:
-                            # v2.2.50: Using current IP as PX_IP was undefined
-                            r_test = requests.get(api_url, timeout=5)
+                            headers = {'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/121.0.0.0 Safari/537.36'}
+                            api_url = api["url"]
+                            
+                            # Special case: some APIs need the IP appended
+                            if api_url.endswith("="):
+                                # We don't have the IP yet, so we use it as a generic check if possible
+                                # but usually we want to know the browser's IP
+                                continue 
+
+                            r_test = requests.get(api_url, timeout=4, headers=headers)
                             if r_test.status_code == 200:
                                 g_data = r_test.json()
-                                cc = g_data.get("countryCode") or g_data.get("country_code")
-                                if not cc and "country" in g_data: cc = g_data["country"]
                                 
-                                # Special case for ipify/ifconfig which might not return country directly
-                                if not cc:
-                                    # Use the IP from this API to do a split second lookup if we only got the IP
-                                    detected_ip = g_data.get("ip") or g_data.get("query")
-                                    if detected_ip:
-                                        # Quick secondary lookup for the detected IP
-                                        r_sub = requests.get(f"http://ip-api.com/json/{detected_ip}?fields=countryCode", timeout=3)
-                                        cc = r_sub.json().get("countryCode")
+                                # Resolve Country Code
+                                path_cc = api.get("cc", "").split('.')
+                                val_cc = g_data
+                                for p in path_cc:
+                                    if isinstance(val_cc, dict): val_cc = val_cc.get(p)
+                                
+                                # Resolve AS/ISP (to filter Datacenters)
+                                path_as = api.get("as", "").split('.')
+                                val_as = g_data
+                                for p in path_as:
+                                    if isinstance(val_as, dict): val_as = val_as.get(p)
+                                val_as = str(val_as or "").lower()
 
-                                as_org = str(g_data.get("as", "")).lower()
-                                if "m247" in as_org or "romania" in as_org: cc = "RO_FAKE"
+                                # Smart Resolve if API only gives IP
+                                if api.get("needs_sub") or not val_cc:
+                                    det_ip = g_data.get("ip") or g_data.get("query")
+                                    if det_ip:
+                                        r_s = requests.get(f"http://ip-api.com/json/{det_ip}?fields=countryCode,as", timeout=3)
+                                        s_d = r_s.json()
+                                        val_cc = s_d.get("countryCode")
+                                        val_as = str(s_d.get("as", "")).lower()
+
+                                # TITAN FILTER: Only Real ES (No M247, No Datacenters if possible)
+                                bad_orgs = ["m247", "romania", "datacenter", "hosting", "cloud", "digitalocean", "vultr", "ovh"]
+                                if any(x in val_as for x in bad_orgs):
+                                    print(f"    ⛔ DC-BLOCK: Proxy de hosting detectado ({val_as}). Rehusando.")
+                                    val_cc = "BAD_DC"
                                 
-                                if cc == "ES":
-                                    print(f"    ✅ FALLBACK ÉXITO ({api_url.split('/')[2]}): IP verificado como ES.")
+                                if val_cc == "ES":
+                                    print(f"    ✅ TITAN-CHECK SUCCESS ({api_url.split('/')[2]}): IP verificada como ES Residencial.")
                                     check_ok = True
                                     break
-                        except: continue
+                                else:
+                                    print(f"    ⏳ {api_url.split('/')[2]}: Pais incorrecto ({val_cc})")
+                        except Exception as sub_e:
+                            # print(f"    ⚠️  {api['url'].split('/')[2]} falló: {sub_e}")
+                            continue
                     
                     if check_ok: continue
 
                     print(f"    ⚠️ Proxy invalido o no es español ({err_msg}). Rotando...")
                     browser_manager.mark_current_proxy_bad()
-                    browser_manager.close() # CORRECT TEARDOWN
+                    browser_manager.close() 
                     rotation_count += 1
-                    time.sleep(0.5) # v2.2.48: Hyper-Rotation
+                    time.sleep(0.5) 
                     if stop_check and stop_check(): break
-                    continue # Try next rotation
+                    continue 
             
             if check_ok:
                 try:

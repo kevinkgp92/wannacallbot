@@ -1,5 +1,17 @@
 # ♈ WANNA CALL? - CHANGELOG
 
+## [v2.2.52] - Titan Quantum Check (2026-02-06)
+### 🇪🇸 ESPAÑOL
+- **🛡️ TITAN QUANTUM CHECK**: Rediseñado el motor de verificación Geo-IP. Ahora utiliza un sistema dinámico de 8+ APIs con parsers específicos para asegurar la validación incluso bajo bloqueos masivos.
+- **🚫 DC-SHIELD**: Implementado filtro avanzado de ISPs para descartar automáticamente proxies de centros de datos (M247, etc.) y priorizar conexiones residenciales de España.
+- **⚡ RESILIENT SESSIONS**: Integrado sistema de reintentos con cabeceras de navegador reales para las peticiones de validación.
+
+### 🇺🇸 ENGLISH
+- **🛡️ TITAN QUANTUM CHECK**: Redesigned the Geo-IP verification engine. Now uses a dynamic 8+ API system with specific parsers to ensure validation even under massive blocks.
+- **🚫 DC-SHIELD**: Implemented advanced ISP filtering to automatically discard data center proxies (M247, etc.) and prioritize Spanish residential connections.
+- **⚡ RESILIENT SESSIONS**: Integrated retry system with real browser headers for validation requests.
+
+
 ## [v2.2.51] - Hotfix Stabilizer (2026-02-06)
 ### 🇪🇸 ESPAÑOL
 - **🛠️ CRITICAL STABILITY HOTFIX**: Corregido error `UnboundLocalError` en el motor OSINT que provocaba el cierre de la aplicación al fallar la validación de IP.
