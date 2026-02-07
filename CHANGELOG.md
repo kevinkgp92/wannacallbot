@@ -1,5 +1,15 @@
 # ♈ WANNA CALL? - CHANGELOG
 
+## [v2.2.96] - Visual Feedback & Hardened SSL (2026-02-07)
+### 🇪🇸 ESPAÑOL
+- **📊 BARRA DE PROGRESO**: Ahora verás un porcentaje (10%, 20%...) mientras el bot verifica los proxies, para que sepas que está trabajando y no congelado.
+- **🛡️ SSL ESTRICTO**: Se ha añadido una "Fase 4" de verificación. Si un proxy pasa el test de Google pero falla al cargar una página real (HTTPS), se descarta. Esto reduce los errores de conexión en OSINT.
+
+### 🇺🇸 ENGLISH
+- **📊 PROGRESS BAR**: You will now see a percentage (10%, 20%...) while the bot verifies proxies, so you know it's working and not frozen.
+- **🛡️ STRICT SSL**: Added a "Phase 4" verification. If a proxy passes Google test but fails to load a real page (HTTPS), it is discarded. This reduces connection errors in OSINT.
+
+
 ## [v2.2.95] - Proxy Trust (2026-02-07)
 ### 🇪🇸 ESPAÑOL
 - **🔒 CONFIANZA CIEGA**: Ahora el sistema confía en los proxies del "Laboratorio" durante 30 minutos (antes 2). Esto evita que el OSINT los borre y empiece a buscar de cero si tardas un poco.

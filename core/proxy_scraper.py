@@ -632,6 +632,8 @@ class ProxyScraper:
                     google_ok = True
             except: pass
 
+            except: pass
+
             # FASE 3: SSL/Tunnel Check (HTTPS a google.com)
             try:
                 r_ssl = requests.get("https://clients3.google.com/generate_204", proxies=proxy_dict, timeout=10, headers=headers)
@@ -639,6 +641,18 @@ class ProxyScraper:
                     checks_passed += 1
                     google_ok = True
             except: pass
+
+            # FASE 4 (v2.2.96): REAL WORLD SSL TEST (Handshake Strictness)
+            # Many proxies pass Google 204 but fail actual data transfer.
+            # We test against a neutral HTTPS endpoint.
+            if google_ok:
+                try: 
+                    r_real = requests.get("https://ipv4.icanhazip.com", proxies=proxy_dict, timeout=10, headers=headers)
+                    if r_real.status_code != 200:
+                        # If it fails a real page load, revoke google_ok
+                        google_ok = False
+                except:
+                    google_ok = False
 
             # CRITERIO DE SUPERVIVENCIA (v2.2.89)
             # Si no conecta a Google, NO SIRVE para OSINT.
@@ -658,9 +672,18 @@ class ProxyScraper:
 
         import concurrent.futures
         # v2.2.34: ARCTIC FREEZE - Bajar de 10 a 5 workers para evitar micro-stuttering del GIL
+        total_checks = len(proxies)
+        completed = 0
         with concurrent.futures.ThreadPoolExecutor(max_workers=5) as executor:
-            futures = [executor.submit(is_alive, p) for p in proxies]
+            futures = {executor.submit(is_alive, p): p for p in proxies}
+            
             for future in concurrent.futures.as_completed(futures):
+                completed += 1
+                # v2.2.96: Feedback visual de progreso
+                if completed % 10 == 0 or completed == total_checks:
+                     perc = int((completed / total_checks) * 100)
+                     print(f"    ⏳ Verificando... {perc}% ({completed}/{total_checks})")
+
                 # v2.2.34: Micro-pulso de sueño para dar paso a la GUI
                 time.sleep(0.02)
                 
