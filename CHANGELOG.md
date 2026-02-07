@@ -1,5 +1,17 @@
 # ♈ WANNA CALL? - CHANGELOG
 
+## [v2.4.00] - TITAN APEX (2026-02-07)
+### 🇪🇸 ESPAÑOL
+- **🎨 REDISEÑO TITAN UI**: Nueva interfaz "Cyberpunk" ultra-oscura. Terminal estilo Matrix, botones neón y fuente Consolas para una experiencia de hacker real.
+- **☢️ BOTÓN DE PURGA**: Ahora puedes borrar manualmente la memoria del bot (caché proxies) desde la barra lateral con un solo clic botón rojo "PURGAR CACHÉ".
+- **🚀 OPTIMIZACIÓN VISUAL**: Menos parpadeos, log más limpio y colores que indican el estado real del sistema (Verde=Éxito, Rojo=Fallo, Dorado=God Mode).
+
+### 🇺🇸 ENGLISH
+- **🎨 TITAN UI REDESIGN**: New Ultra-Dark "Cyberpunk" interface. Matrix-style terminal, neon buttons, and Consolas font for a real hacker experience.
+- **☢️ PURGE BUTTON**: You can now manually wipe bot memory (proxy cache) from sidebar with a single click red button "PURGE CACHE".
+- **🚀 VISUAL OPTIMIZATION**: Less flickering, cleaner log, and colors indicating real system status (Green=Success, Red=Fail, Gold=God Mode).
+
+
 ## [v2.3.00] - The Big Clean (2026-02-07)
 ### 🇪🇸 ESPAÑOL
 - **☢️ RESET NUCLEAR**: Se ha eliminado automáticamente toda la caché de proxies antigua y corrupta. Empiezas de cero (0).
