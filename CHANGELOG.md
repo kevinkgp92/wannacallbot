@@ -1,5 +1,16 @@
 # ♈ WANNA CALL? - CHANGELOG
 
+## [v2.4.14] - TURBO PROXY DISCOVERY (2026-02-07)
+### 🇪🇸 ESPAÑOL
+- **⚡ TURBO MODE**: Eliminado el límite de 250 IPs en el Laboratorio. Ahora procesa miles de candidatos en la Fase 1.
+- **🧵 MULTI-THREADING X3**: Aumentados los hilos de validación de 5 a 15 para un escaneo mucho más rápido.
+- **🎯 DESCUBRIMIENTO MASIVO**: Optimizado para encontrar más proxies UHQ en menos tiempo.
+
+### 🇺🇸 ENGLISH
+- **⚡ TURBO MODE**: Removed 250-IP limit in Proxy Lab. Now processes thousands of candidates in Phase 1.
+- **🧵 MULTI-THREADING X3**: Increased validation threads from 5 to 15 for faster scanning.
+- **🎯 MASSIVE DISCOVERY**: Optimized to find more UHQ proxies in significantly less time.
+
 ## [v2.4.13] - UHQ PROXY ENFORCEMENT (2026-02-07)
 ### 🇪🇸 ESPAÑOL
 - **🧪 VALIDACIÓN UHQ**: Los proxies ahora deben pasar búsquedas reales (Wikipedia/Spam) para ser aceptados.

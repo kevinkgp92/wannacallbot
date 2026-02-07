@@ -355,7 +355,8 @@ class ProxyScraper:
         
         # v2.2.68: TITAN NITRO - Hard Truncation for ultimate speed
         # Reducimos de 5000 a 250 para que la Fase 1 sea instantánea.
-        limit = 250
+        # v2.4.14: Bypassed for Proxy Lab (high_yield) to find more UHQ proxies.
+        limit = 5000 if country_code == "ES" and len(uncached) > 250 else 250
         if len(uncached) > limit:
             print(f"  ⚡ Titan Nitro: Optimizando {len(uncached)} candidatos a los {limit} más prometedores.")
             uncached = uncached[:limit]
@@ -744,10 +745,10 @@ class ProxyScraper:
             return None
 
         import concurrent.futures
-        # v2.2.34: ARCTIC FREEZE - Bajar de 10 a 5 workers para evitar micro-stuttering del GIL
+        # v2.4.14: OVERCLOCK - Subiendo de 5 a 15 hilos para mayor throughput en Laboratorio.
         total_checks = len(proxies)
         completed = 0
-        with concurrent.futures.ThreadPoolExecutor(max_workers=5) as executor:
+        with concurrent.futures.ThreadPoolExecutor(max_workers=15) as executor:
             futures = {executor.submit(is_alive, p): p for p in proxies}
             
             for future in concurrent.futures.as_completed(futures):
