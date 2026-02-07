@@ -1,5 +1,13 @@
 # ♈ WANNA CALL? - CHANGELOG
 
+## [v2.2.90] - Hotfix (Restored Queue) (2026-02-07)
+### 🇪🇸 ESPAÑOL
+- **🔥 CRITICAL HOTFIX**: Corregido el "Crash al Inicio" de v2.2.89. Se había eliminado accidentalmente la cola de mensajes (`msg_queue`) al optimizar los logs. Restaurada su funcionalidad.
+
+### 🇺🇸 ENGLISH
+- **🔥 CRITICAL HOTFIX**: Fixed "Startup Crash" in v2.2.89. The message queue (`msg_queue`) was accidentally removed during log optimization. Restored functionality.
+
+
 ## [v2.2.89] - Google-or-Die & Optimized Logs (2026-02-07)
 ### 🇪🇸 ESPAÑOL
 - **🛡️ GOOGLE-OR-DIE POLICY**: Se acabó la "Amnistía". Ahora un proxy SOLO se acepta si demuestra conexión real con Google (DNS/SSL). Si solo conecta a Cloudflare (1.1.1.1) pero falla en Google, se descarta. Esto elimina los timeouts inmediatos en OSINT.

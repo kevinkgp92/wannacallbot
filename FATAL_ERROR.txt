@@ -1,0 +1,26 @@
+--- CRASH REPORT ---
+Timestamp: 2026-02-07 10:53:15
+Error: name 'traceback' is not defined
+
+Traceback (most recent call last):
+  File "gui.py", line 307, in __init__
+    self._build_main_ui()
+  File "gui.py", line 667, in _build_main_ui
+    self.print_banner()
+  File "gui.py", line 964, in print_banner
+    print(banner)
+  File "gui.py", line 182, in write
+    self.msg_queue.put(clean_str)
+    ^^^^^^^^^^^^^^
+AttributeError: 'TextRedirector' object has no attribute 'msg_queue'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "gui.py", line 1624, in <module>
+    app = OsintGUI()
+          ^^^^^^^^^^
+  File "gui.py", line 312, in __init__
+    error_msg = f"ERROR CRITICO DE UI:\n{e}\n\n{traceback.format_exc()}"
+                                                ^^^^^^^^^
+NameError: name 'traceback' is not defined
