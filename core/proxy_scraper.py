@@ -363,8 +363,12 @@ class ProxyScraper:
                                     self.session_blacklist.add(chunk[idx])
                                     continue
 
-                                if any(asn in as_org for asn in self.residential_asns) and cc == country_code:
-                                    self.geo_cache[ip_key] = "GOLDEN"
+                                # v2.2.82: MODO LENIENCIA - Aceptamos cualquier ES, no solo GOLDEN
+                                if cc == country_code:
+                                    if any(asn in as_org for asn in self.residential_asns):
+                                        self.geo_cache[ip_key] = "GOLDEN"
+                                    else:
+                                        self.geo_cache[ip_key] = cc # ES (Datacenter/Generic)
                                     res_matches.append(chunk[idx])
                                 elif "m247" in as_org or "romania" in as_org:
                                     self.geo_cache[ip_key] = "BAD_DC"
@@ -594,8 +598,9 @@ class ProxyScraper:
         def is_alive(proxy):
             if stop_signal and stop_signal(): return None
             
-            # Triple-Check Logic (v2.2.19)
-            # A proxy is alive if it passes at least 2 checks
+            # Zenith Latency Standard (v2.2.82)
+            # We measure the response time. Ultra-slow proxies cause driver timeouts.
+            start_time = time.time()
             checks_passed = 0
             proto = "http"
             actual_proxy = proxy
@@ -605,18 +610,35 @@ class ProxyScraper:
             proxy_dict = {proto: f"{proto}://{actual_proxy}"}
             headers = {"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36"}
             
+            # DNS Health Check (v2.2.82+)
+            # If the proxy can't resolve common names, it will cause dnsNotFound in browser.
+            try:
+                # v2.2.82+: LENIENCIA ZENITH - Timeout aumentado a 5s para proxies lentos
+                r_dns = requests.get("http://1.1.1.1", proxies=proxy_dict, timeout=5, headers=headers)
+                # Si falla el check de IP directa (1.1.1.1), el proxy es basura (Ni siquiera rutea IP)
+                if r_dns.status_code != 200: return None
+            except: 
+                return None
+            
             # Check 1: Google (v2.2.32: FAST CHECK - 6s)
             try:
                 r = requests.get("https://clients3.google.com/generate_204", 
                                  proxies=proxy_dict, timeout=6, headers=headers)
-                if r.status_code == 204: checks_passed += 1
+                if r.status_code == 204: 
+                    checks_passed += 1
+                    latency = time.time() - start_time
+                    # v2.2.82+: LENIENCIA ZENITH - Relajado de 2.0s a 4.5s para no morir de éxito
+                    if latency > 4.5: return None 
             except: pass
 
             # Check 2: Icanhazip (v2.2.32: FAST CHECK - 5s)
             try:
                 r = requests.get("https://ipv4.icanhazip.com", 
                                  proxies=proxy_dict, timeout=5, headers=headers)
-                if r.status_code == 200 and len(r.text.strip()) <= 15: checks_passed += 1
+                if r.status_code == 200 and len(r.text.strip()) <= 15: 
+                    checks_passed += 1
+                    latency = time.time() - start_time
+                    if latency > 4.5: return None
             except: pass
 
             # Check 3: Bing (v2.2.32: FAST CHECK - 5s)
@@ -624,7 +646,10 @@ class ProxyScraper:
                 try:
                     r = requests.get("https://www.bing.com", 
                                      proxies=proxy_dict, timeout=5, headers=headers)
-                    if r.status_code == 200: checks_passed += 1
+                    if r.status_code == 200: 
+                        checks_passed += 1
+                        latency = time.time() - start_time
+                        if latency > 4.5: return None
                 except: pass
 
             if checks_passed >= 2:

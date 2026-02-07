@@ -10,6 +10,8 @@ from selenium.webdriver.common.keys import Keys
 import re
 import concurrent.futures
 from concurrent.futures import ThreadPoolExecutor
+import os
+import subprocess
 # Requests & DuckEngine removed to prevent DLL crash
 
 class OSINTManager:
@@ -18,6 +20,7 @@ class OSINTManager:
         self.last_ip_check_time = 0
         self.last_verified_ip = None
         pass
+
 
     def _wait_for_captcha(self, browser, source_name, timeout=40):
         """Attempts to auto-click captcha using Shadow DOM piercing and multiple strategies"""
@@ -328,17 +331,38 @@ class OSINTManager:
                     if isinstance(e, InterruptedError) or (stop_check and stop_check()): raise e
                     
                     err_msg = str(e).upper()
-                    is_net_error = any(x in err_msg for x in ["DNS_PROBE", "CONNECTION_REFUSED", "NAME_NOT_RESOLVED", "CONNECTION_RESET"])
+                    is_net_error = any(x in err_msg for x in [
+                        "DNS_PROBE", "CONNECTION_REFUSED", "NAME_NOT_RESOLVED", 
+                        "CONNECTION_RESET", "DNSNOTFOUND", "NETTIMEOUT", 
+                        "PROXYCONNECTFAILURE", "NSSFAILURE2"
+                    ])
                     
+                    # Zenith Atomic Restoration (v2.2.82)
+                    # WinError 10061 / MaxRetryError indicates the driver communication is DEAD.
+                    is_driver_dead = any(x in err_msg for x in ["10061", "MAX RETRIES EXCEEDED", "CONNECTIONREFUSEDERROR", "PROTOCOLERROR"])
+
+                    if is_driver_dead:
+                        print(f"💀 DRIVER MUERTO DETECTADO ({e}). Iniciando Resurrección Atómica Zenith...")
+                        try: browser.quit()
+                        except: pass
+                        # Force a clean start regardless of attempts
+                        b_mgr.mark_current_proxy_bad()
+                        browser = b_mgr.get_driver()
+                        attempt -= 1 # Re-attempt current source with fresh driver
+                        continue
+
                     if is_net_error:
-                        print(f"🌐 ERROR DE RED (DNS/Net): {e}. Rotando sin gastar intento...")
-                        # We don't increment 'attempt' here so the source isn't skipped for a bad proxy
+                        print(f"🌐 ERROR DE RED (ZENITH AMNESTY): {e}. Rotando sin gastar intento...")
+                        # v2.2.82: AMNISTÍA ZENITH v2
+                        # No solo no incrementamos 'attempt', sino que evitamos penalizar 'rotation_count'
+                        # para que una racha de proxies con DNS roto no aborte la búsqueda.
                         attempt -= 1 
+                        rotation_penalty = 0.2 # Penalización mínima vs 1.0 estándar
                     else:
                         print(f"⚠️ Error de conexión ({e}). Rotando proxy ({attempt+1}/{timeout_retries})...")
+                        rotation_penalty = 1.0
                 
                     # 3. TUNNEL ERROR DETECTION (v2.2.78)
-                    err_msg = str(e).upper()
                     is_tunnel_fail = "ERR_TUNNEL_CONNECTION_FAILED" in err_msg or "ERR_PROXY_CONNECTION_FAILED" in err_msg
                     
                     # ROTATION LOGIC
@@ -352,11 +376,11 @@ class OSINTManager:
                         print("🚨 ERROR DE TÚNEL DETECTADO: El proxy no permite conexiones SSL. Blacklisteado.")
                     
                     print("🔄 SISTEMA: Rotando proxy por bloqueo/bajo rendimiento...")
-                    rotation_count += 1
+                    rotation_count += rotation_penalty
                     if rotation_count > max_rotations:
                         print("🚫 LÍMITE DE ROTACIÓN ALCANZADO: Demasiados bloqueos. Saltando fuente.")
                         return False
-                    browser = browser_manager.get_driver()
+                    browser = b_mgr.get_driver()
                     # v2.2.81: Overclocked Timeout (60s) to allow slow but valid residential proxies
                     browser.set_page_load_timeout(60) 
             
@@ -640,6 +664,13 @@ class OSINTManager:
                 f"site:milanuncios.com \"{clean_phone}\"",
                 f"site:boe.es \"{clean_phone}\"",
                 f"site:dgt.es \"{clean_phone}\"",
+                # LEVEL 5 INTEL (v2.2.82 Zenith)
+                f"site:truecaller.com \"{clean_phone}\"",
+                f"site:rocketreach.co \"{clean_phone}\"",
+                f"site:contactout.com \"{clean_phone}\"",
+                f"site:apollo.io \"{clean_phone}\"",
+                f"site:yelp.es \"{clean_phone}\"",
+                f"site:zoominfo.com \"{clean_phone}\"",
                 f"site:pastebin.com \"{clean_phone}\"",
                 f"site:locanto.es \"{clean_phone}\""
             ]

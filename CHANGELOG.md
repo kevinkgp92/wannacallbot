@@ -1,5 +1,19 @@
 # ♈ WANNA CALL? - CHANGELOG
 
+## [v2.2.82] - Titan Apex Saul Zenith (El Juicio Final) (2026-02-07)
+### 🇪🇸 ESPAÑOL
+- **🧬 RESURRECCIÓN ATÓMICA (DRIVER SYNC)**: El bot ahora monitoriza la vida del navegador en tiempo real (`is_alive`). Si detecta un fallo o cierre accidental, lo resucita de forma atómica y transparente. Se acabó el error `WinError 10061`.
+- **⚡ MODO LENIENCIA ZENITH**: Relajación de filtros para evitar el descarte masivo de proxies. Ahora se aceptan proxies de Datacenter (ES) si no hay residenciales, y la latencia permitida ha subido de 2.0s a **4.5s**.
+- **👁️ INTEL NIVEL 5**: Expansión masiva de dorks de inteligencia. Integración de dorks para TrueCaller, RocketReach y ContactOut para maximizar el hallazgo de identidades reales.
+- **🧹 LIMPIEZA INTELIGENTE**: Eliminadas las funciones de limpieza autodestructivas. El bot ahora limpia procesos de forma segura sin interferir con la sesión activa.
+
+### 🇺🇸 ENGLISH
+- **🧬 ATOMIC RESTORATION (DRIVER SYNC)**: Real-time browser heartbeat monitoring (`is_alive`). Instantly resuscitates the driver if it crashes or is closed, killing `WinError 10061` for good.
+- **⚡ ZENITH LENIENCY MODE**: Filter relaxation to avoid empty proxy pools. Now accepts Datacenter proxies (ES) as fallback, and latency limit raised to **4.5s**.
+- **👁️ LEVEL 5 INTEL**: Massive dork expansion. Added TrueCaller, RocketReach, and ContactOut to maximize real identity hits.
+- **🧹 SMART CLEANUP**: Removed self-destructive cleanup functions. Safer process management without killing the active session.
+
+
 ## [v2.2.81] - Titan Apex Saul Overclock (The Final Stand) (2026-02-07)
 ### 🇪🇸 ESPAÑOL
 - **⏳ OVERCLOCKED TIMEOUTS**: Aumentado el tiempo de carga por página a 60 segundos. Esto permite que los proxies residenciales españoles (lentos pero efectivos) tengan tiempo de cargar los datos sin ser descartados.

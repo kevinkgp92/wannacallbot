@@ -68,7 +68,22 @@ class BrowserManager:
             self.scraper.blacklist_proxy(self.current_proxy)
             self.current_proxy = None
 
+    def is_alive(self):
+        """v2.2.82: Zenith Heartbeat - Checks if the driver is still responsive."""
+        if not self.driver: return False
+        try:
+            # Simple check that doesn't affect page state
+            self.driver.current_url
+            return True
+        except:
+            return False
+
     def get_driver(self, force_chrome=False):
+        # v2.2.82: Zenith Sync - If driver exists but is dead, clear it
+        if self.driver and not self.is_alive():
+            print("💀 SISTEMA: Driver detectado como muerto. Re-inicializando...")
+            self.driver = None
+        
         if self.driver: return self.driver
 
         # POLICY CHANGE: FIREFOX IS NOW PRIMARY (Lighter, better Captcha handling)
