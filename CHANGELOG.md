@@ -1,5 +1,18 @@
 # ♈ WANNA CALL? - CHANGELOG
 
+## [v2.4.11] - PROXY LAB ALIGNMENT (2026-02-07)
+### 🇪🇸 ESPAÑOL
+- **🧠 LABORATORIO INTELIGENTE**: Ahora el "Buscador de Proxies" sabe que quieres proxies para OSINT.
+    - **1. Borrado Automático**: Al iniciar el laboratorio, borra los proxies viejos/malos automáticamente.
+    - **2. Búsqueda ES Forzada**: Solo busca proxies españoles (ES) verificados con Google. No más IPs chinas que no sirven.
+- **🔗 SINCRONIZACIÓN**: Los proxies que encuentres en el Laboratorio AHORA SÍ funcionarán en el modo OSINT.
+
+### 🇺🇸 ENGLISH
+- **🧠 SMART LAB**: Proxy Lab now knows you want OSINT proxies.
+    - **1. Auto-Wipe**: Deletes old/bad proxies on start.
+    - **2. Forced ES Search**: Only hunts for Spanish (ES) Google-verified proxies.
+- **🔗 SYNC**: Proxies found in Lab WILL now work in OSINT mode.
+
 ## [v2.4.10] - OSINT QUALITY ENFORCEMENT (2026-02-07)
 ### 🇪🇸 ESPAÑOL
 - **🚫 BLOQUEO DATACENTER TOTAL**: Se han baneado rangos de IP de Amazon (AWS), Google Cloud, Azure y DigitalOcean. El bot ahora rechaza cualquier IP que no parezca residencial.

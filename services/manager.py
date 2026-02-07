@@ -349,8 +349,11 @@ class ServiceManager:
             print(f"    Target: Google & Ocultación Total")
             
             # Use the existing scraper attached to browser_manager
-            # Force refresh to clear old verified proxies and find new ones
-            proxies = self.browser_manager.scraper.scrape(force_refresh=True)
+            # v2.4.11: NUCLEAR WIPE - As requested by user, we wipe everything first.
+            self.browser_manager.scraper.wipe_cache()
+            
+            # v2.4.11: FORCE ES - We need specific proxies for OSINT (Spanish), not global garbage.
+            proxies = self.browser_manager.scraper.scrape(country="ES", force_refresh=True)
             
             if proxies:
                 print(f"\n✅ LABORATORIO FINALIZADO: {len(proxies)} proxies de Alta Calidad (Google-Verified) guardados.")
