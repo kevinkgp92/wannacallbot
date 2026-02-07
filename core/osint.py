@@ -248,8 +248,8 @@ class OSINTManager:
     def _do_lookup_logic(self, browser, browser_manager, phone_str, name_hint, update_progress, stop_check, rotation_count, max_rotations):
         # GLOBAL TIMEOUT & CIRCUIT BREAKER
         circuit_breaker_tripped = False
-        browser.set_page_load_timeout(35) # v2.2.37: Boosted from 20s to 35s for Quantum OSINT
-        browser.set_script_timeout(35)
+        browser.set_page_load_timeout(60) # v2.2.86: Boosted to 60s for "Patience Mode"
+        browser.set_script_timeout(60)
         
         # UNIVERSAL JS INJECTOR: "Nuclear Spain Mode" (Optimized v2.2.29)
         def force_spain_universal(driver):
@@ -359,12 +359,21 @@ class OSINTManager:
                         continue
 
                     if is_net_error:
-                        print(f"🌐 ERROR DE RED (ZENITH AMNESTY): {e}. Rotando sin gastar intento...")
-                        # v2.2.82: AMNISTÍA ZENITH v2
-                        # No solo no incrementamos 'attempt', sino que evitamos penalizar 'rotation_count'
-                        # para que una racha de proxies con DNS roto no aborte la búsqueda.
-                        attempt -= 1 
-                        rotation_penalty = 0.2 # Penalización mínima vs 1.0 estándar
+                        # v2.2.86: SEGUNDA OPORTUNIDAD (Second Chance Policy)
+                        # Si es el primer fallo de este proxy, NO lo quemamos. Reiniciamos driver y probamos de nuevo.
+                        if attempt < timeout_retries - 1:
+                            print(f"🌐 ERROR DE RED (ZENITH MILD): {e}. Reintentando con el MISMO proxy (Segunda Oportunidad)...")
+                            try: b_mgr.close()
+                            except: pass
+                            browser = b_mgr.get_driver() # Re-init driver with SAME proxy (not rotated yet)
+                            # NO decrementamos attempt porque es un reintento "gratis" del mismo intento lógico
+                            # NO rotamos proxy.
+                            continue
+                        else:
+                            # Si falla por segunda vez, entonces sí es culpa del proxy.
+                            print(f"🔥 ERROR PERSISTENTE ({e}). Quemando proxy...")
+                            # Amnistía para rotation_count si fue solo error de red
+                            rotation_penalty = 0.5 
                     else:
                         print(f"⚠️ Error de conexión ({e}). Rotando proxy ({attempt+1}/{timeout_retries})...")
                         rotation_penalty = 1.0

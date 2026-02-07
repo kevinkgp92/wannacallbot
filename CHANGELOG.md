@@ -1,5 +1,17 @@
 # ♈ WANNA CALL? - CHANGELOG
 
+## [v2.2.87] - Zero Stutter (Paciencia Infinita) (2026-02-07)
+### 🇪🇸 ESPAÑOL
+- **📉 ZERO STUTTER UI**: Ajustado el ciclo de refresco de logs de 10ms a 100ms. Eliminados los "microsaltos" y la congelación de la ventana al moverla.
+- **🔄 SECOND CHANCE PROXY**: Si un proxy falla por `NetTimeout` o `DNS`, ya no se quema instantáneamente. El bot reinicia el driver y le da un segundo intento "gratis".
+- **⏳ MODO PACIENCIA (60s)**: Aumentado el timeout de carga de 35s a 60s para soportar proxies residenciales lentos sin falsos negativos.
+
+### 🇺🇸 ENGLISH
+- **📉 ZERO STUTTER UI**: Relaxed log refresh rate from 10ms to 100ms. Eliminated micro-stutters and window freezing during movement.
+- **🔄 SECOND CHANCE PROXY**: If a proxy fails due to `NetTimeout` or `DNS`, it is no longer burned immediately. The bot restarts the driver and gives it a "free" second attempt.
+- **⏳ PATIENCE MODE (60s)**: Increased load timeout from 35s to 60s to support slow residential proxies without false negatives.
+
+
 ## [v2.2.86] - Zenith Amnesty (Resiliencia OSINT) (2026-02-07)
 ### 🇪🇸 ESPAÑOL
 - **🛠️ PARSEO UNIVERSAL DE PROXIES**: Corregido el error crítico de Firefox (`not enough values to unpack`). El sistema ahora interpreta correctamente todos los formatos de proxy (`IP:PORT`, `PROTO|IP:PORT`, `IP:PORT|TIER`).
