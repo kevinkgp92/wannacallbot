@@ -1,5 +1,13 @@
 # ♈ WANNA CALL? - CHANGELOG
 
+## [v2.2.94] - OSINT Input Fix (2026-02-07)
+### 🇪🇸 ESPAÑOL
+- **🐛 UI FIX**: El campo de teléfono desaparecía al cambiar de "Proxy Lab" a "Buscador OSINT". Ahora se restaura correctamente para que puedas introducir el objetivo.
+
+### 🇺🇸 ENGLISH
+- **🐛 UI FIX**: Phone input field was disappearing when switching from "Proxy Lab" to "OSINT Finder". It is now correctly restored so you can enter the target.
+
+
 ## [v2.2.93] - Proxy Lab Crash Fix (2026-02-07)
 ### 🇪🇸 ESPAÑOL
 - **💥 CRASH FIX**: Solucionado error crítico en "Proxy Lab" (`unexpected keyword argument 'force_refresh'`). El motor de búsqueda ahora acepta comandos de refresco forzado.
