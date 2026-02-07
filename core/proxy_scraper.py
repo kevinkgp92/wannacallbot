@@ -637,15 +637,30 @@ class ProxyScraper:
                     google_ok = True
             except: pass
 
-            # FASE 4 (v2.2.96): REAL WORLD SSL TEST (Handshake Strictness)
-            # Many proxies pass Google 204 but fail actual data transfer.
-            # We test against a neutral HTTPS endpoint.
+            # FASE 4 (v2.2.99): REAL WORLD GOOGLE SEARCH (Title Verification)
+            # Replaces SSL check. We need to know if we can actually SEARCH.
+            # Many proxies pass 204 but fail Search with 429/Captcha.
             if google_ok:
                 try: 
-                    r_real = requests.get("https://ipv4.icanhazip.com", proxies=proxy_dict, timeout=10, headers=headers)
-                    if r_real.status_code != 200:
-                        # If it fails a real page load, revoke google_ok
+                    # Anti-CDN/Cloudflare Filter (v2.2.99)
+                    # Reject known CDN ranges that don't relay traffic correctly or are auto-blocked
+                    if actual_proxy.startswith("104.") or \
+                       actual_proxy.startswith("172.67.") or \
+                       actual_proxy.startswith("172.64.") or \
+                       actual_proxy.startswith("162.158.") or \
+                       actual_proxy.startswith("108.162."):
+                        return None 
+
+                    # Real Search Test
+                    r_real = requests.get("https://www.google.com/search?q=test&hl=es", 
+                                          proxies=proxy_dict, timeout=10, headers=headers)
+                    
+                    # If we get a CAPTCHA (429) or a strictly blocked page, it's useless
+                    if r_real.status_code == 429 or "recaptcha" in r_real.text.lower():
                         google_ok = False
+                    elif "<title>Google</title>" not in r_real.text and "Google" not in r_real.text:
+                         # Very strict: Must look like Google
+                         google_ok = False
                 except:
                     google_ok = False
 

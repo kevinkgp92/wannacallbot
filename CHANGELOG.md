@@ -1,5 +1,15 @@
 # ♈ WANNA CALL? - CHANGELOG
 
+## [v2.2.99] - Quality Purge (2026-02-07)
+### 🇪🇸 ESPAÑOL
+- **🚫 FILTRO ANTI-CDN**: El bot ahora rechaza automáticamente IPs de Cloudflare (104.x, 172.67.x) que suelen ser proxies falsos o trampas.
+- **🔍 PRUEBA DE BÚSQUEDA REAL**: Ya no basta con "conectar". Ahora el proxy debe realizar una búsqueda en Google (`?q=test`) y devolver una página normal (sin Captchas) para ser aceptado. Esto garantiza que funcionará en OSINT.
+
+### 🇺🇸 ENGLISH
+- **🚫 ANTI-CDN FILTER**: Bot now automatically rejects Cloudflare IPs (104.x, 172.67.x) which are often fake proxies or honeypots.
+- **🔍 REAL SEARCH TEST**: Connecting is no longer enough. The proxy must now perform a Google search (`?q=test`) and return a normal page (no Captchas) to be accepted. This guarantees it works for OSINT.
+
+
 ## [v2.2.98] - Proxy Logic Relax (2026-02-07)
 ### 🇪🇸 ESPAÑOL
 - **🧠 MEMORIA HISTÓRICA**: Corregido bug donde el OSINT olvidaba que los proxies del Laboratorio eran españoles solo porque no tenían la etiqueta "ES" explícita. Ahora los usa sin preguntar.
