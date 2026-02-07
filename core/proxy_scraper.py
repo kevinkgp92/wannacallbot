@@ -610,39 +610,43 @@ class ProxyScraper:
             proxy_dict = {proto: f"{proto}://{actual_proxy}"}
             headers = {"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36"}
             
-            # v2.2.84: PROTOCOLO REALIDAD ZENITH (Fix Lógico & Leniencia)
+            # v2.2.85: AMNISTÍA SAUL v3 (Leniencia Total)
+            # Aumentamos timeouts: Los proxies públicos son lentos por naturaleza.
+            
             # FASE 1: IP Check (HTTP Directo a 1.1.1.1)
             try:
-                # v2.2.84: 1.1.1.1 devuelve 301. Aceptamos 200 o 301.
-                r_ip = requests.get("http://1.1.1.1", proxies=proxy_dict, timeout=4, headers=headers, allow_redirects=False)
-                if r_ip.status_code not in [200, 301]: return None
-                checks_passed += 1
-            except: return None
+                r_ip = requests.get("http://1.1.1.1", proxies=proxy_dict, timeout=10, headers=headers, allow_redirects=False)
+                if r_ip.status_code in [200, 301]:
+                    checks_passed += 1
+            except: pass
 
             # FASE 2: DNS Check (HTTP a google.com)
             try:
-                r_dns = requests.get("http://www.google.com/generate_204", proxies=proxy_dict, timeout=5, headers=headers)
+                r_dns = requests.get("http://www.google.com/generate_204", proxies=proxy_dict, timeout=10, headers=headers)
                 if r_dns.status_code == 204:
                     checks_passed += 1
             except: pass
 
             # FASE 3: SSL/Tunnel Check (HTTPS a google.com)
             try:
-                r_ssl = requests.get("https://clients3.google.com/generate_204", proxies=proxy_dict, timeout=6, headers=headers)
+                r_ssl = requests.get("https://clients3.google.com/generate_204", proxies=proxy_dict, timeout=12, headers=headers)
                 if r_ssl.status_code == 204:
                     checks_passed += 1
             except: pass
 
-            # CRITERIO DE SUPERVIVENCIA (v2.2.84)
-            # 1. Prioridad Máxima: 3/3 (GOLDEN)
-            # 2. Último Recurso: 2/3 (Si rutea IP y tiene DNS o SSL)
+            # CRITERIO DE SUPERVIVENCIA (v2.2.85)
+            # 1. GOLDEN (3/3): El Santo Grial
+            # 2. SILVER (2/3): Muy bueno
+            # 3. BRONZE (1/3): "Peor es nada" - Si sobrevive a un check, lo intentamos
+            
             if checks_passed == 3:
                 return proxy
             
-            # v2.2.84: Si el proxy es ES y rutea IP + DNS, lo marcamos como "Silver" (Aceptable si no hay más)
-            if checks_passed >= 2:
-                # Marcamos internamente que es un proxy Silver para posterior limpieza si entran mejores
+            if checks_passed == 2:
                 return proxy + "|SILVER" if "|" not in proxy else proxy
+            
+            if checks_passed == 1:
+                return proxy + "|BRONZE" if "|" not in proxy else proxy
             
             return None
 

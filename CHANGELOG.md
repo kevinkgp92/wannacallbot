@@ -1,6 +1,16 @@
 # ♈ WANNA CALL? - CHANGELOG
 
-## [v2.2.84] - Titan Apex Saul Fixit (El Arregla-Lo-Todo) (2026-02-07)
+## [v2.2.85] - Titan Apex Saul Amnesty (Rescate OSINT) (2026-02-07)
+### 🇪🇸 ESPAÑOL
+- **♈ AMNISTÍA SAUL v3**: Relajación total de los filtros de validación de proxies. Ahora se aceptan proxies si pasan CUALQUIERA de las 3 fases (IP, DNS o SSL).
+- **⏱️ TIMEOUTS RELAX**: Aumentada la paciencia del validador de 4s a 10s-12s para capturar proxies lentos pero funcionales.
+- **🛡️ SISTEMA DE CATEGORÍAS**: Implementada clasificación interna de proxies (Golden, Silver, Bronze) para priorizar la mejor conexión disponible.
+
+### 🇺🇸 ENGLISH
+- **♈ SAUL AMNESTY v3**: Total relaxation of proxy validation filters. Proxies are now accepted if they pass ANY of the 3 phases (IP, DNS, or SSL).
+- **⏱️ RELAXED TIMEOUTS**: Increased validator patience from 4s to 10s-12s to capture slow but functional proxies.
+- **🛡️ CATEGORY SYSTEM**: Implemented internal proxy ranking (Golden, Silver, Bronze) to prioritize the best available connection.
+
 ### 🇪🇸 ESPAÑOL
 - **🔧 HOTFIX TRIPLE-CHECK**: Corregido fallo lógico en la Phase 1 (IP) que descartaba erróneamente proxies por redirecciones 301.
 - **🛡️ LENIENCIA TÁCTICA 2/3**: En caso de pool vacío, el bot ahora permite proxies que pasen 2 de las 3 fases (IP + DNS/SSL) para evitar bloqueos totales.
