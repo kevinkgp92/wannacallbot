@@ -1,5 +1,15 @@
 # ♈ WANNA CALL? - CHANGELOG
 
+## [v2.2.91] - Proxy Lab Mode (2026-02-07)
+### 🇪🇸 ESPAÑOL
+- **🔬 PROXY LAB**: Nuevo modo "Buscador de Proxies (Solo)". Permite cazar y validar proxies masivamente sín necesidad de ejecutar un ataque. Los proxies validados (Google-or-Die) se guardan en caché para usarse después en OSINT.
+- **🛡️ UI UX**: La interfaz ahora se adapta (color Cian) y oculta campos innecesarios cuando se activa el modo Proxy Lab.
+
+### 🇺🇸 ENGLISH
+- **🔬 PROXY LAB**: New mode "Proxy Finder (Only)". Allows massive proxy hunting and validation without running an attack. Validated proxies (Google-or-Die) are cached for later OSINT use.
+- **🛡️ UI UX**: Interface now adapts (Cyan color) and hides unnecessary fields when Proxy Lab mode is active.
+
+
 ## [v2.2.90] - Hotfix (Restored Queue) (2026-02-07)
 ### 🇪🇸 ESPAÑOL
 - **🔥 CRITICAL HOTFIX**: Corregido el "Crash al Inicio" de v2.2.89. Se había eliminado accidentalmente la cola de mensajes (`msg_queue`) al optimizar los logs. Restaurada su funcionalidad.

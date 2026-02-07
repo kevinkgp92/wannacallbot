@@ -85,7 +85,7 @@ class BootstrapSplash:
         self.progress.pack(pady=10)
         
         # Version Tag
-        tk.Label(self.root, text="Titan Apex v2.2.90 (HOTFIX)", font=("Arial", 8), fg="#333", bg="#16161d").pack(side="bottom", pady=5)
+        tk.Label(self.root, text="Titan Apex v2.2.91 (PROXY LAB)", font=("Arial", 8), fg="#333", bg="#16161d").pack(side="bottom", pady=5)
         
         self.root.update()
 
@@ -239,7 +239,7 @@ class TextRedirector(object):
 class OsintGUI(ctk.CTk):
     def __init__(self):
         super().__init__()
-        self.version = "2.2.90"
+        self.version = "2.2.91"
         
         # NITRO: Init attributes BEFORE splash to avoid AttributeError
         self.updater_ready = False
@@ -588,7 +588,7 @@ class OsintGUI(ctk.CTk):
         self.action_frame = ctk.CTkFrame(self.main_frame, fg_color="transparent")
         self.action_frame.grid(row=1, column=0, padx=30, pady=(0, 20), sticky="ew")
         
-        self.btn_start = ctk.CTkButton(self.action_frame, text=f"!!! INICIAR v2.2.90 !!!", command=self.start_process, 
+        self.btn_start = ctk.CTkButton(self.action_frame, text=f"!!! INICIAR v2.2.91 !!!", command=self.start_process, 
                                        fg_color="#2ecc71", hover_color="#27ae60", height=60, corner_radius=15,
                                        font=ctk.CTkFont(family="Roboto", size=20, weight="bold"),
                                        border_width=2, border_color="#2ecc71")
@@ -1184,20 +1184,35 @@ class OsintGUI(ctk.CTk):
             self.entry_name.grid()
             self.entry_surname.grid_remove()
             self.entry_email.grid_remove()
+            self.entry_email.grid_remove()
             self.entry_zip.grid_remove()
+        elif "Proxies" in new_mode:
+            desc = "Busca y valida proxies contra Google. Preparación para OSINT."
+            self.Target_label.configure(text="LABORATORIO DE PROXIES", text_color="#00efff")
+            self.Target_desc.configure(text="Búsqueda dedicada de conexiones seguras.")
+            self.btn_start.configure(text="INICIAR BÚSQUEDA", fg_color="#00efff", hover_color="#00bdcc", text_color="#000000")
+            
+            # Hide ALL inputs
+            self.entry_name.grid_remove()
+            self.entry_surname.grid_remove()
+            self.entry_email.grid_remove()
+            self.entry_zip.grid_remove()
+            self.entry_phone.grid_remove()
         
-        # Restore defaults if not OSINT
-        if "OSINT" not in new_mode:
+        # Restore defaults if not OSINT/Proxy
+        if "OSINT" not in new_mode and "Proxies" not in new_mode:
             self.Target_label.configure(text="DATOS DEL OBJETIVO", text_color="#ff4500")
             self.Target_desc.configure(text="Información de la víctima para los formularios")
             self.btn_start.configure(text="INICIAR ATAQUE", fg_color="#e74c3c", hover_color="#c0392b")
             self.entry_name.configure(placeholder_text="Nombre")
             
             # Show fields
+            # Show fields
             self.entry_name.grid()
             self.entry_surname.grid()
             self.entry_email.grid()
             self.entry_zip.grid()
+            self.entry_phone.grid()
         
         self.mode_desc.configure(text=desc)
 
@@ -1299,7 +1314,10 @@ class OsintGUI(ctk.CTk):
         if self.running: return
         
         data = self.get_user_data()
-        if not data['phone']:
+        mode = self.mode_option.get()
+        
+        # Validation: Phone is required unless in Proxy Lab mode
+        if not data['phone'] and "Proxies" not in mode:
             print("ERROR: El teléfono es obligatorio.")
             return
 
@@ -1598,6 +1616,8 @@ class OsintGUI(ctk.CTk):
                     manager.run_contrareembolso()
                 elif "OSINT" in mode:
                     manager.run_osint(current_target['phone'])
+                elif "Proxies" in mode:
+                    manager.run_proxy_lab()
                 
                 # Update global stats
                 self.update_stats(manager.stats['success'], manager.stats['error'])

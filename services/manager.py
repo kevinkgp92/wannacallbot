@@ -341,6 +341,29 @@ class ServiceManager:
             print(f"❌ Error en OSINT: {e}")
             self.browser_manager.close()
             return None
+    
+    def run_proxy_lab(self):
+        """Dedicated Proxy Scraper Mode (Google-or-Die enforced)"""
+        try:
+            print(f"🔬 INICIANDO LABORATORIO DE PROXIES...")
+            print(f"    Target: Google & Ocultación Total")
+            
+            # Use the existing scraper attached to browser_manager
+            # Force refresh to clear old verified proxies and find new ones
+            proxies = self.browser_manager.scraper.scrape(force_refresh=True)
+            
+            if proxies:
+                print(f"\n✅ LABORATORIO FINALIZADO: {len(proxies)} proxies de Alta Calidad (Google-Verified) guardados.")
+                print(f"    Los proxies están listos para OSINT.")
+            else:
+                print(f"\n⚠️ LABORATORIO FINALIZADO: No se encontraron proxies válidos bajo los criterios estrictos.")
+            
+            self.browser_manager.close()
+            return proxies
+        except Exception as e:
+            print(f"❌ Error en Laboratorio de Proxies: {e}")
+            self.browser_manager.close()
+            return None
 
     def print_summary(self):
         """Prints a high-visibility summary of the operation"""
