@@ -1,5 +1,19 @@
 # ♈ WANNA CALL? - CHANGELOG
 
+## [v2.2.86] - Zenith Amnesty (Resiliencia OSINT) (2026-02-07)
+### 🇪🇸 ESPAÑOL
+- **🛠️ PARSEO UNIVERSAL DE PROXIES**: Corregido el error crítico de Firefox (`not enough values to unpack`). El sistema ahora interpreta correctamente todos los formatos de proxy (`IP:PORT`, `PROTO|IP:PORT`, `IP:PORT|TIER`).
+- **🧬 RESURRECCIÓN ZENITH v2**: Refuerzo de la estabilidad del driver. Si el navegador se cierra o falla antes de una búsqueda, se realiza una limpieza nuclear de procesos y una resurrección atómica.
+- **🛡️ ESCUDO DE PROXIES TIER**: Asegurada la compatibilidad total con los rangos GOLDEN, SILVER y BRONZE en todos los navegadores (Chrome/Firefox).
+- **🚀 OPTIMIZACIÓN DE FLUJO**: Eliminados los cuellos de botella en la rotación de proxies bajo situaciones de bloqueo masivo.
+
+### 🇺🇸 ENGLISH
+- **🛠️ UNIVERSAL PROXY PARSING**: Fixed the critical Firefox unpack error. The system now correctly parses all proxy formats (`IP:PORT`, `PROTO|IP:PORT`, `IP:PORT|TIER`).
+- **🧬 ZENITH RESURRECTION v2**: Hardened driver stability. If the browser crashes or fails before a search, a nuclear cleanup and atomic resurrection are performed.
+- **🛡️ TIER PROXY SHIELD**: Ensured full compatibility with GOLDEN, SILVER, and BRONZE tiers across all browsers (Chrome/Firefox).
+- **🚀 FLOW OPTIMIZATION**: Eliminated proxy rotation bottlenecks during massive blocking events.
+
+
 ## [v2.2.85] - Titan Apex Saul Amnesty (Rescate OSINT) (2026-02-07)
 ### 🇪🇸 ESPAÑOL
 - **♈ AMNISTÍA SAUL v3**: Relajación total de los filtros de validación de proxies. Ahora se aceptan proxies si pasan CUALQUIERA de las 3 fases (IP, DNS o SSL).

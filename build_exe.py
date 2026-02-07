@@ -9,7 +9,7 @@ def get_version():
         with open("version.txt", "r") as f:
             return f.read().strip()
     except:
-        return "2.2.49"
+        return "2.2.86"
 
 def build():
     version = get_version()
@@ -23,8 +23,6 @@ def build():
     # Kill processes
     subprocess.run("taskkill /F /IM geckodriver.exe /T", shell=True, capture_output=True)
     subprocess.run("taskkill /F /IM chromedriver.exe /T", shell=True, capture_output=True)
-    # v2.2.45: NO LONGER KILLING BROWSER PROCESSES (Chrome/Firefox)
-    # Only kill previous versions of the bot if needed
     subprocess.run("taskkill /F /IM WannaCall_v*.exe /T", shell=True, capture_output=True)
     time.sleep(1)
 
@@ -35,7 +33,7 @@ def build():
                 shutil.rmtree(folder)
         except: pass
 
-    # Remove old EXEs
+    # Remove old EXEs (EXCEPT current dist if exists, but we want a fresh start)
     for old_exe in glob.glob("WannaCall_v*.exe"):
         try:
             os.remove(old_exe)
@@ -59,7 +57,7 @@ def build():
         "--noconfirm",
         "--onefile",
         "--windowed",
-        "--icon", "logo_v3.ico",
+        "--icon", "logo_v2.ico" if os.path.exists("logo_v2.ico") else "icon.ico",
         "--name", f"WannaCall_v{version}",
         "--distpath", dist_path,
         "--workpath", build_path,
@@ -74,6 +72,12 @@ def build():
         "gui.py"
     ]
     
+    # Check if logo_v3.ico exists, if not use icon.ico
+    if os.path.exists("logo_v3.ico"):
+        cmd[7] = "logo_v3.ico"
+    elif os.path.exists("icon.ico"):
+         cmd[7] = "icon.ico"
+
     result = subprocess.run(cmd)
     
     if result.returncode == 0:

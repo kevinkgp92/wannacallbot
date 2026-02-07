@@ -47,6 +47,50 @@ class BrowserManager:
                 # We only kill the automation drivers.
             except: pass
 
+    def _parse_proxy_string(self, proxy_str):
+        """v2.2.86: Universal parsing for IP:PORT|TIER and PROTO|IP:PORT|TIER."""
+        if not proxy_str: return None, None, None
+        
+        proto = "http"
+        actual_proxy = proxy_str
+        tier = None
+        
+        # 1. Extract Tier (e.g., |SILVER, |BRONZE)
+        if "|" in actual_proxy:
+            # We need to be careful: is it proto|proxy or proxy|tier?
+            # Pattern: proto|host:port|tier or host:port|tier
+            parts = actual_proxy.split("|")
+            
+            # Case: socks5|1.2.3.4:1080|SILVER
+            if len(parts) == 3:
+                proto = parts[0]
+                actual_proxy = parts[1]
+                tier = parts[2]
+            # Case: socks5|1.2.3.4:1080 OR 1.2.3.4:1080|SILVER
+            elif len(parts) == 2:
+                # If the first part has a colon, it's host:port|tier
+                if ":" in parts[0]:
+                    actual_proxy = parts[0]
+                    tier = parts[1]
+                else:
+                    # Otherwise it's proto|host:port
+                    proto = parts[0]
+                    actual_proxy = parts[1]
+        
+        # 2. Extract Host and Port (Safeguard against malformed actual_proxy)
+        try:
+            if ":" in actual_proxy:
+                host, port = actual_proxy.split(":", 1)
+                # Ensure port is numeric (might still have a stray | if logic above failed)
+                if "|" in port:
+                    port = port.split("|")[0]
+            else:
+                host, port = actual_proxy, "80"
+        except:
+            host, port = actual_proxy, "80"
+            
+        return proto, actual_proxy, (host, port)
+
     def _get_proxy(self):
         if self.proxy:
             if isinstance(self.proxy, list):
@@ -129,12 +173,8 @@ class BrowserManager:
         # Proxy (Supports HTTP, SOCKS4, SOCKS5)
         proxy_str = self._get_proxy()
         if proxy_str:
-            proto = "http"
-            actual_proxy = proxy_str
-            if "|" in proxy_str:
-                proto, actual_proxy = proxy_str.split("|", 1)
+            proto, actual_proxy, (host, port) = self._parse_proxy_string(proxy_str)
             
-            host, port = actual_proxy.split(':')
             options.set_preference("network.proxy.type", 1)
             
             if proto.startswith("socks"):
@@ -148,7 +188,7 @@ class BrowserManager:
                 options.set_preference("network.proxy.ssl", host)
                 options.set_preference("network.proxy.ssl_port", int(port))
             
-            print(f"  🔗 Usando Proxy ({proto.upper()}): {actual_proxy}")
+            print(f"  🔗 Usando Proxy ({proto.upper()}): {host}:{port}")
 
         # SSL / Security Bypass (Nuclear Mode)
         options.accept_insecure_certs = True
@@ -295,12 +335,8 @@ class BrowserManager:
             opt = uc.ChromeOptions()
             if self.headless: opt.add_argument("--headless")
             if proxy_str:
-                proto = "http"
-                actual_proxy = proxy_str
-                if "|" in proxy_str:
-                    proto, actual_proxy = proxy_str.split("|", 1)
-                
-                proxy_url = f"{proto}://{actual_proxy}"
+                proto, hp_str, (host, port) = self._parse_proxy_string(proxy_str)
+                proxy_url = f"{proto}://{host}:{port}"
                 opt.add_argument(f'--proxy-server={proxy_url}')
             # OSINT Force Spanish
             opt.add_argument("--lang=es-ES")
@@ -319,13 +355,9 @@ class BrowserManager:
             options.add_argument("--headless")
         
         if proxy_str:
-            proto = "http"
-            actual_proxy = proxy_str
-            if "|" in proxy_str:
-                proto, actual_proxy = proxy_str.split("|", 1)
-            
+            proto, hp_str, (host, port) = self._parse_proxy_string(proxy_str)
             # Chrome uses schemes like socks5:// or http:// for the proxy server flag
-            proxy_url = f"{proto}://{actual_proxy}"
+            proxy_url = f"{proto}://{host}:{port}"
             options.add_argument(f'--proxy-server={proxy_url}')
         
         # Simple native stealth & Spanish Locale

@@ -222,6 +222,12 @@ class OSINTManager:
             
             if check_ok:
                 try:
+                    # v2.2.86: Ensure a clean driver before starting sub-logic
+                    if browser and not browser_manager.is_alive():
+                        print("💀 SISTEMA: Driver detectado como inestable antes de empezar sub-lógica. Limpiando...")
+                        browser_manager.close()
+                        browser = browser_manager.get_driver()
+
                     # Execute the actual OSINT logic
                     # v2.2.78: Pass browser_manager to sub-logic to avoid NameError
                     return self._do_lookup_logic(browser, browser_manager, phone_str, name_hint, update_progress, stop_check, rotation_count, max_rotations)
@@ -343,7 +349,8 @@ class OSINTManager:
 
                     if is_driver_dead:
                         print(f"💀 DRIVER MUERTO DETECTADO ({e}). Iniciando Resurrección Atómica Zenith...")
-                        try: browser.quit()
+                        try: 
+                            b_mgr.close() # Nuclear cleanup
                         except: pass
                         # Force a clean start regardless of attempts
                         b_mgr.mark_current_proxy_bad()
