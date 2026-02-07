@@ -94,6 +94,7 @@ class ProxyScraper:
         self.last_scrape_time = 0
         self.last_full_scrape_time = 0 # v2.2.35: Cooldown for source download
         self.scrape_lock = threading.Lock() # v2.2.35: Prevent parallel storm
+        self.api_locks = {} # v2.4.12: FIX CRASH - Missing attribute
         self.session_blacklist = set() # v2.2.44: Global session blacklist for RO_FAKE/M247
         # v2.2.57: Titan Zenith - Atomic ASN Whitelist (Unforgeable)
         # v2.2.60: Titan Ultimatum - Expanded Residential Whitelist

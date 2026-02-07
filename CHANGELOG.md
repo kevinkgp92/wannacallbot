@@ -1,5 +1,14 @@
 # ♈ WANNA CALL? - CHANGELOG
 
+## [v2.4.12] - CRASH FIX (api_locks) (2026-02-07)
+### 🇪🇸 ESPAÑOL
+- **🩹 HOTFIX CRÍTIC0**: Arreglado error `AttributeError: 'ProxyScraper' ... 'api_locks'` que cerraba el programa al escanear. Error mío, perdón.
+- **✨ ESTABILIDAD**: El laboratorio de proxies ya no debería crashear al intentar bloquear IPs abusivas.
+
+### 🇺🇸 ENGLISH
+- **🩹 CRITICAL HOTFIX**: Fixed `AttributeError: ... 'api_locks'` crash during scan. My bad.
+- **✨ STABILITY**: Proxy Lab should no longer crash when rate-limiting abusive IPs.
+
 ## [v2.4.11] - PROXY LAB ALIGNMENT (2026-02-07)
 ### 🇪🇸 ESPAÑOL
 - **🧠 LABORATORIO INTELIGENTE**: Ahora el "Buscador de Proxies" sabe que quieres proxies para OSINT.
