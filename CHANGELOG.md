@@ -1,5 +1,15 @@
 # ♈ WANNA CALL? - CHANGELOG
 
+## [v2.2.98] - Proxy Logic Relax (2026-02-07)
+### 🇪🇸 ESPAÑOL
+- **🧠 MEMORIA HISTÓRICA**: Corregido bug donde el OSINT olvidaba que los proxies del Laboratorio eran españoles solo porque no tenían la etiqueta "ES" explícita. Ahora los usa sin preguntar.
+- **🧹 LIMPIEZA SUAVE**: El inicio del programa es menos agresivo borrando proxies antiguos, lo que ayuda a mantener la caché útil por más tiempo.
+
+### 🇺🇸 ENGLISH
+- **🧠 HISTORICAL MEMORY**: Fixed bug where OSINT forgot Lab proxies were Spanish just because they lacked explicit "ES" tag. It now uses them without asking.
+- **🧹 SOFT CLEAN**: Startup cleanup is less aggressive deleting old proxies, keeping cache useful for longer.
+
+
 ## [v2.2.97] - Syntax Hotfix (2026-02-07)
 ### 🇪🇸 ESPAÑOL
 - **🚑 HOTFIX CRÍTICO**: Solucionado error interno (`SyntaxError`) que impedía cargar el módulo de proxies. El "Buscador de Proxies" vuelve a estar operativo.

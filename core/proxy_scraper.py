@@ -173,18 +173,13 @@ class ProxyScraper:
         
         initial_count = len(self.proxies)
         clean_pool = []
+        # v2.2.98: Simplified sanitization to avoid list index errors and over-cleaning
+        # Only remove if explicitly marked as BAD
         for p in self.proxies:
             ip = p.split(':')[0]
             status = self.get_geo_status(ip)
-            
-            # Si ya sabemos que es nuclear o datacenter malo, fuera.
             if status in ["NUCLEAR_BL", "BAD_DC"]:
-                self.blacklist_proxy(p)
                 continue
-                
-            # Si no hay status pero el ASN es sospechoso (fallback), fuera.
-            # (Nota: Esto requiere un check que evitemos si es posible, 
-            # pero al arrancar podemos permitirnos un filtro ligero si tenemos info de ASNs guardada)
             clean_pool.append(p)
             
         self.proxies = clean_pool
@@ -725,9 +720,10 @@ class ProxyScraper:
             return random.choice(golden)
             
         # 2. If no GOLDEN, try any ES from cache BEFORE scraping
-        es_proxies = [p for p in self.proxies if self.get_geo_status(p.split(':')[0]) == "ES"]
+        # v2.2.98: Relaxed Check - Include ES and verify "Unknowns" later (Assume ES if in list from Phase 2)
+        es_proxies = [p for p in self.proxies if self.get_geo_status(p.split(':')[0]) in ["ES", None]]
         if es_proxies:
-            print(f"  🇪🇸 PROXY ESTÁNDAR: Usando IP Española (Datacenter/Business).")
+            print(f"  🇪🇸 PROXY ESTÁNDAR: Usando IP Española (Datacenter/Business) de {len(es_proxies)} candidatos.")
             return random.choice(es_proxies)
         
         # 3. Only if NO ES proxies exist, trigger massive scrape

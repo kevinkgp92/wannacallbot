@@ -85,7 +85,7 @@ class BootstrapSplash:
         self.progress.pack(pady=10)
         
         # Version Tag
-        tk.Label(self.root, text="Titan Apex v2.2.97 (HOTFIX)", font=("Arial", 8), fg="#333", bg="#16161d").pack(side="bottom", pady=5)
+        tk.Label(self.root, text="Titan Apex v2.2.98 (LOGIC RELAX)", font=("Arial", 8), fg="#333", bg="#16161d").pack(side="bottom", pady=5)
         
         self.root.update()
 
@@ -239,7 +239,7 @@ class TextRedirector(object):
 class OsintGUI(ctk.CTk):
     def __init__(self):
         super().__init__()
-        self.version = "2.2.97"
+        self.version = "2.2.98"
         
         # NITRO: Init attributes BEFORE splash to avoid AttributeError
         self.updater_ready = False
@@ -588,7 +588,7 @@ class OsintGUI(ctk.CTk):
         self.action_frame = ctk.CTkFrame(self.main_frame, fg_color="transparent")
         self.action_frame.grid(row=1, column=0, padx=30, pady=(0, 20), sticky="ew")
         
-        self.btn_start = ctk.CTkButton(self.action_frame, text=f"!!! INICIAR v2.2.97 !!!", command=self.start_process, 
+        self.btn_start = ctk.CTkButton(self.action_frame, text=f"!!! INICIAR v2.2.98 !!!", command=self.start_process, 
                                        fg_color="#2ecc71", hover_color="#27ae60", height=60, corner_radius=15,
                                        font=ctk.CTkFont(family="Roboto", size=20, weight="bold"),
                                        border_width=2, border_color="#2ecc71")
