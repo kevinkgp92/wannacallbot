@@ -1,5 +1,18 @@
 # ♈ WANNA CALL? - CHANGELOG
 
+## [v2.4.18] - QUANTUM BALANCE (YIELD OPTIMIZATION) (2026-02-07)
+### 🇪🇸 ESPAÑOL
+- **⚛️ EQUILIBRIO QUANTUM**: Re-ajustado el descubrimiento de IPs a 2.500 para aumentar la pesca de proxies.
+- **⚙️ MOTOR BALANCEADO**: Subido a 6 hilos para mayor velocidad sin sacrificar la fluidez del sistema.
+- **⏳ PACIENCIA MEJORADA**: Aumentado el tiempo de búsqueda profunda a 150s para evitar rendirse demasiado pronto.
+- **⚡ LOTES DINÁMICOS**: Lotes de Phase 2 aumentados a 250 IPs para mayor momentum.
+
+### 🇺🇸 ENGLISH
+- **⚛️ QUANTUM BALANCE**: Adjusted discovery limit to 2,500 IPs to improve proxy yield.
+- **⚙️ BALANCED ENGINE**: Increased to 6 threads for better speed without sacrificing system smoothness.
+- **⏳ IMPROVED PATIENCE**: Increased Phase 2 timeout to 150s to avoid early exits.
+- **⚡ DYNAMIC BATCHES**: Phase 2 batches increased to 250 IPs for better momentum.
+
 ## [v2.4.17] - ZEN REFRIGERATION (TWITCH HARMONY) (2026-02-07)
 ### 🇪🇸 ESPAÑOL
 - **🧘 MODO ZEN**: Reducida la carga de CPU drásticamente para permitir ver Twitch/YouTube sin tirones.

@@ -355,8 +355,8 @@ class ProxyScraper:
         
         # v2.2.68: TITAN NITRO - Hard Truncation for ultimate speed
         # Reducimos de 5000 a 250 para que la Fase 1 sea instantánea.
-        # v2.4.17: ZEN REFRIGERATION - Capped at 800 (from 1500) for Ultra-Low CPU usage.
-        limit = 800 if country_code == "ES" and len(uncached) > 250 else 250
+        # v2.4.18: QUANTUM BALANCE - Capped at 2500 (from 800) for better yield.
+        limit = 2500 if country_code == "ES" and len(uncached) > 250 else 250
         if len(uncached) > limit:
             print(f"  ⚡ Titan Nitro: Optimizando {len(uncached)} candidatos a los {limit} más prometedores.")
             uncached = uncached[:limit]
@@ -377,8 +377,8 @@ class ProxyScraper:
             # 1. BATCH STRATEGY (ip-api)
             if not self._is_api_locked("ip-api"):
                 try:
-                    # v2.4.17: ZEN JITTER - Increased sleep to 0.4-1.2s to yield CPU time.
-                    time.sleep(random.uniform(0.4, 1.2))
+                    # v2.4.18: QUANTUM JITTER - Balanced sleep 0.3-0.8s.
+                    time.sleep(random.uniform(0.3, 0.8))
                     p_data = [{"query": ip, "fields": "status,countryCode,as"} for ip in ips]
                     r = requests.post("http://ip-api.com/batch", json=p_data, timeout=12)
                     if r.status_code == 200:
@@ -428,8 +428,8 @@ class ProxyScraper:
             
             return res_matches
 
-        # v2.4.17: ZEN MOTOR - Reducing to 4 threads (Ultra-Stable).
-        with concurrent.futures.ThreadPoolExecutor(max_workers=4) as executor:
+        # v2.4.18: QUANTUM MOTOR - Balanced 6 threads.
+        with concurrent.futures.ThreadPoolExecutor(max_workers=6) as executor:
             futures = [executor.submit(process_chunk, c) for c in chunks]
             for f in concurrent.futures.as_completed(futures):
                 found = f.result()
@@ -578,7 +578,7 @@ class ProxyScraper:
              return self.proxies
 
         # HUNTING LOOP for ES in Tier 2
-        BATCH_SIZE = 100 # v2.2.43: Ultra-Responsive (Reduced from 1500 to 100)
+        BATCH_SIZE = 250 # v2.4.18: Increased for better momentum
         GOAL = 6 # v2.2.43: Target increased for better diversity
         MAX_SCAN = 60000 
         START_TIME = time.time()
@@ -589,9 +589,9 @@ class ProxyScraper:
         for i in range(0, len(tier2_candidates), BATCH_SIZE):
             if stop_signal and stop_signal(): break
             
-            # DESPERATION MODE (v2.2.19): If we have at least 1 and 60s passed, GO.
+            # DESPERATION MODE (v2.2.19): If we have at least 1 and 150s passed, GO.
             elapsed = time.time() - START_TIME
-            if elapsed > 60 and len(self.proxies) >= 1:
+            if elapsed > 150 and len(self.proxies) >= 1:
                 print(f"  ⚠️ MODO DESESPERACIÓN: {int(elapsed)}s transcurridos. Arrancando con {len(self.proxies)} proxies.")
                 break
 
@@ -749,10 +749,10 @@ class ProxyScraper:
             return None
 
         import concurrent.futures
-        # v2.4.17: ZEN MOTOR - Cap to 4 threads (Twitch Compatibility Mode).
+        # v2.4.18: QUANTUM MOTOR - Balanced 6 threads.
         total_checks = len(proxies)
         completed = 0
-        with concurrent.futures.ThreadPoolExecutor(max_workers=4) as executor:
+        with concurrent.futures.ThreadPoolExecutor(max_workers=6) as executor:
             futures = {executor.submit(is_alive, p): p for p in proxies}
             
             for future in concurrent.futures.as_completed(futures):
