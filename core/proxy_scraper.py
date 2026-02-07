@@ -610,51 +610,34 @@ class ProxyScraper:
             proxy_dict = {proto: f"{proto}://{actual_proxy}"}
             headers = {"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36"}
             
-            # DNS Health Check (v2.2.82+)
-            # If the proxy can't resolve common names, it will cause dnsNotFound in browser.
+            # v2.2.83: PROTOCOLO REALIDAD ZENITH (Triple-Check Dictatorial)
+            # FASE 1: IP Check (HTTP Directo a 1.1.1.1) - Verifica ruteo básico
             try:
-                # v2.2.82+: LENIENCIA ZENITH - Timeout aumentado a 5s para proxies lentos
-                r_dns = requests.get("http://1.1.1.1", proxies=proxy_dict, timeout=5, headers=headers)
-                # Si falla el check de IP directa (1.1.1.1), el proxy es basura (Ni siquiera rutea IP)
-                if r_dns.status_code != 200: return None
+                r_ip = requests.get("http://1.1.1.1", proxies=proxy_dict, timeout=4, headers=headers)
+                if r_ip.status_code != 200: return None
+            except: return None
+
+            # FASE 2: DNS Check (HTTP a google.com) - Verifica resolución de nombres
+            try:
+                # Usamos HTTP para no confundir fallos de DNS con fallos de túnel SSL aún
+                r_dns = requests.get("http://www.google.com/generate_204", proxies=proxy_dict, timeout=5, headers=headers)
+                if r_dns.status_code != 204: return None
+            except: return None
+
+            # FASE 3: SSL/Tunnel Check (HTTPS a google.com) - Verifica soporte CONNECT y cifrado
+            try:
+                # Este es el check crítico que fallaba en el rango 185.18.250.x
+                r_ssl = requests.get("https://clients3.google.com/generate_204", proxies=proxy_dict, timeout=6, headers=headers)
+                if r_ssl.status_code != 204: return None
+                
+                # Si llega aquí, medimos latencia definitiva basada en el túnel SSL
+                latency = time.time() - start_time
+                if latency > 4.5: return None
             except: 
-                return None
-            
-            # Check 1: Google (v2.2.32: FAST CHECK - 6s)
-            try:
-                r = requests.get("https://clients3.google.com/generate_204", 
-                                 proxies=proxy_dict, timeout=6, headers=headers)
-                if r.status_code == 204: 
-                    checks_passed += 1
-                    latency = time.time() - start_time
-                    # v2.2.82+: LENIENCIA ZENITH - Relajado de 2.0s a 4.5s para no morir de éxito
-                    if latency > 4.5: return None 
-            except: pass
+                return None # Fallo de túnel SSL (ERR_TUNNEL_CONNECTION_FAILED)
 
-            # Check 2: Icanhazip (v2.2.32: FAST CHECK - 5s)
-            try:
-                r = requests.get("https://ipv4.icanhazip.com", 
-                                 proxies=proxy_dict, timeout=5, headers=headers)
-                if r.status_code == 200 and len(r.text.strip()) <= 15: 
-                    checks_passed += 1
-                    latency = time.time() - start_time
-                    if latency > 4.5: return None
-            except: pass
-
-            # Check 3: Bing (v2.2.32: FAST CHECK - 5s)
-            if checks_passed < 2:
-                try:
-                    r = requests.get("https://www.bing.com", 
-                                     proxies=proxy_dict, timeout=5, headers=headers)
-                    if r.status_code == 200: 
-                        checks_passed += 1
-                        latency = time.time() - start_time
-                        if latency > 4.5: return None
-                except: pass
-
-            if checks_passed >= 2:
-                return proxy
-            return None
+            # ¡ORO PURO! Ha pasado las 3 pruebas de fuego
+            return proxy
 
         import concurrent.futures
         # v2.2.34: ARCTIC FREEZE - Bajar de 10 a 5 workers para evitar micro-stuttering del GIL

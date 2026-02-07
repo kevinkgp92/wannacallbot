@@ -1,5 +1,19 @@
 # ♈ WANNA CALL? - CHANGELOG
 
+## [v2.2.83] - Titan Apex Saul Reality (La Realidad Absoluta) (2026-02-07)
+### 🇪🇸 ESPAÑOL
+- **🛡️ PROTOCOLO REALIDAD ZENITH**: Implementado validador dictatorial de 3 fases (IP -> DNS -> SSL). Los proxies que no soportan túneles HTTPS o resolución de nombres son ejecutados al instante.
+- **⚡ ZERO TUNNEL ERRORS**: Eliminación total de los errores `net::ERR_TUNNEL_CONNECTION_FAILED` gracias al pre-check de túnel CONNECT obligatorio.
+- **🌐 DNS SHIELD v2**: Los proxies ahora deben demostrar que saben resolver dominios reales antes de ser entregados al navegador.
+- **🔥 PURGA DE RANGOS FANTASMA**: Identificación y bloqueo automático del rango `185.18.250.x` y similares que saboteaban el escaneo con falsos positivos de conectividad.
+
+### 🇺🇸 ENGLISH
+- **🛡️ ZENITH REALITY PROTOCOL**: Mandatory 3-phase validator (IP -> DNS -> SSL). Proxies that fail to support HTTPS tunnels or name resolution are terminated immediately.
+- **⚡ ZERO TUNNEL ERRORS**: Total elimination of `net::ERR_TUNNEL_CONNECTION_FAILED` errors via mandatory CONNECT tunnel pre-check.
+- **🌐 DNS SHIELD v2**: Proxies must prove they can resolve real domains before reaching the browser.
+- **🔥 GHOST RANGE PURGE**: Automatic identification and blocking of `185.18.250.x` and similar ranges that sabotaged scans with connectivity false positives.
+
+
 ## [v2.2.82] - Titan Apex Saul Zenith (El Juicio Final) (2026-02-07)
 ### 🇪🇸 ESPAÑOL
 - **🧬 RESURRECCIÓN ATÓMICA (DRIVER SYNC)**: El bot ahora monitoriza la vida del navegador en tiempo real (`is_alive`). Si detecta un fallo o cierre accidental, lo resucita de forma atómica y transparente. Se acabó el error `WinError 10061`.
