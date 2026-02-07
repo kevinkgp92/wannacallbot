@@ -18,6 +18,7 @@ Este workflow DEBE seguirse estrictamente en cada actualización de versión:
 ### 3. Construcción (EXE)
 - Ejecutar `python build_exe.py`.
 - Verificar que se genera el archivo `WannaCall_vX.X.XX_PORTABLE.exe`.
+- **IMPORTANTE**: No borrar el EXE hasta haberlo subido/enviado.
 
 ### 4. Ritual Git Final
 // turbo
@@ -25,6 +26,9 @@ Este workflow DEBE seguirse estrictamente en cada actualización de versión:
 2. `git commit -m "Nombre_Release vX.X.XX: Resumen rápido"`
 3. `git tag vX.X.XX`
 4. `git push origin main --force --tags`
+
+### 5. Subida de Binarios (Releases GitHub)
+- **Subir el EXE**: Subir `WannaCall_vX.X.XX_PORTABLE.exe` a la release de GitHub correspondiente al tag.
 
 ### 5. Limpieza
 - Eliminar carpetas `build_*` y `dist_*`.
