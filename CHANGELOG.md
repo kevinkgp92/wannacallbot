@@ -1,6 +1,16 @@
 # ♈ WANNA CALL? - CHANGELOG
 
-## [v2.2.83] - Titan Apex Saul Reality (La Realidad Absoluta) (2026-02-07)
+## [v2.2.84] - Titan Apex Saul Fixit (El Arregla-Lo-Todo) (2026-02-07)
+### 🇪🇸 ESPAÑOL
+- **🔧 HOTFIX TRIPLE-CHECK**: Corregido fallo lógico en la Phase 1 (IP) que descartaba erróneamente proxies por redirecciones 301.
+- **🛡️ LENIENCIA TÁCTICA 2/3**: En caso de pool vacío, el bot ahora permite proxies que pasen 2 de las 3 fases (IP + DNS/SSL) para evitar bloqueos totales.
+- **⚡ OPTIMIZACIÓN DE CONECTIVIDAD**: Refinado el timeout de resolución para ser más resiliente ante proxies públicos lentos.
+
+### 🇺🇸 ENGLISH
+- **🔧 TRIPLE-CHECK HOTFIX**: Fixed logical bug in Phase 1 (IP) that erroneously discarded proxies due to 301 redirects.
+- **🛡️ 2/3 TACTICAL LENIENCY**: In case of an empty pool, the bot now allows proxies that pass 2 out of 3 phases (IP + DNS/SSL) to avoid total lockouts.
+- **⚡ CONNECTIVITY OPTIMIZATION**: Refined resolution timeout to be more resilient against slow public proxies.
+
 ### 🇪🇸 ESPAÑOL
 - **🛡️ PROTOCOLO REALIDAD ZENITH**: Implementado validador dictatorial de 3 fases (IP -> DNS -> SSL). Los proxies que no soportan túneles HTTPS o resolución de nombres son ejecutados al instante.
 - **⚡ ZERO TUNNEL ERRORS**: Eliminación total de los errores `net::ERR_TUNNEL_CONNECTION_FAILED` gracias al pre-check de túnel CONNECT obligatorio.

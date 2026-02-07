@@ -85,7 +85,7 @@ class BootstrapSplash:
         self.progress.pack(pady=10)
         
         # Version Tag
-        tk.Label(self.root, text="Titan Apex v2.2.83 (Saul Reality)", font=("Arial", 8), fg="#333", bg="#16161d").pack(side="bottom", pady=5)
+        tk.Label(self.root, text="Titan Apex v2.2.84 (Saul Fixit)", font=("Arial", 8), fg="#333", bg="#16161d").pack(side="bottom", pady=5)
         
         self.root.update()
 
@@ -237,7 +237,7 @@ class TextRedirector(object):
 class OsintGUI(ctk.CTk):
     def __init__(self):
         super().__init__()
-        self.version = "2.2.83"
+        self.version = "2.2.84"
         
         # NITRO: Init attributes BEFORE splash to avoid AttributeError
         self.updater_ready = False
@@ -259,7 +259,7 @@ class OsintGUI(ctk.CTk):
         self.updater.check_updates_silent(callback=self._on_update_found)
         self.after(2000, self._process_update_queue)
 
-        self.title(f"WANNA CALL? v{self.version} [SAUL REALITY]")
+        self.title(f"WANNA CALL? v{self.version} [SAUL FIXIT]")
         self.geometry("1100x700")
         
         # Performance & Stats tracking

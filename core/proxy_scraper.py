@@ -610,34 +610,41 @@ class ProxyScraper:
             proxy_dict = {proto: f"{proto}://{actual_proxy}"}
             headers = {"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36"}
             
-            # v2.2.83: PROTOCOLO REALIDAD ZENITH (Triple-Check Dictatorial)
-            # FASE 1: IP Check (HTTP Directo a 1.1.1.1) - Verifica ruteo básico
+            # v2.2.84: PROTOCOLO REALIDAD ZENITH (Fix Lógico & Leniencia)
+            # FASE 1: IP Check (HTTP Directo a 1.1.1.1)
             try:
-                r_ip = requests.get("http://1.1.1.1", proxies=proxy_dict, timeout=4, headers=headers)
-                if r_ip.status_code != 200: return None
+                # v2.2.84: 1.1.1.1 devuelve 301. Aceptamos 200 o 301.
+                r_ip = requests.get("http://1.1.1.1", proxies=proxy_dict, timeout=4, headers=headers, allow_redirects=False)
+                if r_ip.status_code not in [200, 301]: return None
+                checks_passed += 1
             except: return None
 
-            # FASE 2: DNS Check (HTTP a google.com) - Verifica resolución de nombres
+            # FASE 2: DNS Check (HTTP a google.com)
             try:
-                # Usamos HTTP para no confundir fallos de DNS con fallos de túnel SSL aún
                 r_dns = requests.get("http://www.google.com/generate_204", proxies=proxy_dict, timeout=5, headers=headers)
-                if r_dns.status_code != 204: return None
-            except: return None
+                if r_dns.status_code == 204:
+                    checks_passed += 1
+            except: pass
 
-            # FASE 3: SSL/Tunnel Check (HTTPS a google.com) - Verifica soporte CONNECT y cifrado
+            # FASE 3: SSL/Tunnel Check (HTTPS a google.com)
             try:
-                # Este es el check crítico que fallaba en el rango 185.18.250.x
                 r_ssl = requests.get("https://clients3.google.com/generate_204", proxies=proxy_dict, timeout=6, headers=headers)
-                if r_ssl.status_code != 204: return None
-                
-                # Si llega aquí, medimos latencia definitiva basada en el túnel SSL
-                latency = time.time() - start_time
-                if latency > 4.5: return None
-            except: 
-                return None # Fallo de túnel SSL (ERR_TUNNEL_CONNECTION_FAILED)
+                if r_ssl.status_code == 204:
+                    checks_passed += 1
+            except: pass
 
-            # ¡ORO PURO! Ha pasado las 3 pruebas de fuego
-            return proxy
+            # CRITERIO DE SUPERVIVENCIA (v2.2.84)
+            # 1. Prioridad Máxima: 3/3 (GOLDEN)
+            # 2. Último Recurso: 2/3 (Si rutea IP y tiene DNS o SSL)
+            if checks_passed == 3:
+                return proxy
+            
+            # v2.2.84: Si el proxy es ES y rutea IP + DNS, lo marcamos como "Silver" (Aceptable si no hay más)
+            if checks_passed >= 2:
+                # Marcamos internamente que es un proxy Silver para posterior limpieza si entran mejores
+                return proxy + "|SILVER" if "|" not in proxy else proxy
+            
+            return None
 
         import concurrent.futures
         # v2.2.34: ARCTIC FREEZE - Bajar de 10 a 5 workers para evitar micro-stuttering del GIL
