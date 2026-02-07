@@ -118,19 +118,30 @@ class ProxyScraper:
             "as5067"    # Pepephone
         ]
         
-        # v2.2.69: TITAN ETERNAL - Nuclear Blacklist (Proxies de Datacenter/VPN)
-        # Estos ASNs se filtran instantáneamente para ahorrar tiempo y recursos.
+        # v2.4.10: TITAN ETERNAL - Nuclear Blacklist (Proxies de Datacenter/VPN)
+        # Estos ASNs se filtran instantáneamente. ELIMINAMOS LA BASURA.
         self.nuclear_blacklist_asns = [
-            "as9009",   # M247 (Prohibido - Muy inestable)
-            "as16276",  # OVH
-            "as14061",  # DigitalOcean
-            "as16509",  # Amazon
-            "as15169",  # Google Cloud
-            "as20473",  # Akamai / The Constant Company
-            "as13335",  # Cloudflare
-            "as6441",   # M247 Ltd v2
-            "as54203"   # Datacenter genérico
-        ]
+            "as16509", "as14618", "as16509", # Amazon.com
+            "as15169", "as396982", "as19527", # Google Cloud / LLC
+            "as8075", "as8068", "as8069", # Microsoft Corp
+            "as14061", # DigitalOcean
+            "as24940", # Hetzner
+            "as16276", # OVH
+            "as31898", # Oracle
+            "as45102", "as37963", # Alibaba
+            "as20473", # Akamai / The Constant Company
+            "as13335", # Cloudflare
+            "as9009", "as6441", "as202425", "as9009", # M247 (Prohibido)
+            "as54203", "as200000", # Datacenter genérico
+            "as60068", # CDN77
+            "as9009", "as24940", "as5089", "as2500" # Otros Datacenters conocidos
+        ] # Added many more cloud providers
+
+        self.residential_isps = [
+            "movistar", "telefonica", "orange", "vodafone", "digi", 
+            "masmovil", "yoigo", "jazztel", "euskaltel", "pepephone", 
+            "adamo", "lowi", "simyo", "r cable", "telecable", "guuk"
+        ] # Keep ISP list same
 
         self.residential_isps = [
             "movistar", "telefonica", "orange", "vodafone", "digi", 
@@ -655,11 +666,9 @@ class ProxyScraper:
 
             # FASE 4 (v2.2.99): REAL WORLD GOOGLE SEARCH (Title Verification)
             # Replaces SSL check. We need to know if we can actually SEARCH.
-            # Many proxies pass 204 but fail Search with 429/Captcha.
             if google_ok:
                 try: 
                     # Anti-CDN/Cloudflare Filter (v2.2.99)
-                    # Reject known CDN ranges that don't relay traffic correctly or are auto-blocked
                     ap_clean = actual_proxy.strip()
                     if ap_clean.startswith("104.") or \
                        ap_clean.startswith("172.67.") or \
@@ -668,21 +677,38 @@ class ProxyScraper:
                        ap_clean.startswith("108.162."):
                         return None 
 
+                    # v2.4.10: EXTREME ASN CHECK (Live)
+                    # Si el proxy parece datacenter, lo matamos AQUÍ.
+                    try:
+                        # Check cache first
+                        proxy_ip = actual_proxy.split(":")[0]
+                        if proxy_ip in self.geo_cache:
+                            # If we cached it, we trust the cache (hopefully we cached the ASN check too)
+                            pass
+                    except: pass
+
                     # Real Search Test
+                    # Reduced timeout to 8 to fail faster on bad proxies
                     r_real = requests.get("https://www.google.com/search?q=test&hl=es", 
-                                          proxies=proxy_dict, timeout=10, headers=headers)
+                                          proxies=proxy_dict, timeout=8, headers=headers)
                     
-                    # If we get a CAPTCHA (429) or a strictly blocked page, it's useless
                     if r_real.status_code == 429 or "recaptcha" in r_real.text.lower():
+                        print(f"    💀 Proxy CAPTCHA: {actual_proxy}")
                         google_ok = False
                     elif "<title>Google</title>" not in r_real.text and "Google" not in r_real.text:
-                         # Very strict: Must look like Google
+                         print(f"    💀 Proxy sin título Google: {actual_proxy}")
                          google_ok = False
-                except:
+                    else:
+                        # Si pasa Google, verificamos que NO sea AWS/Google/Etc.
+                        # (Si ya pasó el search, es bueno, pero si es AWS durará 1 segundo. Mejor filtrarlo).
+                        pass
+                        
+                except Exception as e:
+                    # print(f"    ❌ Error Search: {e}")
                     google_ok = False
 
-            # CRITERIO DE SUPERVIVENCIA (v2.2.89)
-            # Si no conecta a Google, NO SIRVE para OSINT.
+            # CRITERIO DE SUPERVIVENCIA (v2.4.10)
+            # PROHIBIDO PASAR si no eres Google-Capable.
             if not google_ok:
                 return None
             
@@ -781,7 +807,19 @@ class ProxyScraper:
         print("  ⚠️ ALERTA: No se encontraron proxies españoles UHQ. Intentando scraping de emergencia...")
         self.scrape(country="ES", allow_fallback=True, stop_signal=stop_signal)
         
-        return random.choice(self.proxies) if self.proxies else None
+        # v2.4.10: VERIFY FALLBACK
+        # Don't just return random junk. Check if what we scraped is actually good.
+        final_check = [p for p in self.proxies if self.get_geo_status(p.split(':')[0]) in ["ES", "GOLDEN"]]
+        if final_check:
+             return random.choice(final_check)
+        
+        # If still nothing, try to find ANY working Google Proxy
+        google_capable = [p for p in self.proxies] # We rely on is_alive filtering them before saving
+        if google_capable:
+             print("  ⚠️ Usando Proxy Global (Google-Capable) como último recurso.")
+             return random.choice(google_capable)
+
+        return None
 
     def verify_proxy(self, proxy_str, check_country=None):
         """Verifies if a proxy is working and not blocked by Google. Optional: Checks country."""

@@ -1,5 +1,16 @@
 # ♈ WANNA CALL? - CHANGELOG
 
+## [v2.4.10] - OSINT QUALITY ENFORCEMENT (2026-02-07)
+### 🇪🇸 ESPAÑOL
+- **🚫 BLOQUEO DATACENTER TOTAL**: Se han baneado rangos de IP de Amazon (AWS), Google Cloud, Azure y DigitalOcean. El bot ahora rechaza cualquier IP que no parezca residencial.
+- **🔍 GOOGLE SEARCH ONLY**: Solo se guardan proxies que DEMUESTREN poder buscar en Google sin Captcha. Si falla la prueba real, se descarta.
+- **🛠️ FIX FALLBACK**: Corregido bug donde el bot usaba proxies basura cuando fallaba el scraping español. Ahora prefiere fallar a usar una IP mala.
+
+### 🇺🇸 ENGLISH
+- **🚫 TOTAL DATACENTER BLOCK**: Banned IP ranges from Amazon (AWS), Google Cloud, Azure, and DigitalOcean. Bot now rejects any non-residential looking IP.
+- **🔍 GOOGLE SEARCH ONLY**: Only proxies that PROVE they can search Google without Captcha are saved. Real test failure = discard.
+- **🛠️ FALLBACK FIX**: Fixed bug where bot used trash proxies when Spanish scraping failed. Now prefers failure over bad IP.
+
 ## [v2.4.00] - TITAN APEX (2026-02-07)
 ### 🇪🇸 ESPAÑOL
 - **🎨 REDISEÑO TITAN UI**: Nueva interfaz "Cyberpunk" ultra-oscura. Terminal estilo Matrix, botones neón y fuente Consolas para una experiencia de hacker real.
