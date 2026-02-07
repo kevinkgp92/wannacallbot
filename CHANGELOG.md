@@ -1,5 +1,17 @@
 # ♈ WANNA CALL? - CHANGELOG
 
+## [v2.3.00] - The Big Clean (2026-02-07)
+### 🇪🇸 ESPAÑOL
+- **☢️ RESET NUCLEAR**: Se ha eliminado automáticamente toda la caché de proxies antigua y corrupta. Empiezas de cero (0).
+- **🔒 POLÍTICA DE FRONTERAS CERRADAS**: Se acabó la "relajación". El bot ahora SOLO aceptará proxies que estén confirmados al 100% como ESPAÑOLES ("ES"). Nada de "Unknown" o "Indonesia".
+- **💎 CALIDAD SUPREMA**: Los filtros Anti-CDN se han ajustado para no dejar pasar ni una IP de Cloudflare.
+
+### 🇺🇸 ENGLISH
+- **☢️ NUCLEAR RESET**: Old and corrupt proxy cache has been automatically deleted. You start from zero (0).
+- **🔒 CLOSED BORDERS POLICY**: No more "relaxation". Bot now ONLY accepts proxies confirmed 100% as SPANISH ("ES"). No "Unknown" or "Indonesia".
+- **💎 SUPREME QUALITY**: Anti-CDN filters tuned to not let a single Cloudflare IP pass.
+
+
 ## [v2.2.99] - Quality Purge (2026-02-07)
 ### 🇪🇸 ESPAÑOL
 - **🚫 FILTRO ANTI-CDN**: El bot ahora rechaza automáticamente IPs de Cloudflare (104.x, 172.67.x) que suelen ser proxies falsos o trampas.

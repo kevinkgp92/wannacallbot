@@ -9,7 +9,7 @@ def get_version():
         with open("version.txt", "r") as f:
             return f.read().strip()
     except:
-        return "2.2.99"
+        return "2.3.00"
 
 def build():
     version = get_version()

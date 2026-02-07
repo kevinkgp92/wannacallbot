@@ -644,11 +644,12 @@ class ProxyScraper:
                 try: 
                     # Anti-CDN/Cloudflare Filter (v2.2.99)
                     # Reject known CDN ranges that don't relay traffic correctly or are auto-blocked
-                    if actual_proxy.startswith("104.") or \
-                       actual_proxy.startswith("172.67.") or \
-                       actual_proxy.startswith("172.64.") or \
-                       actual_proxy.startswith("162.158.") or \
-                       actual_proxy.startswith("108.162."):
+                    ap_clean = actual_proxy.strip()
+                    if ap_clean.startswith("104.") or \
+                       ap_clean.startswith("172.67.") or \
+                       ap_clean.startswith("172.64.") or \
+                       ap_clean.startswith("162.158.") or \
+                       ap_clean.startswith("108.162."):
                         return None 
 
                     # Real Search Test
@@ -735,10 +736,16 @@ class ProxyScraper:
             return random.choice(golden)
             
         # 2. If no GOLDEN, try any ES from cache BEFORE scraping
-        # v2.2.98: Relaxed Check - Include ES and verify "Unknowns" later (Assume ES if in list from Phase 2)
-        es_proxies = [p for p in self.proxies if self.get_geo_status(p.split(':')[0]) in ["ES", None]]
+        # 2. If no GOLDEN, try any ES from cache BEFORE scraping
+        # v2.3.00: STRICT ES POLICY (No unknowns allowed)
+        # We filter specifically for "ES" or "GOLDEN".
+        es_proxies = [
+            p for p in self.proxies 
+            if self.get_geo_status(p.split(':')[0]) in ["ES", "GOLDEN"]
+        ]
+        
         if es_proxies:
-            print(f"  🇪🇸 PROXY ESTÁNDAR: Usando IP Española (Datacenter/Business) de {len(es_proxies)} candidatos.")
+            print(f"  🇪🇸 PROXY ESTÁNDAR: Usando IP Española (Confirmada v2.3.00) de {len(es_proxies)} candidatos.")
             return random.choice(es_proxies)
         
         # 3. Only if NO ES proxies exist, trigger massive scrape
