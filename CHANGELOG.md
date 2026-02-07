@@ -1,5 +1,15 @@
 # ♈ WANNA CALL? - CHANGELOG
 
+## [v2.2.95] - Proxy Trust (2026-02-07)
+### 🇪🇸 ESPAÑOL
+- **🔒 CONFIANZA CIEGA**: Ahora el sistema confía en los proxies del "Laboratorio" durante 30 minutos (antes 2). Esto evita que el OSINT los borre y empiece a buscar de cero si tardas un poco.
+- **⚡ OSINT INMEDIATO**: Si hay proxies españoles válidos, el OSINT arranca al instante sin exigir "GOLDEN" (Residenciales) si no los encuentra, acelerando el proceso masivamente.
+
+### 🇺🇸 ENGLISH
+- **🔒 BLIND TRUST**: System now trusts "Lab" proxies for 30 minutes (was 2). This prevents OSINT from wiping them and searching from scratch if you delay.
+- **⚡ INSTANT OSINT**: If valid Spanish proxies exist, OSINT starts immediately without demanding "GOLDEN" (Residential) if missing, massively speeding up the process.
+
+
 ## [v2.2.94] - OSINT Input Fix (2026-02-07)
 ### 🇪🇸 ESPAÑOL
 - **🐛 UI FIX**: El campo de teléfono desaparecía al cambiar de "Proxy Lab" a "Buscador OSINT". Ahora se restaura correctamente para que puedas introducir el objetivo.

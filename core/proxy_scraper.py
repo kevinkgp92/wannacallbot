@@ -445,9 +445,9 @@ class ProxyScraper:
         # =========================================================================
         current_time = time.time()
         
-        # PERSISTENCE (v2.2.34): If we have enough valid proxies and rescrape is too soon, EXIT.
-        if not force_refresh and self.proxies and (current_time - self.last_scrape_time) < 120:
-             # print(f"🚀 FASE 0: Usando proxies activos (Cooldown: {int(120 - (current_time - self.last_scrape_time))}s).")
+        # PERSISTENCE (v2.2.95): Increase cache life to 30 mins to respect Proxy Lab results.
+        if not force_refresh and self.proxies and (current_time - self.last_scrape_time) < 1800:
+             # print(f"🚀 FASE 0: Usando proxies activos (Cooldown: {int(1800 - (current_time - self.last_scrape_time))}s).")
              return self.proxies
 
         if not force_refresh and self.proxies:
@@ -701,8 +701,14 @@ class ProxyScraper:
             print(f"  🌟 PROXY SUPREMO: Usando IP Española Residencial de alta confianza.")
             return random.choice(golden)
             
-        # 2. If no GOLDEN, try to scrape specific ES sources
-        print(f"  🔍 Búsqueda UHQ: No hay proxies GOLDEN en caché. Cazando IPs españolas reales...")
+        # 2. If no GOLDEN, try any ES from cache BEFORE scraping
+        es_proxies = [p for p in self.proxies if self.get_geo_status(p.split(':')[0]) == "ES"]
+        if es_proxies:
+            print(f"  🇪🇸 PROXY ESTÁNDAR: Usando IP Española (Datacenter/Business).")
+            return random.choice(es_proxies)
+        
+        # 3. Only if NO ES proxies exist, trigger massive scrape
+        print(f"  🔍 Búsqueda UHQ: No hay proxies ES en caché. Cazando IPs españolas reales...")
         self.scrape(country="ES", stop_signal=stop_signal)
         
         # Re-check GOLDEN after scrape
