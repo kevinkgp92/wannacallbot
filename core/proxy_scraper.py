@@ -150,17 +150,27 @@ class ProxyScraper:
             "adamo", "lowi", "simyo", "r cable", "telecable", "guuk"
         ]
 
-    # v2.4.00: TITAN PURGE - Deep Clean
+    # v2.4.13: TITAN PURGE - Nuclear Deep Clean (Exhaustive)
     def wipe_cache(self):
-        """Elimina físicamente los archivos de caché para un reinicio limpio."""
+        """Elimina físicamente TODOS los archivos de caché y proxies guardados."""
         try:
-            if os.path.exists(CACHE_FILE):
-                os.remove(CACHE_FILE)
-            if os.path.exists(GEO_CACHE_FILE):
-                os.remove(GEO_CACHE_FILE)
+            targets = [
+                CACHE_FILE, 
+                GEO_CACHE_FILE, 
+                "proxies.txt", 
+                "core/golden_proxies.json",
+                "core/proxies_cache.json"
+            ]
+            for target in targets:
+                if os.path.exists(target):
+                    os.remove(target)
+            
             self.proxies = []
             self.geo_cache = {}
-            print("  ☢️ TITAN PURGE: Caché eliminada física y lógicamente.")
+            if hasattr(self, 'session_blacklist'):
+                self.session_blacklist.clear()
+            
+            print("  ☢️ TITAN PURGE: Todos los rastros de proxies anteriores eliminados.")
             return True
         except Exception as e:
             print(f"  ❌ ERROR PURGE: {e}")
@@ -688,21 +698,30 @@ class ProxyScraper:
                             pass
                     except: pass
 
-                    # Real Search Test
-                    # Reduced timeout to 8 to fail faster on bad proxies
-                    r_real = requests.get("https://www.google.com/search?q=test&hl=es", 
+                    # Real OSINT-Style Search Test (v2.4.13)
+                    # We use a query that mimics OSINT behavior to ensure the proxy isn't just "okay" but "OSINT-Ready".
+                    queries = ["pueblo+vaticano+wikipedia", "spam+telefonico+españa", "lista+spam+numeros"]
+                    q = random.choice(queries)
+                    
+                    r_real = requests.get(f"https://www.google.com/search?q={q}&hl=es", 
                                           proxies=proxy_dict, timeout=8, headers=headers)
                     
-                    if r_real.status_code == 429 or "recaptcha" in r_real.text.lower():
-                        print(f"    💀 Proxy CAPTCHA: {actual_proxy}")
+                    text_low = r_real.text.lower()
+                    if r_real.status_code == 429 or "recaptcha" in text_low or "captcha" in text_low or "unusual traffic" in text_low:
+                        print(f"    💀 Proxy BLOQUEADO/CAPTCHA: {actual_proxy}")
                         google_ok = False
+                    elif "did not match any documents" in text_low:
+                         # If Google says no results for Wikipedia, it might be a soft-block or filtering
+                         google_ok = False
                     elif "<title>Google</title>" not in r_real.text and "Google" not in r_real.text:
                          print(f"    💀 Proxy sin título Google: {actual_proxy}")
                          google_ok = False
                     else:
-                        # Si pasa Google, verificamos que NO sea AWS/Google/Etc.
-                        # (Si ya pasó el search, es bueno, pero si es AWS durará 1 segundo. Mejor filtrarlo).
-                        pass
+                        # SUCCESS: Double check for Spanish content hints if it's an ES search
+                        if "españa" in q and "españa" not in text_low and "spain" not in text_low:
+                             # Proxy might be transparently redicting or showing generic results
+                             google_ok = False
+
                         
                 except Exception as e:
                     # print(f"    ❌ Error Search: {e}")

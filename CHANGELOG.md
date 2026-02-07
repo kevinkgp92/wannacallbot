@@ -1,5 +1,16 @@
 # ♈ WANNA CALL? - CHANGELOG
 
+## [v2.4.13] - UHQ PROXY ENFORCEMENT (2026-02-07)
+### 🇪🇸 ESPAÑOL
+- **🧪 VALIDACIÓN UHQ**: Los proxies ahora deben pasar búsquedas reales (Wikipedia/Spam) para ser aceptados.
+- **☢️ NUCLEAR WIPE**: El borrado de caché ahora elimina `proxies.txt` y todas las bases de datos antiguas. Limpieza total.
+- **🛡️ RESILIENCIA OSINT**: Filtrado agresivo de CAPTCHAs y "Soft-Blocks" de Google.
+
+### 🇺🇸 ENGLISH
+- **🧪 UHQ VALIDATION**: Proxies must now pass real searches (Wikipedia/Spam) to be accepted.
+- **☢️ NUCLEAR WIPE**: Cache wipe now deletes `proxies.txt` and all old databases. Full reset.
+- **🛡️ OSINT RESILIENCE**: Aggressive filtering for Google CAPTCHAs and Soft-Blocks.
+
 ## [v2.4.12] - CRASH FIX (api_locks) (2026-02-07)
 ### 🇪🇸 ESPAÑOL
 - **🩹 HOTFIX CRÍTIC0**: Arreglado error `AttributeError: 'ProxyScraper' ... 'api_locks'` que cerraba el programa al escanear. Error mío, perdón.
