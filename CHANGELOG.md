@@ -1,5 +1,15 @@
 # ♈ WANNA CALL? - CHANGELOG
 
+## [v2.2.88] - Patience & Throttling (2026-02-07)
+### 🇪🇸 ESPAÑOL
+- **⏳ TIMEOUT ENFORCER**: Corregido un "olvido" crítico donde los navegadores rotados perdían la configuración de 60s y volvían al timeout por defecto. Ahora se fuerza la paciencia de 60s en cada resurrección o rotación.
+- **📉 UI THROTTLER**: Limitada la tasa de actualización de la barra de progreso a 10 veces por segundo. Esto evita que el hilo de trabajo "inunde" la interfaz gráfica durante operaciones rápidas.
+
+### 🇺🇸 ENGLISH
+- **⏳ TIMEOUT ENFORCER**: Fixed a critical "amnesia" bug where rotated browsers lost the 60s timeout setting. Now enforcing 60s patience on every resurrection or rotation.
+- **📉 UI THROTTLER**: Capped progress bar update rate to 10fps. This prevents the worker thread from flooding the GUI event loop during fast operations.
+
+
 ## [v2.2.87] - Zero Stutter (Paciencia Infinita) (2026-02-07)
 ### 🇪🇸 ESPAÑOL
 - **📉 ZERO STUTTER UI**: Ajustado el ciclo de refresco de logs de 10ms a 100ms. Eliminados los "microsaltos" y la congelación de la ventana al moverla.

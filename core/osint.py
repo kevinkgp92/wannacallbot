@@ -298,6 +298,11 @@ class OSINTManager:
                 print(f"⚠️ PENALIZACIÓN ACTIVA: Rotando para saltar bloqueo en Google...")
                 b_mgr.rotate()
                 browser = b_mgr.get_driver()
+                # v2.2.88: TIMEOUT ENFORCER - Re-apply timeout after rotation!
+                try:
+                    browser.set_page_load_timeout(60)
+                    browser.set_script_timeout(60)
+                except: pass
                 time.sleep(5) # Penalty sleep
                 circuit_breaker_tripped = False # Reset for this specific attempt
 
@@ -355,6 +360,11 @@ class OSINTManager:
                         # Force a clean start regardless of attempts
                         b_mgr.mark_current_proxy_bad()
                         browser = b_mgr.get_driver()
+                        # v2.2.88: TIMEOUT ENFORCER - Re-apply timeout after resurrection!
+                        try:
+                            browser.set_page_load_timeout(60)
+                            browser.set_script_timeout(60)
+                        except: pass
                         attempt -= 1 # Re-attempt current source with fresh driver
                         continue
 
@@ -366,6 +376,11 @@ class OSINTManager:
                             try: b_mgr.close()
                             except: pass
                             browser = b_mgr.get_driver() # Re-init driver with SAME proxy (not rotated yet)
+                            # v2.2.88: TIMEOUT ENFORCER - Re-apply timeout after Second Chance!
+                            try:
+                                browser.set_page_load_timeout(60)
+                                browser.set_script_timeout(60)
+                            except: pass
                             # NO decrementamos attempt porque es un reintento "gratis" del mismo intento lógico
                             # NO rotamos proxy.
                             continue
@@ -397,8 +412,11 @@ class OSINTManager:
                         print("🚫 LÍMITE DE ROTACIÓN ALCANZADO: Demasiados bloqueos. Saltando fuente.")
                         return False
                     browser = b_mgr.get_driver()
-                    # v2.2.81: Overclocked Timeout (60s) to allow slow but valid residential proxies
-                    browser.set_page_load_timeout(60) 
+                    # v2.2.88: TIMEOUT ENFORCER - Re-apply timeout after loop rotation!
+                    try:
+                        browser.set_page_load_timeout(60)
+                        browser.set_script_timeout(60)
+                    except: pass
             
             print(f"❌ Error persistente en {url}. Saltando fuente.")
             if "google.com" in url:
