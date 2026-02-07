@@ -1,5 +1,16 @@
 # ♈ WANNA CALL? - CHANGELOG
 
+## [v2.4.15] - SSL-MANDATORY ENFORCEMENT (2026-02-07)
+### 🇪🇸 ESPAÑOL
+- **🛡️ SSL O MUERTE**: Eliminados los proxies que no soportan túneles SSL (Adiós a los errores `ERR_TUNNEL_CONNECTION_FAILED`).
+- **💎 ADIÓS BRONCE**: Eliminada la categoría de baja calidad. Solo proxies Plata y Oro permitidos para OSINT.
+- **⏳ TIMEOUT OPTIMIZADO**: Aumentado el tiempo de espera a 12s para reducir falsos negativos en proxies lentos.
+
+### 🇺🇸 ENGLISH
+- **🛡️ SSL-OR-DIE**: Eliminated proxies that don't support SSL tunneling (Fixed `ERR_TUNNEL_CONNECTION_FAILED`).
+- **💎 BYE BRONZE**: Removed low-quality tier. Only Silver and Gold proxies allowed for OSINT.
+- **⏳ OPTIMIZED TIMEOUT**: Increased verification timeout to 12s to reduce false negatives.
+
 ## [v2.4.14] - TURBO PROXY DISCOVERY (2026-02-07)
 ### 🇪🇸 ESPAÑOL
 - **⚡ TURBO MODE**: Eliminado el límite de 250 IPs en el Laboratorio. Ahora procesa miles de candidatos en la Fase 1.

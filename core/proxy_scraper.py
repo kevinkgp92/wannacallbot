@@ -648,8 +648,9 @@ class ProxyScraper:
             # Aumentamos timeouts: Los proxies públicos son lentos por naturaleza.
             
             # v2.2.89: GOOGLE-OR-DIE POLICY
-            # We track if the proxy can actually reach Google.
+            # We track if the proxy can actually reach Google and handle SSL.
             google_ok = False
+            ssl_ok = False
 
             # FASE 1: IP Check (HTTP Directo a 1.1.1.1)
             try:
@@ -663,7 +664,7 @@ class ProxyScraper:
                 r_dns = requests.get("http://www.google.com/generate_204", proxies=proxy_dict, timeout=8, headers=headers)
                 if r_dns.status_code == 204:
                     checks_passed += 1
-                    google_ok = True
+                    # google_ok = True # Removed: HTTP only isn't enough for OSINT
             except: pass
 
 
@@ -674,6 +675,7 @@ class ProxyScraper:
                 if r_ssl.status_code == 204:
                     checks_passed += 1
                     google_ok = True
+                    ssl_ok = True
             except: pass
 
             # FASE 4 (v2.2.99): REAL WORLD GOOGLE SEARCH (Title Verification)
@@ -704,8 +706,9 @@ class ProxyScraper:
                     queries = ["pueblo+vaticano+wikipedia", "spam+telefonico+españa", "lista+spam+numeros"]
                     q = random.choice(queries)
                     
+                    # v2.4.15: Increased timeout to 12s for heavy OSINT searches
                     r_real = requests.get(f"https://www.google.com/search?q={q}&hl=es", 
-                                          proxies=proxy_dict, timeout=8, headers=headers)
+                                          proxies=proxy_dict, timeout=12, headers=headers)
                     
                     text_low = r_real.text.lower()
                     if r_real.status_code == 429 or "recaptcha" in text_low or "captcha" in text_low or "unusual traffic" in text_low:
@@ -728,19 +731,18 @@ class ProxyScraper:
                     # print(f"    ❌ Error Search: {e}")
                     google_ok = False
 
-            # CRITERIO DE SUPERVIVENCIA (v2.4.10)
-            # PROHIBIDO PASAR si no eres Google-Capable.
-            if not google_ok:
+            # CRITERIO DE SUPERVIVENCIA (v2.4.15)
+            # PROHIBIDO PASAR si no eres SSL-Capable (Google).
+            if not ssl_ok or not google_ok:
                 return None
             
-            if checks_passed == 3:
+            if checks_passed >= 3:
                 return proxy
             
             if checks_passed == 2:
+                # If it passed SSL + Search or SSL + IP, it's Silver. 
+                # Bronze discarded for lack of SSL robustnes.
                 return proxy + "|SILVER" if "|" not in proxy else proxy
-            
-            if checks_passed >= 1 and google_ok:
-                return proxy + "|BRONZE" if "|" not in proxy else proxy
             
             return None
 
