@@ -632,7 +632,7 @@ class ProxyScraper:
                     google_ok = True
             except: pass
 
-            except: pass
+
 
             # FASE 3: SSL/Tunnel Check (HTTPS a google.com)
             try:

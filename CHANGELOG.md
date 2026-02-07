@@ -1,5 +1,13 @@
 # ♈ WANNA CALL? - CHANGELOG
 
+## [v2.2.97] - Syntax Hotfix (2026-02-07)
+### 🇪🇸 ESPAÑOL
+- **🚑 HOTFIX CRÍTICO**: Solucionado error interno (`SyntaxError`) que impedía cargar el módulo de proxies. El "Buscador de Proxies" vuelve a estar operativo.
+
+### 🇺🇸 ENGLISH
+- **🚑 CRITICAL HOTFIX**: Fixed internal error (`SyntaxError`) that prevented the proxy module from loading. "Proxy Finder" is validating again.
+
+
 ## [v2.2.96] - Visual Feedback & Hardened SSL (2026-02-07)
 ### 🇪🇸 ESPAÑOL
 - **📊 BARRA DE PROGRESO**: Ahora verás un porcentaje (10%, 20%...) mientras el bot verifica los proxies, para que sepas que está trabajando y no congelado.
