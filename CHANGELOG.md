@@ -1,5 +1,16 @@
 # ♈ WANNA CALL? - CHANGELOG
 
+## [v2.4.16] - ARCTIC BALANCE (CPU OPTIMIZATION) (2026-02-07)
+### 🇪🇸 ESPAÑOL
+- **🧊 OPTIMIZACIÓN CPU**: Reducido el límite de descubrimiento de 5.000 a 1.500 IPs para evitar saturación.
+- **🧵 HILOS EQUILIBRADOS**: Bajado de 15 a 10 hilos para un rendimiento fluido sin congelar el sistema.
+- **⚡ RENDIMIENTO ZEN**: Velocidad mantenida pero con mucho menos impacto térmico/recursos.
+
+### 🇺🇸 ENGLISH
+- **🧊 CPU OPTIMIZATION**: Lowered discovery limit from 5,000 to 1,500 IPs to prevent CPU spikes.
+- **🧵 BALANCED THREADING**: Reduced from 15 to 10 threads for smooth system performance.
+- **⚡ ZEN PERFORMANCE**: Speed maintained with significantly lower resource impact.
+
 ## [v2.4.15] - SSL-MANDATORY ENFORCEMENT (2026-02-07)
 ### 🇪🇸 ESPAÑOL
 - **🛡️ SSL O MUERTE**: Eliminados los proxies que no soportan túneles SSL (Adiós a los errores `ERR_TUNNEL_CONNECTION_FAILED`).
