@@ -1,5 +1,15 @@
 # ♈ WANNA CALL? - CHANGELOG
 
+## [v2.2.92] - Visible Lab (2026-02-07)
+### 🇪🇸 ESPAÑOL
+- **🐛 UI FIX**: El modo "Buscador de Proxies" no aparecía en el menú desplegable. Ahora sí es visible.
+- **📜 RITUAL**: Confirmado y reforzado el protocolo de idioma (Castellano) y proceso de release.
+
+### 🇺🇸 ENGLISH
+- **🐛 UI FIX**: "Proxy Finder" mode was not showing in the dropdown. Now it is visible.
+- **📜 RITUAL**: Confirmed and reinforced language protocol (Spanish) and release process.
+
+
 ## [v2.2.91] - Proxy Lab Mode (2026-02-07)
 ### 🇪🇸 ESPAÑOL
 - **🔬 PROXY LAB**: Nuevo modo "Buscador de Proxies (Solo)". Permite cazar y validar proxies masivamente sín necesidad de ejecutar un ataque. Los proxies validados (Google-or-Die) se guardan en caché para usarse después en OSINT.
