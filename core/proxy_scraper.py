@@ -355,8 +355,8 @@ class ProxyScraper:
         
         # v2.2.68: TITAN NITRO - Hard Truncation for ultimate speed
         # Reducimos de 5000 a 250 para que la Fase 1 sea instantánea.
-        # v2.4.16: ARCTIC BALANCE - Capped at 1500 (from 5000) to protect CPU.
-        limit = 1500 if country_code == "ES" and len(uncached) > 250 else 250
+        # v2.4.17: ZEN REFRIGERATION - Capped at 800 (from 1500) for Ultra-Low CPU usage.
+        limit = 800 if country_code == "ES" and len(uncached) > 250 else 250
         if len(uncached) > limit:
             print(f"  ⚡ Titan Nitro: Optimizando {len(uncached)} candidatos a los {limit} más prometedores.")
             uncached = uncached[:limit]
@@ -377,8 +377,8 @@ class ProxyScraper:
             # 1. BATCH STRATEGY (ip-api)
             if not self._is_api_locked("ip-api"):
                 try:
-                    # v2.2.66: Jitter aleatorio para evitar detección
-                    time.sleep(random.uniform(0.1, 0.4))
+                    # v2.4.17: ZEN JITTER - Increased sleep to 0.4-1.2s to yield CPU time.
+                    time.sleep(random.uniform(0.4, 1.2))
                     p_data = [{"query": ip, "fields": "status,countryCode,as"} for ip in ips]
                     r = requests.post("http://ip-api.com/batch", json=p_data, timeout=12)
                     if r.status_code == 200:
@@ -428,8 +428,8 @@ class ProxyScraper:
             
             return res_matches
 
-        # v2.2.67: VELOCITY - Aumentando a 15 hilos para el fallback individual
-        with concurrent.futures.ThreadPoolExecutor(max_workers=15) as executor:
+        # v2.4.17: ZEN MOTOR - Reducing to 4 threads (Ultra-Stable).
+        with concurrent.futures.ThreadPoolExecutor(max_workers=4) as executor:
             futures = [executor.submit(process_chunk, c) for c in chunks]
             for f in concurrent.futures.as_completed(futures):
                 found = f.result()
@@ -630,6 +630,8 @@ class ProxyScraper:
         alive = []
         
         def is_alive(proxy):
+            # v2.4.17: MICRO-SLEEP - Giving the OS air before starting
+            time.sleep(0.05)
             if stop_signal and stop_signal(): return None
             
             # Zenith Latency Standard (v2.2.82)
@@ -747,10 +749,10 @@ class ProxyScraper:
             return None
 
         import concurrent.futures
-        # v2.4.16: ARCTIC BALANCE - Bajar de 15 a 10 hilos para no saturar el CPU.
+        # v2.4.17: ZEN MOTOR - Cap to 4 threads (Twitch Compatibility Mode).
         total_checks = len(proxies)
         completed = 0
-        with concurrent.futures.ThreadPoolExecutor(max_workers=10) as executor:
+        with concurrent.futures.ThreadPoolExecutor(max_workers=4) as executor:
             futures = {executor.submit(is_alive, p): p for p in proxies}
             
             for future in concurrent.futures.as_completed(futures):

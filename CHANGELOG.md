@@ -1,5 +1,18 @@
 # ♈ WANNA CALL? - CHANGELOG
 
+## [v2.4.17] - ZEN REFRIGERATION (TWITCH HARMONY) (2026-02-07)
+### 🇪🇸 ESPAÑOL
+- **🧘 MODO ZEN**: Reducida la carga de CPU drásticamente para permitir ver Twitch/YouTube sin tirones.
+- **🧊 REFRIGERACIÓN PASSIVE**: Todos los motores limitados a solo 4 hilos (máxima estabilidad).
+- **📉 DISCOVERY SUAVE**: Límite de descubrimiento ajustado a 800 IPs para evitar picos térmicos.
+- **💤 LATENCIA POSITIVA**: Añadidas micro-pausas para ceder recursos al sistema operativo.
+
+### 🇺🇸 ENGLISH
+- **🧘 ZEN MODE**: Drastically reduced CPU load to allow smooth Twitch/YouTube streaming while scanning.
+- **🧊 PASSIVE COOLING**: All engines capped to 4 threads (maximum stability).
+- **📉 SMOOTH DISCOVERY**: Discovery limit adjusted to 800 IPs to prevent thermal spikes.
+- **💤 POSITIVE LATENCY**: Added micro-sleeps to yield resources to the OS.
+
 ## [v2.4.16] - ARCTIC BALANCE (CPU OPTIMIZATION) (2026-02-07)
 ### 🇪🇸 ESPAÑOL
 - **🧊 OPTIMIZACIÓN CPU**: Reducido el límite de descubrimiento de 5.000 a 1.500 IPs para evitar saturación.
