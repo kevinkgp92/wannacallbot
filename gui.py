@@ -85,7 +85,7 @@ class BootstrapSplash:
         self.progress.pack(pady=10)
         
         # Version Tag
-        tk.Label(self.root, text="Titan Apex v2.2.88 (ZERO STUTTER)", font=("Arial", 8), fg="#333", bg="#16161d").pack(side="bottom", pady=5)
+        tk.Label(self.root, text="Titan Apex v2.2.89 (GOOGLE-OR-DIE)", font=("Arial", 8), fg="#333", bg="#16161d").pack(side="bottom", pady=5)
         
         self.root.update()
 
@@ -163,8 +163,8 @@ class TextRedirector(object):
         target.tag_config("GOD", foreground="#ff4500")     # Orange-Red
 
         # v2.2.37: Quantum Batching - Queue for log messages
-        self.msg_queue = queue.Queue()
-        self._is_polling = False
+        # v2.2.89: EXE STUTTER FIX - Pre-compile regex!
+        self.ansi_escape = re.compile(r'\x1B(?:[@-Z\\-_]|\[[0-?]*[ -/]*[@-~])')
 
     def flush(self):
         """v2.2.68: Required for compatibility with print(flush=True)."""
@@ -173,9 +173,8 @@ class TextRedirector(object):
     def write(self, str_out):
         if not str_out: return
         
-        # Strip ANSI codes (colorama garbage)
-        ansi_escape = re.compile(r'\x1B(?:[@-Z\\-_]|\[[0-?]*[ -/]*[@-~])')
-        clean_str = ansi_escape.sub('', str_out)
+        # Strip ANSI codes using pre-compiled regex
+        clean_str = self.ansi_escape.sub('', str_out)
         
         if not clean_str: return
 
@@ -237,7 +236,7 @@ class TextRedirector(object):
 class OsintGUI(ctk.CTk):
     def __init__(self):
         super().__init__()
-        self.version = "2.2.88"
+        self.version = "2.2.89"
         
         # NITRO: Init attributes BEFORE splash to avoid AttributeError
         self.updater_ready = False
@@ -586,7 +585,7 @@ class OsintGUI(ctk.CTk):
         self.action_frame = ctk.CTkFrame(self.main_frame, fg_color="transparent")
         self.action_frame.grid(row=1, column=0, padx=30, pady=(0, 20), sticky="ew")
         
-        self.btn_start = ctk.CTkButton(self.action_frame, text=f"!!! INICIAR v2.2.88 !!!", command=self.start_process, 
+        self.btn_start = ctk.CTkButton(self.action_frame, text=f"!!! INICIAR v2.2.89 !!!", command=self.start_process, 
                                        fg_color="#2ecc71", hover_color="#27ae60", height=60, corner_radius=15,
                                        font=ctk.CTkFont(family="Roboto", size=20, weight="bold"),
                                        border_width=2, border_color="#2ecc71")

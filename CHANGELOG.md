@@ -1,5 +1,15 @@
 # ♈ WANNA CALL? - CHANGELOG
 
+## [v2.2.89] - Google-or-Die & Optimized Logs (2026-02-07)
+### 🇪🇸 ESPAÑOL
+- **🛡️ GOOGLE-OR-DIE POLICY**: Se acabó la "Amnistía". Ahora un proxy SOLO se acepta si demuestra conexión real con Google (DNS/SSL). Si solo conecta a Cloudflare (1.1.1.1) pero falla en Google, se descarta. Esto elimina los timeouts inmediatos en OSINT.
+- **⚡ OPTIMIZED LOGS (EXE FIX)**: Solucionado el "micro-stutter" en la versión compilada (.exe). El sistema de logs ahora pre-compila sus expresiones regulares, eliminando el lag causado por la impresión de texto en consola.
+
+### 🇺🇸 ENGLISH
+- **🛡️ GOOGLE-OR-DIE POLICY**: Amnesty is over. Now a proxy is ONLY accepted if it proves real connection to Google (DNS/SSL). If it only connects to Cloudflare but fails Google, it is discarded. This eliminates immediate timeouts in OSINT.
+- **⚡ OPTIMIZED LOGS (EXE FIX)**: Fixed "micro-stutter" in compiled (.exe) version. The log system now pre-compiles its regexes, eliminating lag caused by text printing.
+
+
 ## [v2.2.88] - Patience & Throttling (2026-02-07)
 ### 🇪🇸 ESPAÑOL
 - **⏳ TIMEOUT ENFORCER**: Corregido un "olvido" crítico donde los navegadores rotados perdían la configuración de 60s y volvían al timeout por defecto. Ahora se fuerza la paciencia de 60s en cada resurrección o rotación.

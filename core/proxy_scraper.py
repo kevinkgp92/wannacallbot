@@ -613,31 +613,37 @@ class ProxyScraper:
             # v2.2.85: AMNISTÍA SAUL v3 (Leniencia Total)
             # Aumentamos timeouts: Los proxies públicos son lentos por naturaleza.
             
+            # v2.2.89: GOOGLE-OR-DIE POLICY
+            # We track if the proxy can actually reach Google.
+            google_ok = False
+
             # FASE 1: IP Check (HTTP Directo a 1.1.1.1)
             try:
-                r_ip = requests.get("http://1.1.1.1", proxies=proxy_dict, timeout=10, headers=headers, allow_redirects=False)
+                r_ip = requests.get("http://1.1.1.1", proxies=proxy_dict, timeout=8, headers=headers, allow_redirects=False)
                 if r_ip.status_code in [200, 301]:
                     checks_passed += 1
             except: pass
 
             # FASE 2: DNS Check (HTTP a google.com)
             try:
-                r_dns = requests.get("http://www.google.com/generate_204", proxies=proxy_dict, timeout=10, headers=headers)
+                r_dns = requests.get("http://www.google.com/generate_204", proxies=proxy_dict, timeout=8, headers=headers)
                 if r_dns.status_code == 204:
                     checks_passed += 1
+                    google_ok = True
             except: pass
 
             # FASE 3: SSL/Tunnel Check (HTTPS a google.com)
             try:
-                r_ssl = requests.get("https://clients3.google.com/generate_204", proxies=proxy_dict, timeout=12, headers=headers)
+                r_ssl = requests.get("https://clients3.google.com/generate_204", proxies=proxy_dict, timeout=10, headers=headers)
                 if r_ssl.status_code == 204:
                     checks_passed += 1
+                    google_ok = True
             except: pass
 
-            # CRITERIO DE SUPERVIVENCIA (v2.2.85)
-            # 1. GOLDEN (3/3): El Santo Grial
-            # 2. SILVER (2/3): Muy bueno
-            # 3. BRONZE (1/3): "Peor es nada" - Si sobrevive a un check, lo intentamos
+            # CRITERIO DE SUPERVIVENCIA (v2.2.89)
+            # Si no conecta a Google, NO SIRVE para OSINT.
+            if not google_ok:
+                return None
             
             if checks_passed == 3:
                 return proxy
@@ -645,7 +651,7 @@ class ProxyScraper:
             if checks_passed == 2:
                 return proxy + "|SILVER" if "|" not in proxy else proxy
             
-            if checks_passed == 1:
+            if checks_passed >= 1 and google_ok:
                 return proxy + "|BRONZE" if "|" not in proxy else proxy
             
             return None
