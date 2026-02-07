@@ -66,7 +66,7 @@ class BootstrapSplash:
     def __init__(self):
         self.root = tk.Tk()
         self.root.overrideredirect(True)
-        self.root.configure(bg="#16161d")
+        self.root.configure(bg="#0a0a0f") # Ultra Dark
         
         w, h = 400, 320
         sw = self.root.winfo_screenwidth()
@@ -76,12 +76,15 @@ class BootstrapSplash:
         self.root.geometry(f"{w}x{h}+{x}+{y}")
         
         # UI Elements
-        tk.Label(self.root, text="⚖️", font=("Arial", 60), fg="#ff4500", bg="#16161d").pack(pady=(40, 10))
-        tk.Label(self.root, text="WANNA CALL?", font=("Arial", 20, "bold"), fg="white", bg="#16161d").pack()
-        self.status = tk.Label(self.root, text="Iniciando Motores...", font=("Arial", 10), fg="gray", bg="#16161d")
+        tk.Label(self.root, text="⚖️", font=("Segoe UI Emoji", 60), fg="#00ff88", bg="#0a0a0f").pack(pady=(40, 10))
+        tk.Label(self.root, text="TITAN APEX", font=("Roboto", 24, "bold"), fg="#ffffff", bg="#0a0a0f").pack()
+        self.status = tk.Label(self.root, text="Iniciando Sistemas de Vanguardia...", font=("Consolas", 10), fg="#00ff88", bg="#0a0a0f")
         self.status.pack(pady=10)
         
-        self.progress = ttk.Progressbar(self.root, length=300, mode='determinate')
+        style = ttk.Style()
+        style.theme_use('default')
+        style.configure("green.Horizontal.TProgressbar", background='#00ff88', troughcolor='#16161d', bordercolor='#0a0a0f')
+        self.progress = ttk.Progressbar(self.root, length=300, mode='determinate', style="green.Horizontal.TProgressbar")
         self.progress.pack(pady=10)
         
         # Version Tag
@@ -239,7 +242,7 @@ class TextRedirector(object):
 class OsintGUI(ctk.CTk):
     def __init__(self):
         super().__init__()
-        self.version = "2.3.00"
+        self.version = "2.4.00"
         
         # NITRO: Init attributes BEFORE splash to avoid AttributeError
         self.updater_ready = False
@@ -261,8 +264,13 @@ class OsintGUI(ctk.CTk):
         self.updater.check_updates_silent(callback=self._on_update_found)
         self.after(2000, self._process_update_queue)
 
-        self.title(f"WANNA CALL? v{self.version} [ZENITH AMNESTY]")
+        # TITAN UI CONFIG
+        ctk.set_appearance_mode("Dark")
+        ctk.set_default_color_theme("green") # Green accents for "Hacker" vibe
+        
+        self.title(f"TITAN APEX v{self.version} [CYBERPUNK EDITION]")
         self.geometry("1100x700")
+        self.configure(fg_color="#0a0a0f") # Ultra Dark Background
         
         # Performance & Stats tracking
         self.total_success = 0
@@ -1398,7 +1406,11 @@ class OsintGUI(ctk.CTk):
         from services.manager import SERVICE_CLASSES
         for cls in SERVICE_CLASSES:
             var = ctk.BooleanVar(value=True)
-            cb = ctk.CTkCheckBox(self.serv_frame, text=cls.__name__, variable=var, font=ctk.CTkFont(size=10))
+            # Cyberpunk Checkbox Style
+            cb = ctk.CTkCheckBox(self.serv_frame, text=cls.__name__, variable=var, 
+                                 font=ctk.CTkFont(family="Consolas", size=11),
+                                 fg_color="#00ff88", hover_color="#00cc6a", border_color="gray50",
+                                 text_color="white")
             cb.pack(fill="x", padx=5, pady=2)
             self.service_vars[cls.__name__] = var
 
@@ -1442,18 +1454,34 @@ class OsintGUI(ctk.CTk):
             print("ℹ️ El historial ya está vacío.")
 
     def export_log(self):
-        from tkinter import filedialog
-        file_path = filedialog.asksaveasfilename(defaultextension=".txt", 
-                                                 filetypes=[("Text files", "*.txt")],
-                                                 initialfile="perubianbot_log.txt")
-        if file_path:
-            try:
-                log_content = self.log_box.get("1.0", "end")
-                with open(file_path, "w", encoding="utf-8") as f:
-                    f.write(log_content)
-                print(f"💾 Log exportado correctamente a: {file_path}")
-            except Exception as e:
-                print(f"❌ Error al exportar log: {e}")
+        try:
+            from tkinter import filedialog
+            file_path = filedialog.asksaveasfilename(defaultextension=".txt", 
+                                                     filetypes=[("Text files", "*.txt")],
+                                                     initialfile="titan_apex_log.txt")
+            if file_path:
+                try:
+                    log_content = self.log_box.get("1.0", "end")
+                    with open(file_path, "w", encoding="utf-8") as f:
+                        f.write(log_content)
+                    self.log(f"💾 Log exportado correctamente a: {file_path}", "SUCCESS")
+                except Exception as e:
+                    self.log(f"❌ Error al exportar log: {e}", "ERROR")
+        except: pass
+
+    # v2.4.00: TITAN PURGE BUTTON
+    def manual_purge_cache(self):
+        try:
+            from tkinter import messagebox
+            if messagebox.askyesno("TITAN PURGE", "¿Estás seguro? Se BORRARÁ toda la caché de proxies.\n\nEl bot se reiniciará mentalmente."):
+                from core.proxy_scraper import ProxyScraper
+                scraper = ProxyScraper()
+                if scraper.wipe_cache():
+                    self.log("☢️ TITAN PURGE EJECUTADO: Memoria borrada.", "GOD")
+                    messagebox.showinfo("TITAN PURGE", "Memoria borrada. Reinicia el bot para aplicar cambios.")
+                else:
+                    self.log("❌ Error al borrar memoria.", "ERROR")
+        except: pass
 
     def open_logs_folder(self):
         """Open the logs directory in system explorer"""

@@ -137,6 +137,22 @@ class ProxyScraper:
             "masmovil", "yoigo", "jazztel", "euskaltel", "pepephone", 
             "adamo", "lowi", "simyo", "r cable", "telecable", "guuk"
         ]
+
+    # v2.4.00: TITAN PURGE - Deep Clean
+    def wipe_cache(self):
+        """Elimina físicamente los archivos de caché para un reinicio limpio."""
+        try:
+            if os.path.exists(CACHE_FILE):
+                os.remove(CACHE_FILE)
+            if os.path.exists(GEO_CACHE_FILE):
+                os.remove(GEO_CACHE_FILE)
+            self.proxies = []
+            self.geo_cache = {}
+            print("  ☢️ TITAN PURGE: Caché eliminada física y lógicamente.")
+            return True
+        except Exception as e:
+            print(f"  ❌ ERROR PURGE: {e}")
+            return False
         
         # v2.2.64: ZENITH OMEGA API LOCKS
         self.api_locks = {} # {api_name: lock_until_timestamp}
