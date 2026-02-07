@@ -434,7 +434,7 @@ class ProxyScraper:
             except: pass
         return list(found)
 
-    def scrape(self, country=None, allow_fallback=False, stop_signal=None):
+    def scrape(self, country=None, allow_fallback=False, stop_signal=None, force_refresh=False):
         """Mass Scrapes and HUNTS for valid proxies using a TIERED approach."""
         target_country = country if country else "Global"
         
@@ -446,11 +446,11 @@ class ProxyScraper:
         current_time = time.time()
         
         # PERSISTENCE (v2.2.34): If we have enough valid proxies and rescrape is too soon, EXIT.
-        if self.proxies and (current_time - self.last_scrape_time) < 120:
+        if not force_refresh and self.proxies and (current_time - self.last_scrape_time) < 120:
              # print(f"🚀 FASE 0: Usando proxies activos (Cooldown: {int(120 - (current_time - self.last_scrape_time))}s).")
              return self.proxies
 
-        if self.proxies:
+        if not force_refresh and self.proxies:
             # v2.2.35: Only log if we are actually checking something significant
             print(f"🚀 FASE 0: Verificando proxies en caché...")
             cached_live = self._check_proxies_live(self.proxies, stop_signal)
@@ -465,12 +465,12 @@ class ProxyScraper:
         # If another thread is already scraping, wait for it instead of starting a new scan
         with self.scrape_lock:
             # Check cache AGAIN after obtaining lock (Double-Check Pattern)
-            if self.proxies and (time.time() - self.last_scrape_time) < 30:
+            if not force_refresh and self.proxies and (time.time() - self.last_scrape_time) < 30:
                 return self.proxies
             
             # v2.2.69: SMART COOLDOWN BYPASS - Si el pool está seco, forzamos escaneo
             pool_dry = len(self.proxies) == 0
-            if (time.time() - self.last_full_scrape_time) < 60 and not pool_dry:
+            if not force_refresh and (time.time() - self.last_full_scrape_time) < 60 and not pool_dry:
                 print(f"⚠️ FASE 1/2 OMITIDA: Escaneo masivo recientemente completado (Cooldown < 60s).")
                 return self.proxies
 

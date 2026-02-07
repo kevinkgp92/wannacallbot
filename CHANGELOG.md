@@ -1,5 +1,13 @@
 # ♈ WANNA CALL? - CHANGELOG
 
+## [v2.2.93] - Proxy Lab Crash Fix (2026-02-07)
+### 🇪🇸 ESPAÑOL
+- **💥 CRASH FIX**: Solucionado error crítico en "Proxy Lab" (`unexpected keyword argument 'force_refresh'`). El motor de búsqueda ahora acepta comandos de refresco forzado.
+
+### 🇺🇸 ENGLISH
+- **💥 CRASH FIX**: Fixed critical error in "Proxy Lab" (`unexpected keyword argument 'force_refresh'`). Search engine now accepts force refresh commands.
+
+
 ## [v2.2.92] - Visible Lab (2026-02-07)
 ### 🇪🇸 ESPAÑOL
 - **🐛 UI FIX**: El modo "Buscador de Proxies" no aparecía en el menú desplegable. Ahora sí es visible.
